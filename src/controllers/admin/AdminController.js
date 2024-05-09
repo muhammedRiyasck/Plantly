@@ -36,7 +36,7 @@ const verifyLogin = async (req, res) => {
 
             if(passMatch ) {
 
-                req.session.user = userDataa; //  Add User Data in the dbs to session
+                req.session.admin = userDataa; //  Add User Data in the dbs to session
                
                 res.redirect("/admin/dashboard");
 
