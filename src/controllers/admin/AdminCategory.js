@@ -3,8 +3,9 @@ const Category=require('../../model/category_model')
 const loadCategory=async(req,res)=>{
     try {
 
-        const cate = await Category.find({})        
-        res.render('Category' , {cate})
+        const category = await Category.find({})  
+        const msg=req.flash('msg')      
+        res.render('Category' , {category,msg})
     } catch (error) {
         
     }
@@ -14,13 +15,16 @@ const addCategory=async(req,res)=>{
 
     try {
         
-        const cateName = req.body.name
+        const categoryName = req.body.name
         const radio = req.body.radio
-        if(cateName && radio){
+
+        const category = await Category.findOne({name : {$regex: new RegExp('^' + categoryName + '$','i')}})
+
+        if(!category){
 
             const data = new Category({
 
-                name : cateName,
+                name : categoryName,
                 is_Listed : radio
 
             })
@@ -28,45 +32,106 @@ const addCategory=async(req,res)=>{
             data.save()
 
             if(data){
-
+                // res.send({succ:true})
                 res.redirect('/admin/category')
 
             }
-        }
 
-    } catch (error) {
-
-        
+    }else{
+        req.flash('msg','Category is alredy exists')
+        res.redirect('/admin/category')
     }
+   
+ }
+catch (error) {
+
+        console.log(error.message)
+}
+  
 }
 
 const catAction = async(req , res)=>{
 
-    const cateId=req.body.id
+    const categoryId = req.body.id
 
-    const findCate=await Category.findOne({_id:cateId})
-
-    findCate.is_Listed = !findCate.is_Listed;
+    const findCategory = await Category.findOne({_id:categoryId})
+    
+    findCategory.Listed = !findCategory.Listed;
 
     findCate.save()
-
-    res.send({suc : true})
 
 }
 
 const cateDelete = async(req,res)=>{
 
- const user = req.body.user
- const deleteCate = await Category.deleteOne({_id:user})
-    if(true){
-        res.redirect('/admin/category')
+ const userId = req.query.userId
+ console.log(userId)
+ const editCate = await Category.deleteOne({_id:userId})
+  
+    if(editCate){
+
+        res.send({succ:true})
+      
     }
+
+
+}
+
+const categoryEdit = async (req, res , next) => {
+    
+    try {
+
+        const idd = req.body.CateID
+
+        const namee = req.body.name
+
+        const category = await Category.findOne({name : {$regex: new RegExp('^' + namee+ '$','i')}})
+        if(!category){
+            const categoryDataa = await Category.findByIdAndUpdate({ _id: idd }, { $set: { name: namee } });
+
+            categoryDataa.save();
+            //  res.send({su : true});
+            res.redirect('/admin/category')
+        }else{
+            req.flash('msg','Category is already exists')
+            res.redirect('/admin/category')
+        }
+    } catch (error) {
+
+        next(error,req,res);
+        
+    }
+
+};
+
+const valSett = async(req , res)=>{
+
+    try {
+
+        const cId = req.query.id
+
+        const cate = await Category.findOne({_id : cId});
+
+        if(cate){
+
+            res.send({succ : cate})
+
+        }
+        
+    } catch (error) {
+
+        console.log(error.message);
+        
+    }
+
 }
 
 module.exports={
     loadCategory,
     addCategory,
     catAction,
-    cateDelete
+    cateDelete,
+    categoryEdit,
+    valSett
 
 }

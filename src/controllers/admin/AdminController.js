@@ -20,19 +20,12 @@ const verifyLogin = async (req, res) => {
             const Email = req.body.email;
             const Password = req.body.password;
 
-            console.log(Email);
-            console.log(Password);
-
         const userDataa = await User.findOne({ email: Email });
 
-        console.log(userDataa);
         
         if (userDataa && ( userDataa.is_admin == true )) {
 
-            
             const passMatch = await bcrypt.compare(Password, userDataa.password);
-
-            console.log(passMatch);
 
             if(passMatch ) {
 

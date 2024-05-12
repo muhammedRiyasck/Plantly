@@ -170,25 +170,33 @@ const loadOtp=async(req,res)=>{
 }
 
 const insertUser = async (req, res, next) => {
-    try {
 
+    try {
     
       const bodyEmail = req.body.email;
       const password = req.body.password
       const spassword=await securePassword(password)
+
       console.log(spassword)
+
       // check the mail from the database
+
       if (!bodyEmail.endsWith(".com")) {
+
         req.flash('msg', 'Please enter a valied mail');
         return res.redirect('/registration');
+
     }
   
       const emailCheck = await User.findOne({ email: bodyEmail });
-     console.log(emailCheck)
+
       if (emailCheck) {
+
         req.flash("flash", "Email already exist");
         res.redirect("/registration");
+
       } else {
+
         // const first=req.body.f_name
         // const last=req.body.l_name
         // const FullName=first.charAt(0).toUpperCase() + first.slice(1)+' '+last.charAt(0).toUpperCase() + last.slice(1)
@@ -196,6 +204,7 @@ const insertUser = async (req, res, next) => {
         // insert user
   
         const user = new User({
+
           fullName: FullName,
           email: req.body.email,
           mobile: req.body.mobile,
@@ -203,37 +212,56 @@ const insertUser = async (req, res, next) => {
           is_admin: 0,
           is_blocked: false,
           is_verified:false,
+
         });
+
         const password = req.body.password;
         const confirmPassword = req.body.c_password;
   
         req.session.saveUser = user;
 
         if (confirmPassword == password) {
+
           // const userData = await user.save()
   
           // saving the input details into the session
+
           if (req.session.saveUser) {
+
             const OTP = generateOTP();
          
             await sendOTPmail(FullName, req.body.email, OTP, res,req); // passing data as argument
   
-            // setTimeout(async () => {
-            //   await otp.findOneAndDelete({ emailId: bodyEmail });
-            // }, 60000);
+            setTimeout(async () => {
+
+              await otp.findOneAndDelete({ emailId: bodyEmail });
+              
+            }, 60000);
+
           } else {
+
             res.redirect("/registration");
+
           }
+
         } else {
+
           req.flash("passflash", "password not match");
 
           res.redirect("/registration");
+
         }
+
       }
+
     } catch (error) {
+
       console.log(error.message);
+
     }
+
   };
+
 const generateOTP = () => {
     
     const digits = '0123456789';
@@ -252,62 +280,82 @@ const generateOTP = () => {
 
 const sendOTPmail = async (username, email, sendOtp, res,req) => { 
 
-    console.log(username);
-
     try {
+
       const transporter = nodemailer.createTransport({
+
         service: "gmail",
         auth: {
           user: process.env.EMAIL,
           pass: process.env.EMAIL_PASSWORD,
         },
+
       }); 
   
       // compose email
+
       const mailOption = {
+
         from: process.env.EMAIL,
         to: email,
         subject: "For Otp Verification",
         html: `<h3>Hello ${username}</h3><br><h1>Welcome To plantly</h3> <br> <h4>Enter Your OTP:</h4><h2>${sendOtp}<h2>`,
+
       };
   
       //send mail
+
       transporter.sendMail(mailOption, function (error, info) {
+
         if (error) {
+
           console.log("Error sending mail :- ", error.message);
+
         } else {
+
           console.log("Email has been sended :- ", info.response);
+
         }
+
       });
+
       // otp schema adding
-      const userOTP = await otp.create({
+
+      const userOTP = new otp({
+
         emailId: email,
         otp: sendOtp,
-      });
-   
-      const createdAt = Date.now();
-      req.session.time = createdAt
-      res.redirect(`/otp?email=${email}&time=${createdAt}`);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  
-  
 
+      });
+
+      if(userOTP){
+
+        userOTP.save()
+
+        const createdAt = Date.now();
+        req.session.time = createdAt
+  
+        res.redirect(`/otp?email=${email}&time=${createdAt}`);
+      }
+
+    } catch (error) {
+
+      console.log(error.message);
+
+    }
+
+};
+  
 const verifyOtp=async(req,res)=>{
 
     try {
         const{inp1,inp2,inp3,inp4}=req.body
         const bodyOtp = inp1 + inp2 + inp3 + inp4;
         
-        console.log(bodyOtp,req.session.saveUser.email,'haiii')
-
         const otpChek = await otp.findOne({emailId : req.session.saveUser.email});
 
-         console.log(otpChek)
         if(otpChek && bodyOtp == otpChek.otp){
-                    console.log(otpChek.otp)
+                    
                     const userSessionData = new User({
 
                         fullName: req.session.saveUser.fullName,
@@ -345,8 +393,6 @@ const ResendOtp = async (req, res ) => {
 
 
             console.log(generatedotp + " Re-send Otp");
-
-            console.log(req.session.saveUser.fullName + "a");
 
             await sendOTPmail(req.session.saveUser.fullName , req.session.saveUser.email ,generatedotp, res , req);
             

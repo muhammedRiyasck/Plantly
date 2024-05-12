@@ -7,7 +7,7 @@ const CategorySchema= new mongoose.Schema({
         unique:true,
     },
 
-    is_Listed:{
+    Listed:{
         type:Boolean,
         required:true,
         default:true

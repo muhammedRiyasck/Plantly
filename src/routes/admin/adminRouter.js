@@ -19,7 +19,9 @@ adminRoute.put('/userAction' , adminUsers.statusUpdation);
 adminRoute.get('/add_products',adminProducts.loadProducts)
 adminRoute.get('/category',adminCategory.loadCategory)
 adminRoute.post('/addCategory',adminCategory.addCategory)
-adminRoute.put('/categoryAction',adminCategory.catAction)
-adminRoute.post('/cateDelete',adminCategory.cateDelete)
+adminRoute.put('/categoryList',adminCategory.catAction)
+adminRoute.post('/valSet' , adminCategory.valSett);
+adminRoute.post('/categoryEdit',adminCategory.categoryEdit)
+adminRoute.post('/categoryDelete',adminCategory.cateDelete)
  
 module.exports = adminRoute

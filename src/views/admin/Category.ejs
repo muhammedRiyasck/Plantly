@@ -14,28 +14,24 @@
             <div class="content-wrapper" id="reloadDiv">
 
             <div class="d-flex">
-
+            
               <!-- Add Brand Modal -->
 
-              <img width="50" height="50" src="https://img.icons8.com/color/48/potted-plant--v1.png" alt="potted-plant--v1"/>            
-             <div class=" d-flex  w-50 ">
+              <img width="50" height="50" src="https://img.icons8.com/color/48/potted-plant--v1.png" alt="potted-plant--v1"/>   
+                  
+             <div class="justify-content-end d-flex  w-50 " style="padding-top: 1rem;">
 
-
-
-                <!--modal for add brand-->
-
-                <div class="modal fade" id="Addbrand" tabindex="-1" aria-labelledby="AddbrandLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
-                        
-
-                      </div>
-                  </div>
+                <!--category exist messge-->
+              
+                <p id="msg" class="justify-content-end text-danger ">
+                  <% if(locals.msg) {%>
+                    <%= msg %>
+                    <% } %>
+                   
+                  </p>
               </div>
-                
-              </div>
-
-              <!-- End Brand Modal -->
+             
+         
 
               <div class="w-50 p-2 d-flex justify-content-end ">
 
@@ -96,11 +92,13 @@
                     </div>
                   </div>
                 </div>
+              </div>
+                <!-- modal for edit -->
 
-                </div>
+              
 
             </div>
-            
+          
             <table class="table table-dark mt-4 " style="border-radius: 10px;">
 
               <thead class="text-center ">
@@ -111,7 +109,7 @@
                    <th class="text-white">Category</th>
                    <th class="text-white">Status</th>
                    <th class="text-white">Action</th>
-                   <th class="text-white">Delete</th>
+                   <th class="text-white">DELETE</th>
 
                 </tr>
 
@@ -119,7 +117,7 @@
 
                   <tbody class="text-center">
 
-                    <% cate.forEach((val , indx) => { %>
+                    <% category.forEach((val , indx) => { %>
 
                      <tr>
 
@@ -127,9 +125,9 @@
 
                       <td><%= val.name %></td>
 
-                      <td><% if(val.is_Listed == true ) { %>
+                      <td><% if(val.Listed == true ) { %>
 
-                        <span class="text-success " id="s<%=val._id %>">Listed</span>
+                        <span class="text-success " id="s<%= val._id %>">Listed</span>
 
                       <% } else { %>
 
@@ -140,12 +138,52 @@
                      </td>
 
                      <td>
-                      <button type="button" id="s<%=val._id %>" class="action btn <%=val.is_Listed==false?'btn-outline-success ':'btn-outline-danger '  %> btn-icon-text" onclick="liststatus('<%= val._id  %>',this)" style="margin-right: 5px;"><%=val.is_Listed ? 'Unlist':'List'  %></button>
-                     </td>
+                      <button type="button" id="s<%= val._id %>" class="action btn <%= val.Listed == false ? 'btn-outline-success':'btn-outline-danger' %> btn-icon-text" onclick = "list('<%= val._id  %>',this)" style="margin-right: 5px;"><%= val.Listed ? 'Unlist' : 'List' %></button>
+                      <button type="button" class="btn btn-outline-primary modal-title"  data-bs-toggle="modal" data-bs-target="#exampleModall" onclick="valueSet('<%= val._id %>')">Edit</button>
+
+                    </td>
+                                       
                      <td>
-                      <button type="button" id="delete" class="btn btn-outline-danger" onclick="cateDelete('<%=val._id%>')">DELETE</button>
+                      <button type="button" id="delete" class="btn btn-outline-danger" onclick="cateDelete('<%= val._id%>')">DELETE</button>
                      </td>
                      </tr>
+
+                     <div class="modal fade" id="exampleModall" tabindex="-1" aria-labelledby="exampleModalLabell" aria-hidden="true">
+
+                      <div class="modal-dialog">
+    
+                        <div class="modal-content">
+    
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabell">Edit Category</h5>
+                              <button type="button" class="btn-close btn-outline-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
+                          </div>
+    
+                       <form action="/admin/categoryEdit" method="post">
+    
+                        <div class="modal-body">
+    
+                          <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Category Name</label>
+                            <p id="error" class="text-danger text-center "></p>
+                            <input type="text" class="form-control text-white" name="name" id="catee" value="" oninput="categoryCheck(this) ; categoryValidation(this)">
+                            <div class="text-center"><p class="text-danger" id="err"></p></div>
+                          </div>
+
+                          <input type="text" value="" id="ID" name="CateID" hidden>
+
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit"  class="btn btn-outline-success" data-bs-dismiss="modal" id="submit">SaveChanges</button>
+                          </div>
+                                                
+                      </div>
+    
+                       </form>
+    
+                        </div>
+                      </div>
+                    </div>
                       
                   <%  }); %>
                      
@@ -170,7 +208,7 @@
 
 function cateDelete(user){
 
-  fetch(`/admin/cateDelete`,{ 
+  fetch(`/admin/categoryDelete?userId=${user}`,{ 
 
     method:'post',
 
@@ -178,11 +216,28 @@ function cateDelete(user){
       'Content-Type': 'application/json' 
     },
 
-    body:JSON.stringify({user})
-
   }
   )
+
+  .then(res=>res.json())
+  .then(data => {
+
+    if(data.succ){
+
+          $('#reloadDiv').load('/admin/category #reloadDiv')
+
+
+    }
+
+  })
+
 }
+
+
+
+setTimeout(() => {
+  const message = document.getElementById('msg').textContent=''
+}, 2000);
 
 // Add Category  :-
   
@@ -281,13 +336,25 @@ function cateDelete(user){
 
   };
 
+  //function Edit
+
+//   function cateEdit(categoryId) {
+//     // You can perform any additional operations here if needed
+
+
+//     // Show the modal
+//     const modal = new bootstrap.Modal(document.getElementById('editModal'));
+//     modal.show();
+// }
+
+
   // Category Action :-
 
-  function liststatus(id,e) {
+  function list(id,e) {
     
       const status = document.getElementById(`s${id}`);
 
-      fetch(`/admin/categoryAction`, {
+      fetch(`/admin/categoryList`, {
 
         method: 'put',
         headers: {
@@ -310,19 +377,18 @@ function cateDelete(user){
             
       })
 
-    .then(data => {
 
-    if (e.textContent == 'List') {
+    if (e.textContent=='List') {
 
-      e.textContent='Unlist'    
+      e.textContent = 'Unlist'    
       e.classList.remove('btn-outline-success');
       e.classList.add('btn-outline-danger');
       status.textContent='Listed'
       status.classList=('text-success')
-            
+
     } else {
 
-      e.textContent='List'    
+      e.textContent = 'List'    
       e.classList.add('btn-outline-success');
       e.classList.remove('btn-outline-danger');
       status.textContent='Unlisted'
@@ -330,49 +396,27 @@ function cateDelete(user){
 
     }
         
-  })
+
       
 };
 
 //  Edit Category :-
 
- function editCategory(id , cateId) {
+ function editCategory(id) {
 
-  const cateid = id;
-  const newName = document.getElementById('cate'+ id).value;
+  console.log(id);
 
-  fetch(`/admin/categoryEdit?id=${id}&&value=${newName}`, {
+  fetch(`/admin/categoryEdit?id=${id}`, {
 
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' }
 
   })
-    .then(response => {
-
-      if (!response.ok) {
-
-        throw new Error('Network response was not ok');
-
-      }
-
-      return response.json();
-
-    })
+   
 
     .then(data => {
 
-      if (data.error) {
-
-        Swal.fire({
-
-          icon: 'error',
-          title: 'Error',
-          text: data.error,
-          confirmButtonText: 'Okay'
-
-        });
-
-      } else {
+      if (data.su) {
 
         Swal.fire({
 
@@ -439,6 +483,33 @@ function editValidation(input,cateId){
 
 };
 
+
+//  Vall Sett :-
+
+function valueSet(id){
+
+  fetch(`/admin/valSet?id=${id}`, { method: 'post' })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+      if(data.succ){
+
+        // Assuming 'cateName' is the ID of the input field
+
+        document.getElementById('catee').value = data.succ.name;
+        document.getElementById('ID').value=data.succ._id
+        // Optionally, you can also set other fields if needed
+        $('#reloadDiv').load('/admin/category #reloadDiv')
+
+      }
+
+    })
+
+    .catch(error => console.error('Error setting value for editing:', error));
+
+}
 
 </script>
 
