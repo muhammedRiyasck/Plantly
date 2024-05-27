@@ -14,7 +14,6 @@ const port = process.env.PORT
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
-app.set('view engine', 'ejs')
 
 const session = require('express-session');
 
@@ -31,13 +30,27 @@ app.use(session({
 const flash = require('express-flash');
 
 app.use(flash());
+app.set('views',path.join(__dirname,'/src/views/client'));
+// app.set('views','./src/views/admin');
 
-app.use("/assets",express.static(path.join(__dirname,'src/public')));
+app.set('view engine', 'ejs');
+
+app.use("/assets",express.static(path.join(__dirname,'/src/public')));
+
 const userRoute = require('./src/routes/client/userRouter');
-
 app.use('/', userRoute);
+
 const adminRoute = require('./src/routes/admin/adminRouter');
 app.use('/admin', adminRoute);
+
+const googleAuth = require('./googleAuth')
+app.use('/',googleAuth);
+
+app.get('*',(req,res)=>{
+    res.render('404.ejs')
+
+})
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });

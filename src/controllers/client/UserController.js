@@ -1,11 +1,18 @@
 
 const User=require('../../model/user_model')
 const otp=require('../../model/otp_model')
+const validation = require('../../model/validation_Schema') 
+
+const Product = require('../../model/products_model')
+// const Category = require('../../model/category_model')
+
 
 require('dotenv').config()
 const bcrypt=require('bcrypt')
 const nodemailer= require('nodemailer')
 const session = require('express-session')
+
+
 
 const securePassword=async(password)=>{
 
@@ -28,8 +35,7 @@ const loadHome = async (req, res) => {
             res.render('Home' , {userlogdata : req.session.user})
 
         } else {
-
-            res.render('home')
+          res.render('Home')
 
         }
         
@@ -44,14 +50,16 @@ const loadShop=async(req,res)=>{
 
     try{
 
+        const productData = await Product.find({status:true})
+
         if(req.session.user){
 
-            res.render('Shop' , {userlogdata : req.session.user})
+            res.render('Shop' , {userlogdata : req.session.user,productData})
 
 
         } else {
 
-            res.render('Shop')
+            res.render('Shop',{productData})
 
         }
 
@@ -114,7 +122,11 @@ const loadContactUs=async(req,res)=>{
 }
 const loadLogin=async(req,res)=>{
     try {
-        res.render('Login')
+        const message = req.flash('message')
+        const email = req.flash('email')
+        
+        res.render('Login',{message,email})
+        
     } catch (error) {
         console.log(error.message)
     }
@@ -137,16 +149,20 @@ const loadForgetPassword=async(req,res)=>{
     }
     
 }
-const loadSingleBlog=(req,res)=>{
+const loadSingleBlog=async(req,res)=>{
     try {
         res.render('SingleBlog') 
     } catch (error) {
         console.log(error.message)
     }
 }
-const loadSingleProduct=(req,res)=>{
+const loadSingleProduct=async(req,res)=>{
     try {
-        res.render('SingleProduct')
+        const id = req.query.id
+
+        const singleProduct = await Product.findOne({_id:id,status:true}).populate('category_id')
+       
+        res.render('SingleProduct',{singleProduct})
     } catch (error) {
         console.log(error.meassage)
     }
@@ -158,8 +174,10 @@ const loadOtp=async(req,res)=>{
     try {
 
         const email = req.query.email
+        
+        const otpError = req.flash('otpError')
 
-        res.render('Otp' , {email})
+        res.render('Otp' , {email,otpError})
 
     } catch (error) {
 
@@ -173,54 +191,34 @@ const insertUser = async (req, res, next) => {
 
     try {
     
-      const bodyEmail = req.body.email;
-      const password = req.body.password
-      const spassword=await securePassword(password)
+        // --------------joi validation---------------------------------
 
-      console.log(spassword)
+       // const value = await validation.Registration.validateAsync(req.body)
+       //const bodyEmail = value.email;
 
-      // check the mail from the database
+       
+       const {name,email,mobile,password,c_password} = req.body
+       
+       const spassword = await securePassword(password)
 
-      if (!bodyEmail.endsWith(".com")) {
-
-        req.flash('msg', 'Please enter a valied mail');
-        return res.redirect('/registration');
-
-    }
-  
-      const emailCheck = await User.findOne({ email: bodyEmail });
-
-      if (emailCheck) {
-
-        req.flash("flash", "Email already exist");
-        res.redirect("/registration");
-
-      } else {
-
-        // const first=req.body.f_name
-        // const last=req.body.l_name
-        // const FullName=first.charAt(0).toUpperCase() + first.slice(1)+' '+last.charAt(0).toUpperCase() + last.slice(1)
-        const FullName=req.body.name
         // insert user
   
         const user = new User({
 
-          fullName: FullName,
-          email: req.body.email,
-          mobile: req.body.mobile,
+          fullName: name,
+          email: email,
+          mobile: mobile,
           password: spassword,
-          is_admin: 0,
+          is_admin: false,
           is_blocked: false,
           is_verified:false,
 
         });
 
-        const password = req.body.password;
-        const confirmPassword = req.body.c_password;
   
         req.session.saveUser = user;
 
-        if (confirmPassword == password) {
+        if (password == c_password) {
 
           // const userData = await user.save()
   
@@ -230,13 +228,13 @@ const insertUser = async (req, res, next) => {
 
             const OTP = generateOTP();
          
-            await sendOTPmail(FullName, req.body.email, OTP, res,req); // passing data as argument
+            await sendOTPmail(name, email, OTP, res,req); // passing data as argument
   
             setTimeout(async () => {
 
-              await otp.findOneAndDelete({ emailId: bodyEmail });
+              await otp.findOneAndDelete({ emailId: email });
               
-            }, 60000);
+            }, 300000);
 
           } else {
 
@@ -247,14 +245,12 @@ const insertUser = async (req, res, next) => {
         } else {
 
           req.flash("passflash", "password not match");
-
+          
           res.redirect("/registration");
 
         }
 
-      }
-
-    } catch (error) {
+      } catch (error) {
 
       console.log(error.message);
 
@@ -271,9 +267,10 @@ const generateOTP = () => {
     for (let i = 0; i < 4; i++) {
 
         OTP += digits[Math.floor(Math.random() * 10)];
-    };      
+    };  
     
-
+    console.log(OTP)
+    
     return OTP;
 
 };
@@ -352,9 +349,9 @@ const verifyOtp=async(req,res)=>{
         const{inp1,inp2,inp3,inp4}=req.body
         const bodyOtp = inp1 + inp2 + inp3 + inp4;
         
-        const otpChek = await otp.findOne({emailId : req.session.saveUser.email});
+        const userSessionData = await otp.findOne({emailId : req.session.saveUser.email});
 
-        if(otpChek && bodyOtp == otpChek.otp){
+        if(  bodyOtp == userSessionData.otp){
                     
                     const userSessionData = new User({
 
@@ -368,11 +365,11 @@ const verifyOtp=async(req,res)=>{
                     });
 
                     userSessionData.save()
-                    req.session.user=userSessionData
+                    req.session.user = userSessionData
                     res.redirect('/home')
             }else{
 
-                req.flash('msg,OTP is in Correct')
+                req.flash('otpError', 'Incorrect OTP. Please try again.')
                 console.log('otp is incrroect')
 
                 const timee = req.session.time
@@ -391,10 +388,16 @@ const ResendOtp = async (req, res ) => {
     try {
             const generatedotp = generateOTP();
 
-
             console.log(generatedotp + " Re-send Otp");
 
             await sendOTPmail(req.session.saveUser.fullName , req.session.saveUser.email ,generatedotp, res , req);
+
+            setTimeout(async () => {
+
+                await otp.findOneAndDelete({ emailId:req.session.saveUser.email});
+                
+              }, 60000);
+  
             
         }
 
@@ -415,30 +418,48 @@ const verifyLogin = async (req, res) => {
         const userDataa = await User.findOne({ email: Email });
 
 
-        if (userDataa && ( userDataa.is_blocked == false )) {
+        if (userDataa && ( userDataa.is_blocked == false ) && (userDataa.is_admin == false)) {
 
             const passMatch = await bcrypt.compare(Password, userDataa.password);
 
             if(passMatch ) {
 
                 req.session.user = userDataa; //  Add User Data in the dbs to session
-               
+                
                 res.redirect('/home');
+            
 
             } else {
 
-                console.log('wrong')
+            const email = req.body.email
 
-                req.flash('passError', 'Password is Wrong');      //  Password Wrong (Flash)
+            req.flash('email',email)
+
+                req.flash('message', "Incorrect username or password entered. Please try again");      //  Password Wrong (Flash)
 
                 res.redirect('/login');
 
             } 
 
-        } else {
+        }
+        
+        else if(userDataa && ( userDataa.is_blocked == true ) && (userDataa.is_admin == false)){
 
-            console.log('not exist')
-            res.render('Login', { userDosentMag: "User Dosen't Exist" });
+            req.flash('message','Your account has been blocked by an administrator.')
+
+            res.redirect('/login')
+
+        }
+
+        else {
+            
+            const email = req.body.email
+
+            req.flash('email',email)
+
+            req.flash('message','Incorrect username or password entered Please try again')
+
+            res.redirect('/login');
 
         }
 
@@ -454,7 +475,7 @@ const logOut = async(req , res)=>{
     try {
 
         req.session.user = undefined
-
+        req.flash('message', "Logout Successfully...")
         res.redirect('/login')
         
     } catch (error) {
@@ -467,8 +488,10 @@ const logOut = async(req , res)=>{
 
 const existEmail=async(req,res)=>{
     const email=await User.findOne({email:req.body.email})
-    if(email) res.send({exist:true});
-    else res.send({exist:false});
+    if(email) {
+        res.send({exist:true});}
+    else {
+        res.send({exist:false});}
 
 }
 

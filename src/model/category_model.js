@@ -1,6 +1,6 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 
-const CategorySchema= new mongoose.Schema({
+const CategorySchema = new mongoose.Schema({
     name:{
         type:String,
         required:true,
@@ -14,4 +14,4 @@ const CategorySchema= new mongoose.Schema({
     },
 })
 
-module.exports=mongoose.model('category',CategorySchema)
+module.exports = mongoose.model('category',CategorySchema)

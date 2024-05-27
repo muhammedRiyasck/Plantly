@@ -136,25 +136,46 @@
            </div>
         </div>
         <div class="container custom_container ">
-           <h3 class="text-center">Log in to your account </h3>
+           <h3 class="text-center" >Log in to your account </h3>
+           <% if(message) { %>
+
+            <p class="justify-contentt text-center" style="color: red;">  
+
+               <%= message %> </p>
+
+          <% } %>
+          
+          
+
            <div id="login" class="page-content card card-block p-3 p-sm-4 ">
-              <form class="needs-validation" action="/verifylogin" method="post" >
+              <form onsubmit="hello()" class="needs-validation" action="/verifylogin" method="post" >
                  <div class="form-group">
                     <label for="user_email" class="font-weight-bolder">Email address</label>
-                    <input type="email" name="email" class="form-control" id="user_email" aria-describedby="emailHelp" required>
-                    <div class="invalid-feedback">Please Enter your Account Name.</div>
+                    <input type="email" name="email" value="<%= email %>"  class="form-control" id="user_email"  >
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    <div style="color: red;" id="emailError"></div>
                  </div>
                  <div class="form-group font-weight-bolder" >
                     <label for="user_password" class="font-weight-bolder">Password</label>
-                    <input type="password" name="password" class="form-control" id="user_password" required>
-                    <div class="invalid-feedback">Please enter your password.</div>
+                    <input type="password" name="password" class="form-control" id="user_password">
+                    <div style="color: red;" id="passwordError"></div>
                  </div>
                  <div class="form-group form-check">
                     <input type="checkbox" class="form-check-input" id="user_check" >
                     <label class="form-check-label" for="user_check">Check me out</label>
                  </div>
-                 <input type="submit" name="submit" class="btn btn-primary mb-3" value="submit">
+                 <div class="button-container ">
+
+                  <input type="submit" id="submit" name="submit" class="btn btn-primary mb-3" value="submit">
+
+                  <a href="/auth/google" class="btn google-account red-btn" style="margin-left: 215px; margin-bottom: 12px;">
+                     <img width="30" height="30"  src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/>
+                     <span >Sign in with Google</span>                                     
+                  </a>
+                  
+                  </div>
+                
+                 
                  <div class="pass_acc border-top pt-3">
                     <span class="forgot_password font-weight-bolder"><a href="/forgotPassword">Forgot your password? </a></span>
                     <span class="no_account float-right font-weight-bolder"><a href="/registration">No account? Create one here</a></span>
@@ -163,5 +184,69 @@
            </div>
         </div>
      </div>
+<!-- <script>
+  const email=localStorage.getItem("email")||""
+      console.log(email);
+      const inp=document.getElementById("user_email");
+      inp.value=email
+   function hello(){
+      const inp=document.getElementById("user_email");
+      localStorage.setItem("email",inp.value)
+   }
+</script> -->
+
+<script>
+document.getElementById('submit').addEventListener('click', function(event) {
+    if (!validateForm()) {
+        event.preventDefault();
+    }
+});
+
+function validateForm() {
+    var email = document.getElementById('user_email').value.trim();
+    var password = document.getElementById('user_password').value.trim();
+    var emailError = document.getElementById('emailError');
+    var passwordError = document.getElementById('passwordError');
+
+    var isValid = true;
+
+    if (email === "") {
+        emailError.textContent = 'Please enter your email address.';
+        isValid = false;
+        setTimeout(() => {
+      emailError.textContent =''
+   }, 1000);
+    } else if (!email.endsWith('@gmail.com')) {
+        emailError.textContent = 'Please enter a valid email address.';
+
+        isValid = false;
+        setTimeout(() => {
+      emailError.textContent =''
+   }, 1000);
+
+    } else {
+        emailError.textContent = '';
+
+    }
+
+    if (password === "") {
+        passwordError.textContent = 'Please enter your password.';
+        isValid = false;
+
+        setTimeout(() => {
+      passwordError.textContent =''
+   }, 1000);
+        
+    } else {
+        passwordError.textContent = '';
+    }
+
+    return isValid;
+}
+
+
+
+   </script>
+
 
 <%- include('../layouts/client/footer') %>

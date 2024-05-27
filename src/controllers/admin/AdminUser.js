@@ -4,8 +4,8 @@ const loadUsers=async(req,res)=>{
 
     try {
 
-        const user = await Users.find();
-
+        const user = await Users.find({is_admin:{$ne:true}});
+        // console.log(user)
         res.render('Users' , {user})
 
 

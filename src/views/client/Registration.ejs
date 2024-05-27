@@ -7,7 +7,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        /* height: 100vh; */
+        padding-top: 30px;
     }
 
    
@@ -83,45 +84,48 @@
                             <% } %>
 
                         <div class="form-group">
+
                             <label for="name">Name *</label>
-                            <input type="text" class="form-control" id="name" name="name" style="border: solid 1px rgb(69, 66, 66);" required>
+                            <input type="text" class="form-control" id="name" maxlength="20" name="name" oninput="NameCheck(this)" style="border: solid 1px rgb(69, 66, 66);" >
                             <div class="error" id="name-error"></div>
+
                         </div>
                         <div class="form-group">
                             <label for="email">Email *</label>
-                            <input type="email" class="form-control" id="email" oninput="EmailCheck(this)" name="email" style="border: solid 1px rgb(69, 66, 66);" required>
+                            <input type="email" class="form-control" id="email" oninput="EmailCheck(this)" name="email" style="border: solid 1px rgb(69, 66, 66);" >
                             <div class="error" id="email-error"></div>
-                           
-                            <p class="text-danger">
-
-                                <% if(locals.msg) {%>
-                                    <%= msg %>
-                                <% } %>
-            
-                            </p>
                         </div>
                         <div class="form-group">
                             <label for="mobile">Mobile Number *</label>
-                            <input type="text" class="form-control" id="mobile" maxlength="11" pattern="[0-9]*" name="mobile" style="border: solid 1px rgb(69, 66, 66);" required>
+                            <input type="text" class="form-control" id="mobile" maxlength="15"  name="mobile" style="border: solid 1px rgb(69, 66, 66);" >
                             <div class="error" id="mobile-error"></div>
                         </div>
                         <div class="form-group">
                             <label for="password">Password *</label>
-                            <input type="password" class="form-control" id="password" name="password" style="border: solid 1px rgb(69, 66, 66);" required>
-                            <div class="error" id="password-error"></div>
+                            <input type="password" class="form-control" id="password" name="password" style="border: solid 1px rgb(69, 66, 66);" >
+                            <div class="error " id="password-error"></div>
                             <div class="password-strength" id="password-strength"></div>
-                            <div class="live-validation" id="password-validation"></div>
+                            <div class="live-validation " id="password-validation" style="color: #CA1515;"></div>
                         </div>
                         <div class="form-group">
                             <label for="confirm_password">Confirm Password *</label>
-                            <input type="password" class="form-control" id="cpassword" name="c_password" style="border: solid 1px rgb(69, 66, 66);" required>
+                            <input type="password" class="form-control" id="cpassword" name="c_password" style="border: solid 1px rgb(69, 66, 66);" >
                             <div class="error" id="cpassword-error"></div>
-                            <div class="live-validation" id="cpassword-validation"></div>
+                            <div class="live-validation" id="cpassword-validation" style="color:  #CA1515;"></div>
                         </div>
-                        <button type="submit" id="sub" class="btn btn-primary btn-block">Create an Account</button> 
+                        <div class="d-flex w-100 px-2 " style="align-items: center; justify-content: center;  padding: 1rem;">
+                            <button type="submit" id="submit"  class="btn btn-primary w-50">Create an Account</button> 
+
+                            <a href="/auth/google" class="btn google-account red-btn" style="margin-left: 21px; margin-bottom: 12px;">
+                                <img width="30" height="30"  src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/>
+                                <span >Sign Up with Google</span>                                     
+                             </a>
+                             
+                           </div>
                     </form>
                     <p class="text-center create-account">
                         Already have an account? <a href="/login" class="text-decoration-none">Login</a>
+                        
                     </p>
                 </div>
             </div>
@@ -131,200 +135,205 @@
 
 
 <script>
-async function EmailCheck(e){
-    const sub=document.getElementById('sub')
-    const {data}=await axios.put('/emailCheck',{email:e.value});
-    var nameError = document.getElementById('email-error');
-    // console.log(response);
-        if(data.exist){
-
-        nameError.innerText = 'email is allredey exits';
-        sub.disabled=true
-        }else{
-            nameError.innerText=''
-            sub.disabled=false
-        }
-    }
     document.addEventListener('DOMContentLoaded', function() {
+        const submit = document.getElementById('submit');
+        submit.disabled = true;
 
-        function isPreviousFilled(inputElement) {
-            var previousInput = inputElement.previousElementSibling;
-            return previousInput.value.trim() !== '';
-        }
+        function validateName(name) {
+            const nameError = document.getElementById('name-error');
+            nameError.innerText = '';
 
+            const lettter = /^[A-Z][a-zA-Z]*/;
+            const secondLetter = /^[A-Z][a-z]*(?: [A-Z][a-z]*)*$/;
+            const NaN = /^[a-zA-Z\s]+$/;
 
-        function toggleNextInput(currentInput) {
-            var nextInput = currentInput.nextElementSibling;
-            if (isPreviousFilled(currentInput)) {
-                nextInput.removeAttribute('disabled');
+            name = name.trim();
+
+            if (name === '') {
+                nameError.innerText = 'Name cannot be empty';
+                return false;
+            } else if (!NaN.test(name)) {
+                nameError.innerText = 'Name should be alphabetic character';
+                return false;
+            } else if (!lettter.test(name)) {
+                nameError.innerText = 'First letter must be an uppercase';
+                return false;
+            } else if (!secondLetter.test(name)) {
+                nameError.innerText = 'After a space, the letter should be uppercase';
+                return false;
+            } else if(name.length < 3){
+                nameError.innerText = 'Name should be at least 3 characters long';
+                return false;
+            } else if (name.length > 20) {
+                nameError.innerText = 'Name should be within 20 characters';
+                return false;
             } else {
-                nextInput.setAttribute('disabled', 'disabled');
+                nameError.innerText = '';
+                return true;
             }
         }
 
+        async function validateEmail(email) {
+            const emailError = document.getElementById('email-error');
+            emailError.innerText = '';
 
-        function setupInputListeners() {
-            var inputFields = document.querySelectorAll('.form-control');
-            inputFields.forEach(function(input) {
-                input.addEventListener('input', function() {
-                    toggleNextInput(this);
-                });
+            email = email.trim();
+
+            if (email === '') {
+                emailError.innerText = 'Email cannot be empty';
+                return false;
+            } else if (!email.endsWith('@gmail.com') && !email.endsWith('@yahoo.com')) {
+                emailError.innerText = 'Email is invalid';
+                return false;
+            } else {
+                const { data } = await axios.put('/emailCheck', { email: email });
+                if (data.exist) {
+                    emailError.innerText = 'Email already exists';
+                    return false;
+                } else {
+                    emailError.innerText = '';
+                    return true;
+                }
+            }
+        }
+
+        function validateMobile(mobile) {
+            const mobileError = document.getElementById('mobile-error');
+            mobileError.innerText = '';
+
+            const regex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
+
+            mobile = mobile.trim();
+
+            if (mobile === '') {
+                mobileError.innerText = 'Mobile cannot be empty';
+                return false;
+            } else if (!regex.test(mobile)) {
+                mobileError.innerText = 'Invalid Mobile Number';
+                return false;
+            } else {
+                mobileError.innerText = '';
+                return true;
+            }
+        }
+
+        function validatePassword(password) {
+            const passwordValidation = document.getElementById('password-validation');
+            const strength = document.getElementById('password-strength');
+            passwordValidation.innerHTML = '';
+            strength.innerHTML = '';
+
+            const uppercaseRegex = /[A-Z]/;
+            const specialCharRegex = /[@$!%*?&]/;
+            const numberRegex = /\d/;
+            const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{10,}$/;
+            const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%?&]{6,}$/;
+
+            password = password.trim();
+
+            if (password === '') {
+                passwordValidation.innerText = 'Password should not be empty';
+                return false;
+            } else if (!uppercaseRegex.test(password)) {
+                passwordValidation.innerHTML += 'Include at least one uppercase letter.<br>';
+                return false;
+            } else if (!specialCharRegex.test(password)) {
+                passwordValidation.innerHTML += 'Include at least one special character.<br>';
+                return false;
+            } else if (!numberRegex.test(password)) {
+                passwordValidation.innerHTML += 'Include at least one number.<br>';
+                return false;
+            }
+
+            if (strongRegex.test(password)) {
+                strength.innerHTML = 'Strong';
+                strength.style.color = 'green';
+                return true;
+            } else if (mediumRegex.test(password)) {
+                strength.innerHTML = 'Medium';
+                strength.style.color = 'orange';
+                return true;
+            } else {
+                strength.innerHTML = 'Weak';
+                strength.style.color = 'red';
+                return false;
+            }
+        }
+
+        function validateCPassword(password, cpassword) {
+            const cpasswordValidation = document.getElementById('cpassword-validation');
+
+            cpassword = cpassword.trim();
+
+            if (cpassword === '') {
+                cpasswordValidation.innerHTML = 'Confirm Password should not be empty.';
+                return false;
+            } else if (password === cpassword) {
+                cpasswordValidation.innerHTML = 'Passwords match.';
+                cpasswordValidation.style.color = 'green';
+                return true;
+            } else {
+                cpasswordValidation.innerHTML = 'Passwords do not match.';
+                cpasswordValidation.style.color = 'red';
+                return false;
+            }
+        }
+
+        async function validateForm() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const cpassword = document.getElementById('cpassword').value.trim();
+
+            const isNameValid = validateName(name);
+            const isEmailValid = await validateEmail(email);
+            const isMobileValid = validateMobile(mobile);
+            const isPasswordValid = validatePassword(password);
+            const isCPasswordValid = validateCPassword(password, cpassword);
+
+            const allValid = isNameValid && isEmailValid && isMobileValid && isPasswordValid && isCPasswordValid;
+
+            submit.disabled = !allValid;
+        }
+
+        document.querySelectorAll('.form-control').forEach(function(input) {
+            input.addEventListener('input', function() {
+                validateForm();
+            });
+
+            input.addEventListener('blur', function() {
+                validateForm();
+            });
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const cpassword = document.getElementById('cpassword').value.trim();
+
+            if (!name || !email || !mobile || !password || !cpassword) {
+                event.preventDefault();
+                validateForm();
+            }
+        });
+
+        function clearFlashMessages() {
+            const flashMessages = document.querySelectorAll('.alert');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.remove();
+                }, 5000);
             });
         }
 
-        setupInputListeners();
+        clearFlashMessages();
     });
-
-    document.getElementById('name').addEventListener('input', function() {
-        var name = this.value.trim(); 
-        var nameError = document.getElementById('name-error');
-
-        nameError.innerText = '';
-
-        if (name === '') {
-            nameError.innerText = 'Name cannot be empty';
-        }
-    });
-
-   
-    document.getElementById('name').addEventListener('keyup', function(event) {
-        if (event.keyCode === 8 || event.keyCode === 46) {
-            var nameError = document.getElementById('name-error');
-            nameError.innerText = '';
-        }
-    });
-
-   
-    document.getElementById('email').addEventListener('input', function() {
-        var email = this.value.trim(); 
-        var emailError = document.getElementById('email-error');
-
-
-        emailError.innerText = '';
-
-        if (email === '') {
-            emailError.innerText = 'Email cannot be empty';
-        }
-    });
-
-  
-    document.getElementById('email').addEventListener('keyup', function(event) {
-        if (event.keyCode === 8 || event.keyCode === 46) { 
-            var emailError = document.getElementById('email-error');
-            emailError.innerText = ''; 
-        }
-    });
-
-
-    document.getElementById('password').addEventListener('input', function() {
-        var password = this.value;
-        var strength = document.getElementById('password-strength');
-        var passwordValidation = document.getElementById('password-validation');
-        var uppercaseRegex = /[A-Z]/;
-        var specialCharRegex = /[@$!%*?&]/;
-        var numberRegex = /\d/;
-        var strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{10,}$/;
-        var mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%?&]{6,}$/;
-;
-
-        passwordValidation.innerHTML = '';
-        strength.innerHTML = '';
-
-        if (password === '') {
-            return;
-        }
-
-        if (!uppercaseRegex.test(password)) {
-            passwordValidation.innerHTML ='Include at least one uppercase letter.<br>';
-        } else if (!specialCharRegex.test(password)) {
-            passwordValidation.innerHTML +='Include at least one special character.<br>';
-        } else if (!numberRegex.test(password)) {
-            passwordValidation.innerHTML += 'Include at least one number.<br>';
-        }
-
-        if (strongRegex.test(password)) {
-            strength.innerHTML = 'Strong';
-            strength.style.color = 'green';
-        } else if (mediumRegex.test(password)) {
-            strength.innerHTML = 'Medium';
-            strength.style.color = 'orange';
-        } else {
-            strength.innerHTML = 'Weak';
-            strength.style.color = 'red';
-        }
-    });
-
-    document.getElementById('cpassword').addEventListener('input', function() {
-        var password = document.getElementById('password').value;
-        var cpassword = this.value;
-        var cpasswordValidation = document.getElementById('cpassword-validation');
-
-        if (password === cpassword) {
-            cpasswordValidation.innerHTML = 'Passwords match.';
-            cpasswordValidation.style.color = 'green';
-        } else {
-            cpasswordValidation.innerHTML = 'Passwords do not match.';
-            cpasswordValidation.style.color = 'red';
-        }
-    });
-
-    
-    document.getElementById('cpassword').addEventListener('keyup', function(event) {
-        if (event.keyCode === 8 || event.keyCode === 46) { 
-            var cpasswordValidation = document.getElementById('cpassword-validation');
-            cpasswordValidation.innerText = ''; 
-        }
-    });
-
-   
-    document.getElementById('signup-form').addEventListener('submit', function(event) {
-        var name = document.getElementById('name').value.trim();
-        var email = document.getElementById('email').value.trim();
-        var mobile = document.getElementById('mobile').value.trim();
-        var password = document.getElementById('password').value.trim();
-        var cpassword = document.getElementById('cpassword').value.trim();
-
-        if (name === '' || email === '' || mobile === '' || password === '' || cpassword === '') {
-            event.preventDefault();
-            if (name === '') {
-                document.getElementById('name-error').innerText = 'Name cannot be empty';
-            }
-            if (email === '') {
-                document.getElementById('email-error').innerText = 'Email cannot be empty';
-            }
-            if (mobile === '') {
-                document.getElementById('mobile-error').innerText = 'Mobile number cannot be empty';
-            }
-            if (password === '') {
-                document.getElementById('password-error').innerText = 'Password cannot be empty';
-            }
-            if (cpassword === '') {
-                document.getElementById('cpassword-error').innerText = 'Confirm password cannot be empty';
-            }
-        } else {
-          
-            document.getElementById('name-error').innerText = '';
-            document.getElementById('email-error').innerText = '';
-            document.getElementById('mobile-error').innerText = '';
-            document.getElementById('password-error').innerText = '';
-            document.getElementById('cpassword-error').innerText = '';
-
-           
-        }
-    });
-    
-    function clearFlashMessages() {
-        var flashMessages = document.querySelectorAll('.alert');
-        flashMessages.forEach(function(message) {
-            setTimeout(function() {
-                message.remove(); 
-            }, 5000);
-        });
-    }
-
-
-    clearFlashMessages();
 </script>
+
+
      
 
 <%- include('../layouts/client/footer') %>

@@ -1,5 +1,5 @@
 
-const User=require('../../model/user_model')
+const User = require('../../model/user_model')
 const bcrypt=require('bcrypt')
 
 
@@ -34,7 +34,7 @@ const verifyLogin = async (req, res) => {
                 res.redirect("/admin/dashboard");
 
             } else {
-
+              
                 req.flash('passError', 'Password or Username is wrong');      //  Password Wrong (Flash)
                 res.redirect('/admin/login');
 
@@ -42,7 +42,9 @@ const verifyLogin = async (req, res) => {
 
         } else {
 
-            res.render('Login', { msg: "Unauthorized User" });
+            // res.render('Login', { msg: "Unauthorized User" });
+            req.flash('passError', "Unauthorized User" );      //  Password Wrong (Flash)
+            res.redirect('/admin/login');
 
         }
 
@@ -62,10 +64,21 @@ const loadDashboard = async (req, res) => {
     }
 }
 
+const logOut = async (req,res)=>{
+    try {
+        req.session.admin = undefined
+        req.flash('passError', "Logout Successfully...")
+        res.redirect('/admin/login')
+    } catch (error) {
 
+        console.log(error.message);
+        
+    }
+}
 
 module.exports = {
     loadLogin,
     loadDashboard,
-    verifyLogin
+    verifyLogin,
+    logOut
 }

@@ -4,8 +4,9 @@ const loadCategory=async(req,res)=>{
     try {
 
         const category = await Category.find({})  
-        const msg=req.flash('msg')      
-        res.render('Category' , {category,msg})
+        const messages=req.flash('flash')      
+
+        res.render('Category' , {category ,messages})
     } catch (error) {
         
     }
@@ -32,13 +33,15 @@ const addCategory=async(req,res)=>{
             data.save()
 
             if(data){
-                // res.send({succ:true})
+
+                req.flash('flash' , "goood")
                 res.redirect('/admin/category')
 
             }
 
     }else{
-        req.flash('msg','Category is alredy exists')
+
+        req.flash('flash','bad')
         res.redirect('/admin/category')
     }
    
@@ -50,7 +53,7 @@ catch (error) {
   
 }
 
-const catAction = async(req , res)=>{
+const categoryAction = async(req , res)=>{
 
     const categoryId = req.body.id
 
@@ -58,22 +61,23 @@ const catAction = async(req , res)=>{
     
     findCategory.Listed = !findCategory.Listed;
 
-    findCate.save()
+    findCategory.save()
 
 }
 
-const cateDelete = async(req,res)=>{
+const categoryDelete = async(req,res)=>{
 
  const userId = req.query.userId
- console.log(userId)
- const editCate = await Category.deleteOne({_id:userId})
-  
-    if(editCate){
+
+ const deleteCategory = await Category.deleteOne({_id:userId})
+
+  console.log(deleteCategory)
+
+    if(deleteCategory){
 
         res.send({succ:true})
       
     }
-
 
 }
 
@@ -81,20 +85,25 @@ const categoryEdit = async (req, res , next) => {
     
     try {
 
-        const idd = req.body.CateID
+        const id = req.body.CateID
 
-        const namee = req.body.name
+        const CategoryName = req.body.name
 
-        const category = await Category.findOne({name : {$regex: new RegExp('^' + namee+ '$','i')}})
+        const category = await Category.findOne({name : {$regex: new RegExp('^' + CategoryName+ '$','i')}})
+
         if(!category){
-            const categoryDataa = await Category.findByIdAndUpdate({ _id: idd }, { $set: { name: namee } });
+
+            const categoryDataa = await Category.findByIdAndUpdate({ _id: id }, { $set: { name: CategoryName } });
 
             categoryDataa.save();
-            //  res.send({su : true});
+            req.flash('flash','good')
             res.redirect('/admin/category')
+
         }else{
-            req.flash('msg','Category is already exists')
+
+            req.flash('flash' , 'bad')
             res.redirect('/admin/category')
+
         }
     } catch (error) {
 
@@ -129,8 +138,8 @@ const valSett = async(req , res)=>{
 module.exports={
     loadCategory,
     addCategory,
-    catAction,
-    cateDelete,
+    categoryAction,
+    categoryDelete,
     categoryEdit,
     valSett
 

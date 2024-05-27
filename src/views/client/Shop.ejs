@@ -128,7 +128,7 @@
          <div class="row ">
             <div class="col-12 ">
                <ul>
-                  <li class="d-inline-block font-weight-bolder"><a href="index.html">home</a></li>
+                  <li class="d-inline-block font-weight-bolder"><a href="/home">home</a></li>
                   <li class="d-inline-block hr_ font-weight-bolder"><a href="#">shop</a></li>
                </ul>
             </div>
@@ -241,7 +241,7 @@
                   </a>
                </div>
                <div class="col-xl-4 d-xl-inline-block d-lg-none d-sm-none d-none">
-                  <div class="show-product pt-1"><a href="#"> There are 12 products. </a></div>
+                  <!-- <div class="show-product pt-1"><a href="#"> There are 12 products. </a></div> -->
                </div>
                <div class="col-xl-6 col-sm-10 col-8 pr-0 sortpro">
                   <div class="sort-by text-right">
@@ -259,42 +259,15 @@
                </div>
             </div>
             <div id="products" class="row">
-               <div class="item col-xl-3">
-                  <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
-                        <a href="single-product.html"><img src="assets/img/product/product_1.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_1"></a>
-                        <a href="single-product.html"><img src="assets/img/product/product_2.jpg" class="second-img mx-auto d-block img-fluid" alt="product_2"></a>
-                     </div>
-                     <div class="text-center main_text pt-3">
-                        <div>
-                           <div class="star mb-2">
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                           </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="single-product.html">Set of Foliage & Bamboo Plants In White Pot</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$69.00 </span> <del class="text-muted">$100.00</del></span>
-                           <p class="description mt-1 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                           <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                           </div>
-                           <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                           + ADD TO CART
-                           </a>									
-                        </div>
-                     </div>
-                  </div>
-               </div>
+                   
                <!-- item -->
+              
+               <% productData.forEach(val => {%>
                <div class="item col-xl-3">
                   <div class="product_thumb bg-white rounded">
                      <div class="pro_image">
-                        <a href="single-product.html"><img src="assets/img/product/product_15.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_15"></a>
-                        <a href="single-product.html"><img src="assets/img/product/product_16.jpg" class="second-img mx-auto d-block img-fluid" alt="product_16"></a>
+                        <a href="/single-product?id=<%= val._id %>"><img src='/assets/productImages/<%= val.images[0] %>'  class="fst-image mx-auto d-block img-fluid" alt="product_13"></a>
+                        <a href="/single-product?id=<%= val._id %>"><img src='/assets/productImages/<%= val.images[1] %>'  class="second-img mx-auto d-block img-fluid"  alt="product_13"></a>
                      </div>
                      <div class="text-center main_text pt-3">
                         <div>
@@ -305,195 +278,9 @@
                               <i class="fa fa-star" aria-hidden="true"></i>
                               <i class="fa fa-star" aria-hidden="true"></i>
                            </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="single-product.html">High mowing Vegetable Garden Seeds</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$69.00 </span> <del class="text-muted">$100.00</del></span>
-                           <p class="description mt-1 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                           <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                           </div>
-                           <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                           + ADD TO CART
-                           </a>										
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- item -->
-               <div class="item col-xl-3">
-                  <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
-                        <a href="single-product.html"><img src="assets/img/product/product_3.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_3"></a>
-                        <a href="single-product.html"><img src="assets/img/product/product_4.jpg" class="second-img mx-auto d-block img-fluid" alt="product_4"></a>
-                     </div>
-                     <div class="text-center main_text pt-3">
-                        <div>
-                           <div class="star mb-2">
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                           </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="single-product.html">Laudant Doloremque</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$69.00 </span> <del class="text-muted">$100.00</del></span>
-                           <p class="description mt-1 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                           <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                           </div>
-                           <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                           + ADD TO CART
-                           </a>										
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- item -->
-               <div class="item col-xl-3">
-                  <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
-                        <a href="single-product.html"><img src="assets/img/product/product_5.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_5"></a>
-                        <a href="single-product.html"><img src="assets/img/product/product_6.jpg" class="second-img mx-auto d-block img-fluid" alt="product_6"></a>
-                     </div>
-                     <div class="text-center main_text pt-3">
-                        <div>
-                           <div class="star mb-2">
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                           </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="single-product.html">Botanical Interests Tomato Seeds</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$69.00 </span> <del class="text-muted">$100.00</del></span>
-                           <p class="description mt-1 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                           <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                           </div>
-                           <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                           + ADD TO CART
-                           </a>										
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- item -->
-               <div class="item col-xl-3">
-                  <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
-                        <a href="single-product.html"><img src="assets/img/product/product_7.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_7"></a>
-                        <a href="single-product.html"><img src="assets/img/product/product_8.jpg" class="second-img mx-auto d-block img-fluid" alt="product_8"></a>
-                     </div>
-                     <div class="text-center main_text pt-3">
-                        <div>
-                           <div class="star mb-2">
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                           </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="single-product.html">similique suntin culpaqui</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$69.00 </span> <del class="text-muted">$100.00</del></span>
-                           <p class="description mt-1 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                           <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                           </div>
-                           <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                           + ADD TO CART
-                           </a>										
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- item -->
-               <div class="item col-xl-3">
-                  <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
-                        <a href="single-product.html"><img src="assets/img/product/product_9.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_9"></a>
-                        <a href="single-product.html"><img src="assets/img/product/product_10.jpg" class="second-img mx-auto d-block img-fluid" alt="product_10"></a>
-                     </div>
-                     <div class="text-center main_text pt-3">
-                        <div>
-                           <div class="star mb-2">
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                           </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="single-product.html">Grand 5 House Plant Set</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$69.00 </span> <del class="text-muted">$100.00</del></span>
-                           <p class="description mt-1 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                           <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                           </div>
-                           <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                           + ADD TO CART
-                           </a>										
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- item -->
-               <div class="item col-xl-3">
-                  <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
-                        <a href="single-product.html"><img src="assets/img/product/product_11.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_11"></a>
-                        <a href="single-product.html"><img src="assets/img/product/product_12.jpg" class="second-img mx-auto d-block img-fluid" alt="product_12"></a>
-                     </div>
-                     <div class="text-center main_text pt-3">
-                        <div>
-                           <div class="star mb-2">
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                           </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="single-product.html">Rolling Nature Good Luck Jade Plant</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$69.00 </span> <del class="text-muted">$100.00</del></span>
-                           <p class="description mt-1 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                           <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                           </div>
-                           <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                           + ADD TO CART
-                           </a>										
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- item -->
-               <div class="item col-xl-3">
-                  <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
-                        <a href="single-product.html"><img src="assets/img/product/product_13.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_13"></a>
-                        <a href="single-product.html"><img src="assets/img/product/product_14.jpg" class="second-img mx-auto d-block img-fluid"  alt="product_13"></a>
-                     </div>
-                     <div class="text-center main_text pt-3">
-                        <div>
-                           <div class="star mb-2">
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                           </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="single-product.html">MorningVale Croton Mammy pot</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$69.00 </span> <del class="text-muted">$100.00</del></span>
-                           <p class="description mt-1 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="/single-product?id=<%= val._id %>"><%= val.name %></a></h2>
+                           <span class="text-center prices"><span class="font-weight-bolder price">$<%= val.price %> </span> <del class="text-muted"></del></span>
+                           <p class="description mt-1 text-muted"><%= val.description %></p>
                            <div class="button-group">
                               <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
                               <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
@@ -506,7 +293,11 @@
                      </div>
                   </div>
                </div>
+               <% }); %>
+
+              
                <!-- item -->
+
             </div>
          </div>
       </div>

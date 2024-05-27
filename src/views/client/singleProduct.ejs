@@ -131,7 +131,7 @@
               <div class="row">
                  <div class="col-12">
                     <ul>
-                       <li class="d-inline-block font-weight-bolder"><a href="index.html">home</a></li>
+                       <li class="d-inline-block font-weight-bolder"><a href="/home">home</a></li>
                        <li class="d-inline-block hr_ font-weight-bolder"><a href="#">plant</a></li>
                     </ul>
                  </div>
@@ -144,26 +144,34 @@
      <div class="container sp_pro_container pt-2">
         <div class="row sh_page bg-white rounded border py-2">
            <div class="col-xl-4 col-lg-6 col-md-6 col-12 sp_left_product px-2">
-              <div id="content" class="page-content">
+              <div id="content" class="page-content ">
+
                  <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-12 sp_zoom_pro mb-5">
-                       <img id="zoom_03" src="assets/img/product/product_1.jpg" class="rounded img-fluid js-product-cover" data-zoom-image="assets/img/product/product_1.jpg"/>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-12 sp_zoom_pro mb-5 imf">
+                       <img id="zoom_03" src='/assets/productImages/<%= singleProduct.images[0] %>'  class="rounded img-fluid js-product-cover product-main-image" data-zoom-image="assets/img/product/product_1.jpg"/>
                     </div>
+
                     <div class="col-lg-12 col-md-12 col-sm-12 col-12 sp_muti_pro">
-                       <div id="gallery_02" class="row owl-carousel owl-theme">
-                           <div class="col-12 px-1">
-                             <a  href="#" class="elevatezoom-gallery" data-image="assets/img/product/product_1.jpg" data-zoom-image="assets/img/product/product_1.jpg">
-                             <img src="assets/img/product/product_1.jpg" class="border rounded img-fluid" width="100"/></a>
+
+                       <div id="gallery_02" class="row owl-carousel owl-theme row" style="display: flex;">
+
+                           <div class="col-4 px-1">
+                             <a class="elevatezoom-gallery nj" data-image="assets/img/product/product_1.jpg" data-zoom-image="assets/img/product/product_1.jpg">
+                             <img  src='/assets/productImages/<%= singleProduct.images[0] %>' class="border rounded img-fluid" width="100"/></a>
                           </div>
-                          <div class="col-12 px-1">
-                             <a  href="#" class="elevatezoom-gallery" data-image="assets/img/product/product_12.jpg" data-zoom-image="assets/img/product/product_12.jpg">
-                             <img src="assets/img/product/product_12.jpg" class="border rounded img-fluid" width="100"/></a>
+
+                          <div class="col-4 px-1 pt-1">
+                             <a class="elevatezoom-gallery nj" data-image="assets/img/product/product_12.jpg" data-zoom-image="assets/img/product/product_12.jpg">
+                             <img src='/assets/productImages/<%= singleProduct.images[1] %>'  class="border rounded img-fluid" width="100"/></a>
                           </div>
-                          <div class="col-12 px-1">
-                             <a  href="#" class="elevatezoom-gallery" data-image="assets/img/product/product_13.jpg" data-zoom-image="assets/img/product/product_13.jpg">
-                             <img src="assets/img/product/product_13.jpg" class="border rounded img-fluid" width="100"/></a>
+
+                          <div class="col-4 px-1 pt-1">
+                             <a class="elevatezoom-gallery nj" data-image="assets/img/product/product_13.jpg" data-zoom-image="assets/img/product/product_13.jpg">
+                             <img src='/assets/productImages/<%= singleProduct.images[2] %>'  class="border rounded img-fluid" width="100"/></a>
                           </div>
-                          <div class="col-12 px-1">
+                          
+                          <!-- <div class="col-12 px-1">
                              <a  href="#" class="elevatezoom-gallery" data-image="assets/img/product/product_19.jpg" data-zoom-image="assets/img/product/product_19.jpg">
                              <img src="assets/img/product/product_19.jpg" class="border rounded img-fluid" width="100"/></a>
                           </div>
@@ -178,35 +186,45 @@
                           <div class="col-12 px-1">
                              <a  href="#" class="elevatezoom-gallery" data-image="assets/img/product/product_1.jpg" data-zoom-image="assets/img/product/product_11.jpg">
                              <img src="assets/img/product/product_11.jpg" class="border rounded img-fluid" width="100"/></a>
-                          </div>
+                          </div>  -->
+
                        </div> 
+
                     </div>
+
+                    
                  </div>
+
               </div>
+
            </div>
+           
            <div class="col-xl-8 col-lg-6 col-md-6 col-12 sp_right_product pl-lg-3 pl-2 pr-2">
+
               <div class="sp_ri_leftpart">
+
                     <div class="sp_product_detail">
-                    <h1 class=""><a href="#">Ferry Morse Large Vegetable Garden Set</a></h1>
-                    <span class="sp_price font-weight-bold">$500.00</span>
+
+                    <h1 class=""><a href="#"><%= singleProduct.name %></a></h1>
+                    <span class="sp_price font-weight-bold">$<%= singleProduct.price %></span>
                     <div class="text-secondary sp_tax">Tax included.</div>
                     <div class="sp_add_info my-3">
                        <ul>
-                          <li class="sku my-2">
+                          <!-- <li class="sku my-2">
                              <span class="text-uppercase font-weight-bolder tags-title">sku:</span>
                              <span>5010</span>
-                          </li>
+                          </li> -->
                           <li class="availability my-2">
                              <span class="font-weight-bolder tags-title">Availability:</span>
-                             <span class="p_quantity">1</span>
-                             <span>in stock</span>
+                             <span class="p_quantity" style="color: red;"><%= singleProduct.stock %></span>
+                             <span style="color: red;">in stock</span>
                           </li>
                        </ul>
                     </div>
                     <div class="sp_text">
                        <ul>
-                          <li class="my-2" style="color: #505050;">Fashion has been creating well-designed collections since 2010. </li>
-                          <li class="my-2">Casual multifunctional sofabeds head elevation comfortable sofa at daytime ttransforms into changes to a very comfortable bed at night. </li>
+                          <!-- <li class="my-2" style="color: #505050;">Fashion has been creating well-designed collections since 2010. </li> -->
+                          <li class="my-2"><%= singleProduct.description %> </li>
                        </ul>
                     </div>
                     <div class="sp_rating">
@@ -216,7 +234,7 @@
                        <i class="fa fa-star" aria-hidden="true"></i>
                        <i class="fa fa-star" aria-hidden="true"></i>
                     </div>
-                    <div id="clockdiv" class="sp_clockdiv">
+                    <!-- <div id="clockdiv" class="sp_clockdiv">
                        <div class="main_box rounded">
                           <span class="days"></span>
                           <div class="smalltext">Day</div>
@@ -233,8 +251,8 @@
                           <span class="seconds"></span>
                           <div class="smalltext">Sec</div>
                        </div>
-                    </div>
-                    <div class="sp_color my-4">
+                    </div> -->
+                    <!-- <div class="sp_color my-4">
                        <ul>
                           <li class="font-weight-bold text-uppercase my-2">color:</li>
                           <li class="btn-group btn-group-toggle my-2" data-toggle="buttons">
@@ -246,8 +264,8 @@
                              </label>
                           </li>
                        </ul>
-                    </div>
-                    <div class="sp_size">
+                    </div> -->
+                    <!-- <div class="sp_size">
                        <ul>
                           <li class="font-weight-bold text-uppercase my-2">size:</li>
                           <li class="btn-group btn-group-toggle my-2" data-toggle="buttons">
@@ -262,10 +280,10 @@
                              </label>
                           </li>
                        </ul>
-                    </div>
+                    </div> -->
                     <div class="sp_about my-3">
                        <span class="sp_comn1"><a href="#" class="font-weight-bolder" data-toggle="modal" data-target="#shippingModal"><i class="fas fa-box-open"></i>shipping</a></span>
-                       <span class="sp_comn2"><a href="#" class="font-weight-bolder" data-toggle="modal" data-target="#question_Modal"><i class="far fa-envelope"></i>ask about this product</a></span>
+                       <!-- <span class="sp_comn2"><a href="#" class="font-weight-bolder" data-toggle="modal" data-target="#question_Modal"><i class="far fa-envelope"></i>ask about this product</a></span> -->
                     </div>
                     <div class="sp_counter">
                        <div class="sp_c_count1">
@@ -303,15 +321,15 @@
                     </div>
                     <div class="sp_ad_info">
                        <ul>
-                          <li class="my-2">
+                          <!-- <li class="my-2">
                              <span class="font-weight-bolder tags-title">vendor:</span><span><a href="#" class="text-muted pl-2">levis</a></span>
-                          </li>
+                          </li> -->
                           <li class="my-2">
-                             <span class="font-weight-bolder tags-title">product type:</span><span class="text-muted pl-2">Plant</span>
+                             <span class="font-weight-bolder tags-title">product type:</span><span class="text-muted pl-2"><%= singleProduct.category_id.name %></span>
                           </li>
-                          <li class="my-2">
+                          <!-- <li class="my-2">
                              <span class="font-weight-bolder tags-title">barcode:</span><span class="text-muted pl-2">1234321</span>
-                          </li>
+                          </li> -->
                           <li class="my-2">
                              <span class="font-weight-bolder tags-title">tags:</span><span><a href="#" class="text-muted px-2">summer ,</a></span><span><a href="#" class="text-muted ">winter</a></span>
                           </li>
@@ -329,9 +347,7 @@
                              </div>
                              <div id="collapse_One" class="collapse show" aria-labelledby="heading_One" data-parent="#collapse_block">
                                 <div class="card-body">
-                                   <p class="mb-2">Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. </p>
-                                   <p class="mb-2"> Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo.</p>
-                                   <p class="mb-2"> Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>
+                                   <p><%=singleProduct.description %></p>
                                 </div>
                              </div>
                           </div>
@@ -841,5 +857,89 @@
      <!-- single_product_page -->
      <!-- custom product end -->
      <!-- footer -->
+
+     <script>
+
+      const elem = document.querySelector('.imf');
+
+      let x, y, height, width;
+      elem.onmouseenter = () => {
+
+          const size = elem.getBoundingClientRect();
+          x = size.x;
+          y = size.y;
+          width = size.width;
+          height = size.height;
+
+      }
+
+      elem.onmousemove = e => {
+
+          const horizontel = (e.clientX - x) / width * 100;
+          const vertical = (e.clientY - y) / height * 100;
+          console.log(vertical);
+
+          elem.style.setProperty('--x', horizontel + '%')
+          elem.style.setProperty('--y', vertical + '%')
+          console.log(elem);
+      }
+
+      const thumbnails = document.querySelectorAll('.nj');
+      console.log(thumbnails);
+      thumbnails.forEach(thumbnail => {
+
+          thumbnail.addEventListener('click', changeMainImage);
+
+      });
+      
+      function changeMainImage(event) {
+
+          const mainImage = document.querySelector('.product-main-image');
+         console.log(mainImage);
+          mainImage.src = event.target.src;
+
+      }
+      
+  </script>
+
+  <!-- Image Zooming Style -->
+
+  <style>
+
+      body::-webkit-scrollbar {
+
+          width: 0;
+      }
+
+      .product-gallery-item:before {
+
+          opacity: 0;
+          visibility: hidden !important;
+          border: 0.1rem solid #c96;
+
+      }
+
+      .imf {
+
+          overflow: hidden;
+      }
+
+      .imf img {
+
+          transform: scale(var(--zoom, 1));
+          object-fit: cover;
+          transform-origin: var(--x) var(--y);
+          transition: cubic-bezier(0.18, 0.9, 0.33, 1.01) 1s;
+          /* opacity: 0.3; */
+      }
+
+      .imf:hover {
+
+          --zoom: 1.8;
+          cursor: crosshair;
+
+      }
+
+  </style>
 
 <%- include('../layouts/client/footer') %>
