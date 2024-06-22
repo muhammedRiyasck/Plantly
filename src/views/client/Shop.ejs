@@ -1,4 +1,4 @@
-<%- include('../layouts/client/header') %>
+<%- include('../layouts/client/searchHeader') %>
 
 </header>
 <!-- header -->
@@ -138,68 +138,62 @@
    <div class="container custom_container">
       <div class="row">
          <div class="col-lg-3 col-md-4">
-            <form action="#" id="shop_page-form" method="post" class="needs-validation" novalidate>
+            <!-- <form  id="shop_page-form"  class="needs-validation" novalidate> -->
                <div class="shop_sidebar border card-body rounded bg-white">
                   <h2 class="text-uppercase card-title  font-weight-bolder d-md-block d-none">filter by</h2>
                   <div class="s_filter mt-0">
                      <h6 class="text-uppercase  border-bottom font-weight-bold">Range<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_range_collapse"></button></h6>
                      <div class="collapse " id="shop_range_collapse">
                         <div class="col-md-6 col-sm-12 pl-0 pr-md-2 pr-sm-0 pr-0">
-                           <label class="font-weight-bolder">min</label>
-                           <input type="number" class="form-control"  placeholder="$0">
+                           <label class="font-weight-bolder" >min</label>
+                           <input type="number" onblur="sort()" id="min" class="form-control"  placeholder="$0">
                         </div>
                         <div class="col-md-6 col-sm-12 pr-0 pl-md-2 pl-sm-0 pl-0 ">
-                           <label class="font-weight-bolder">max</label>
-                           <input type="number" class="form-control"  placeholder="$0">
+                           <label class="font-weight-bolder" >max</label>
+                           <input type="number" onblur="sort()" id="max" class="form-control"  placeholder="$0">
                         </div>
                      </div>
                   </div>
                   <div class="s_filter form">
-                     <h6 class="text-uppercase  border-bottom font-weight-bold">color<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_color_collapse"></button></h6>
+                     <h6 class="text-uppercase  border-bottom font-weight-bold">sort<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_color_collapse"></button></h6>
                      <div class="collapse" id="shop_color_collapse">
                         <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label font-weight-bolder">pink</span>
+                        <input onclick="sort(1)" name="radio" id="aAzZ" class="form-check-input" type="radio" value="">
+                        <span  class="form-check-label font-weight-bolder" style="text-transform:none;">Name, A to Z</span>
                         <span class="text-right float-right font-weight-bolder">(1)</span>
                         </label>
                         <label class="form-check">
-                        <input class="form-check-input " type="checkbox" value="">
-                        <span class="form-check-label font-weight-bolder">yellow</span>
+                        <input onclick="sort(-1)" id="zZaA" name="radio" class="form-check-input " type="radio" value="">
+                        <span class="form-check-label font-weight-bolder"  style="text-transform: none;">Name, Z to A</span>
                         <span class="text-right float-right font-weight-bolder">(1)</span>
                         </label>
                         <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label font-weight-bolder">white</span>
+                        <input  onclick="sort(1,'price')" id="lowToHigh" name="radio" class="form-check-input" type="radio" value="">
+                        <span class="form-check-label font-weight-bolder">low to high</span>
                         <span class="text-right float-right font-weight-bolder">(1)</span>
                         </label>
                         <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label font-weight-bolder">black</span>
+                        <input onclick="sort(-1,'price')" id="highToLow" name="radio" class="form-check-input"  type="radio" value="">
+                        <span class="form-check-label font-weight-bolder">high to low</span>
                         <span class="text-right float-right font-weight-bolder">(1)</span>
                         </label>
                      </div>
                   </div>
                   <div class="s_filter">
-                     <h6 class="text-uppercase border-bottom font-weight-bold">brand<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_brand_collapse"></button></h6>
-                     <div class="collapse" id="shop_brand_collapse">
-                        <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label font-weight-bolder">brand1</span>
-                        <span class="text-right float-right font-weight-bolder">(1)</span>
-                        </label>
-                        <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label font-weight-bolder">brand1</span>
-                        <span class="text-right float-right font-weight-bolder">(1)</span>
-                        </label>
-                        <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label font-weight-bolder">another brand</span>
-                        <span class="text-right float-right font-weight-bolder">(1)</span>
-                        </label>
-                     </div>
+                     <h6 class="text-uppercase border-bottom font-weight-bold">categories<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_brand_collapse"></button></h6>
+                     <% category.forEach((val,i)=> { %>
+                        <div class="collapse" id="shop_brand_collapse">
+                           <label class="form-check">
+                           <input class="form-check-input checkbox-item" type="checkbox" value="<%= val._id %>" id="checkbox_<%= i %>">
+                           <span class="form-check-label font-weight-bolder"><%=val.name %></span>
+                           <span class="text-right float-right font-weight-bolder">(1)</span>
+                           </label>
+                           
+                        </div>
+                        
+                  <%   }); %>
                   </div>
-                  <div class="s_filter">
+                  <!-- <div class="s_filter">
                      <h6 class="text-uppercase border-bottom font-weight-bold">size<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_size_collapse"></button></h6>
                      <div class="collapse" id="shop_size_collapse">
                         <label class="form-check">
@@ -225,10 +219,14 @@
 
                         
                      </div>
-                  </div>
+                  </div> -->
+                  <div>
                <button id="clearButton" data-search-url="#" class="btn btn-primary clear_btn" type="reset">Clear all</button>
+               <button id="applyButton" data-search-url="#" class="btn btn-primary clear_btn" type="submit" style="margin-left:100px;" onclick="sort()" >apply filter</button>
+
+                 </div>
                </div>
-            </form>
+            <!-- </form> -->
          </div>
          <div class="col-lg-9 col-md-8">
             <div class="row shop_grid_list_row mb-5 bg-white p-2 p-md-1 mb-lg-3 mx-0">
@@ -243,27 +241,27 @@
                <div class="col-xl-4 d-xl-inline-block d-lg-none d-sm-none d-none">
                   <!-- <div class="show-product pt-1"><a href="#"> There are 12 products. </a></div> -->
                </div>
-               <div class="col-xl-6 col-sm-10 col-8 pr-0 sortpro">
+               <!-- <div class="col-xl-6 col-sm-10 col-8 pr-0 sortpro">
                   <div class="sort-by text-right">
                      <div class="sort">
                         <select class="custom-select" id="inlineFormCustomSelect">
                            <option selected>Relevance...</option>
                            <option value="1">Relevance</option>
-                           <option value="2">Name, A to Z</option>
-                           <option value="3">Name, Z to A</option>
+                           <option value="1">Name, A to Z</option>
+                           <option value="2">Name, Z to A</option>
                            <option value="3">Price, low to high</option>
-                           <option value="3">Price, high to low</option>
+                           <option value="4">Price, high to low</option>
                         </select>
                      </div>
                   </div>
-               </div>
+               </div> -->
             </div>
-            <div id="products" class="row">
+            <div id="products" class="row" >
                    
                <!-- item -->
               
                <% productData.forEach(val => {%>
-               <div class="item col-xl-3">
+               <div class="item col-xl-3" >
                   <div class="product_thumb bg-white rounded">
                      <div class="pro_image">
                         <a href="/single-product?id=<%= val._id %>"><img src='/assets/productImages/<%= val.images[0] %>'  class="fst-image mx-auto d-block img-fluid" alt="product_13"></a>
@@ -279,16 +277,19 @@
                               <i class="fa fa-star" aria-hidden="true"></i>
                            </div>
                            <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="/single-product?id=<%= val._id %>"><%= val.name %></a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$<%= val.price %> </span> <del class="text-muted"></del></span>
+                           <span class="text-center prices"><span class="font-weight-bolder price">$<%= val.price %>.00 </span> <del class="text-muted"></del></span>
                            <p class="description mt-1 text-muted"><%= val.description %></p>
                            <div class="button-group">
                               <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
                               <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
                               <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
                            </div>
-                           <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
+                           <!-- <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
                            + ADD TO CART
-                           </a>							
+                           </a>							 -->
+
+                           <a class="btn symbol add_to_cart" onclick="addToCart('<%= val._id %>')">+ ADD TO CART</a>
+
                         </div>
                      </div>
                   </div>
@@ -329,6 +330,176 @@
 <!-- shop_page -->
 <!-- shop page -->
 <!-- footer -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+<script>
+
+function addToCart(id) {
+  
+  fetch(`/cart`,{method:'post',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})})
+
+    .then(res=>res.json())
+
+      .then(data =>{
+
+        if(data.exist){
+
+          const Toast = Swal.mixin({
+  
+            toast: true,
+            position: "top-center",
+            showConfirmButton: false,
+              
+              timer: 2000,
+              timerProgressBar: false,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+
+            });
+            Toast.fire({
+              icon: "warning",
+              title: "Already Added",
+             });
+  
+        }else if(data.success){
+
+          const Toast = Swal.mixin({
+              
+              toast: true,
+              position: "top-center",
+              showConfirmButton: false,
+                
+                timer: 2000,
+                timerProgressBar: false,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Product added to Cart",
+              });
+  
+         }
+         else{
+            const Toast = Swal.mixin({
+  
+  toast: true,
+  position: "top-center",
+  showConfirmButton: false,
+    
+    timer: 2000,
+    timerProgressBar: false,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+
+  });
+  Toast.fire({
+    icon: "error",
+    title: "You are not loged in",
+   });
+       }
+      })
+ 
+}
+
+
+function sort(sortby,Price){
+
+const aAzZ = document.getElementById('aAzZ');
+const zZaA = document.getElementById('zZaA')
+const lowToHigh = document.getElementById('lowToHigh')
+const highToLow = document.getElementById('highToLow')
+
+const min = document.getElementById('min').value||0
+const max = document.getElementById('max').value
+
+const result = document.getElementById('products')
+
+const checkboxes = document.querySelectorAll('.checkbox-item');
+    
+const categoryVal=[]
+    // Iterate over each checkbox to get their values
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            categoryVal.push(checkbox.value)
+            // console.log('Checkbox value:', checkbox.value);
+        }
+    });
+// const status = true
+console.log(categoryVal,'kittin')
+
+if(true){
+   fetch(`/sortAndFilter` , {method : 'POST' , headers:{'Content-Type':'application/json'} , body : JSON.stringify({sortby,Price,min,max,categoryVal})})
+
+   .then(res => res.json())
+
+   .then(data => {
+
+      if(data.length>0){
+
+           result.classList.remove('justify-content-center')
+
+            result.innerHTML= `${data.map((product,i) => (`
+               
+                 <div class="item col-xl-3" >
+                  <div class="product_thumb bg-white rounded">
+                     <div class="pro_image">
+
+                         <a href="/single-product?id=${product._id}"> <img src="/assets/productImages/${product.images[0]}" class="fst-image mx-auto d-block img-fluid" alt="product_img"></a>
+                         <a href="/single-product?id=${product._id}"> <img src="/assets/productImages/${product.images[1]}" class="second-img mx-auto d-block img-fluid"  alt="product_img"></a>
+
+                     </div>
+                     <div class="text-center main_text pt-3">
+                        <div>
+                           <div class="star mb-2">
+                              <i class="fa fa-star" aria-hidden="true"></i>
+                              <i class="fa fa-star" aria-hidden="true"></i>
+                              <i class="fa fa-star" aria-hidden="true"></i>
+                              <i class="fa fa-star" aria-hidden="true"></i>
+                              <i class="fa fa-star" aria-hidden="true"></i>
+                           </div>
+                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="/single-product?id=${product._id}">${product.name}</a></h2>
+                           <span class="text-center prices"><span class="font-weight-bolder price">$${product.price}.00 </span> <del class="text-muted"></del></span>
+                           <p class="description mt-1 text-muted">${product.description}</p>
+                           <div class="button-group">
+                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
+                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
+                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
+                           </div>
+                           <!-- <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
+                           + ADD TO CART
+                           </a>							 -->
+
+                           <a class="btn symbol add_to_cart" onclick="addToCart('${product._id}')">+ ADD TO CART</a>
+
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+         `)).join('')}`
+
+      }else {
+        result.innerHTML = '<p style="margin-left: 22rem">No products found</p>'; // Display message if no products found
+      }
+   })
+
+} else {
+
+   $('#reloadDiv').load('/product #reloadDiv')
+   
+  }
+};
+
+
+
+</script>
 
 <%- include('../layouts/client/footer') %>

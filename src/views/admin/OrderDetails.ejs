@@ -1,0 +1,283 @@
+<%- include('../layouts/admin/header.ejs') %>
+
+<div class="container-scroller">
+
+    <%- include('../layouts/admin/sidebar.ejs') %>
+
+
+    <div class="container-fluid page-body-wrapper">
+
+        <%- include('../layouts/admin/navbar.ejs') %>
+
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+         <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                <h4 class="modal-title fs-5" id="staticBackdropLabel">Accept<Address></Address></h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                </div>
+
+                <div class="modal-body d-flex justify-content-center p-5">
+
+                <p>Are you Sure Accept The Return ?</p>
+
+                </div>
+
+                <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="yes" id onclick="acceptReturn(this)" class="btn btn-primary"data-bs-dismiss="modal">YES</button>
+
+                </div>
+
+            </div>
+
+            </div>
+
+        </div>
+              
+    <div class="main-panel ">
+
+        <div class="row">
+
+                    <div class="col-lg-12 ">
+
+                        <div id="addproduct-accordion" class="custom-accordion">
+
+                            <div class="card" style="background-color: rgb(40, 41, 41); margin-top: 20px;">
+
+                                <a href="#addproduct-billinginfo-collapse" class="text-white text-decoration-none " data-bs-toggle="collapse" aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
+                                    
+                                    <div class="p-4">
+
+                                        <div class="d-flex align-items-center">
+                                         
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <h4 class="font-size-14 mb-1 text-white ">Date: <%= orderDetails.orderDate.toString().split(' ').slice(0,4).join('  ') %></h4>
+                                                <p class="text-white  text-truncate mb-0">Order Id: #<%= orderDetails._id %> %></p>
+                                            </div>
+
+                                            <div class="flex-shrink-0">
+                                                <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </a>
+
+                                <div id="addproduct-billinginfo-collapse" class="collapse show"
+                                    data-bs-parent="#addproduct-accordion">
+                                    <div class="p-4 border-top w-100 ">
+
+                                            <div class="row">
+
+                                                <div class=" col-md-4 d-flex">
+
+                                                    <div class=" text-center " style="width: 3rem;">
+                                                            <i class="ri-user-fill" style="font-size: 25px;"></i>
+                                                    </div>
+
+                                                    <div class=" w-75">
+
+                                                        <h5 class="mt-1 ">Customer</h5>
+                                                        <span><%= orderDetails.user_id.fullName %></span><br>
+                                                        <span><%= orderDetails.user_id.email %></span><br>
+                                                        <span><%= orderDetails.user_id.mobile %></span>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                <br>
+
+                                                <div class=" col-md-4 d-flex ">
+                                                    <div  style="width: 3rem;">
+                                                        <i class="ri-truck-fill"style="font-size: 30px;" ></i>
+                                                </div>
+
+                                                <div class="w-75">
+
+                                                    <h5 class="mt-1 ">Order info</h5>
+
+                                                    <span>Pay Method: <%= orderDetails.payment %></span><br>
+                                                    <span>Payment Status: <%= orderDetails.products[0].orderStatus %></span>
+
+                                                </div>
+
+                                                </div>
+
+                                                <br>
+
+                                                <div class=" col-md-4 d-flex">
+
+                                                    <div style="width: 3rem;">
+                                                        <i class="ri-map-pin-line" style="font-size: 30px;"></i>
+                                                    </div>
+
+                                                <div class=" w-75">
+
+                                                    <h5 class="mt-1 ">Deliver to</h5>
+
+                                                    <span><%= orderDetails.deliveryAddress.name %></span><br>
+                                                    <span><%= orderDetails.deliveryAddress.phone %></span><br>
+                                                    <span><%= orderDetails.deliveryAddress.locality %></span>,
+                                                    <span><%= orderDetails.deliveryAddress.city %></span><br>
+                                                    <span><%= orderDetails.deliveryAddress.state %></span>,
+                                                    <span><%= orderDetails.deliveryAddress.pincode %></span><br>
+
+                                                </div>
+
+                                                </div>
+
+                                                <br>
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+
+                                                    <table class="table align-middle table-nowrap table-check text-white text-center ">
+
+                                                        <thead>
+
+                                                            <tr class="bg-transparent">
+
+                                                                <td style="font-size: 16px;">Product</td>
+                                                                <td style="font-size: 16px;">Price</td>
+                                                                <td style="font-size: 16px;">Quantity</td>
+                                                                <td style="font-size: 16px;">Total</td>
+
+                                                                <td style="font-size: 16px;"><%= orderDetails.products.retruned == true ? 'Are You Sure Accept' : 'Order Status' %></td>
+
+                                                            </tr>
+
+                                                        </thead>
+
+                                                        <thead>
+
+                                                            <% orderDetails.products.forEach((product)=>{ %>
+
+                                                                
+                                                                        <tr>
+
+                                                                            <td><a href="#"><img src="/assets/productImages/<%= product.product_id.images[0] %>" class="fst-image mx-auto d-block img-fluid" alt="product_17"></a></td>
+
+                                                                            <td>$<%= product.product_id.price %>.00</td>
+                                                                            <td><%= product.quantity %></td>
+                                                                            <td>$<%= product.price %>.00</td>
+
+                                                                            <td> 
+                                                                            
+                                                                                <select <%= product.orderStatus == 'canceled' && 'disabled' %> id="status<%= product.product_id._id %>" value="pending" class="badge bg-transparent <%= product.orderStatus !='canceled' ? 'badge-outline-success' : 'badge-outline-danger' %> <%= product.orderStatus == 'canceled' && 'opacity-50' %>" onchange="orderProductStatus(this,'<%= orderDetails._id  %>','<%= product.product_id._id %>')">
+
+                                                                                    <option><%= product.orderStatus %></option>
+
+                                                                                    <option <%= product.orderStatus == 'shipped' ? 'hidden':'' %>>shipped</option>
+
+                                                                                    <option <%= product.orderStatus == 'delivered' ? 'hidden':'' %>>delivered</option>
+
+                                                                                    <option class="text-danger" <%= product.orderStatus == 'canceled' ? 'hidden' :'' %>>canceled</option>
+
+                                                                                </select>
+                                                                                    
+                                                                            </td>
+                                                                                    
+                                                                        </tr>
+
+                                                            <% }) %>
+
+                                                            <tr>
+
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td>Total</td>
+                                                                <td>$<%= orderDetails.orderAmount  %>.00</td>
+
+                                                            </tr>
+
+                                                        </thead>
+
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+                                    </div>
+                                </div>
+
+                            </div> <!-- container-fluid -->
+                        </div>
+
+                    </div>
+                    <!-- end main content-->
+
+                </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    function idchange(id){
+
+       const modal = document.getElementById('yes');
+
+       modal.dataset.id = id
+    }
+
+    //  Order Handling :-
+    
+    function orderProductStatus(e,orderId,productId){
+        
+        const select = document.getElementById(`status${productId}`)
+        
+        if(e.value == 'canceled'){
+            
+            select.classList.remove('badge-outline-success');
+            select.classList.add('badge-outline-danger');
+            
+        }else{
+            
+            select.classList.remove('badge-outline-danger');
+            select.classList.add('badge-outline-success');
+        }
+        
+        fetch('/admin/orderStatusHandling', {
+            
+            method: 'PUT',
+
+            headers: { "Content-Type": "application/json" },
+
+        body: JSON.stringify({ val: e.value, orderId, productId})
+
+    }).then(res => res.json())
+    
+}
+
+//  Accepting Return :-
+
+// const orderId = document.getElementById('oderId').textContent
+
+// function acceptReturn(e){
+
+//     fetch(`/admin/returnManage?id=${orderId}&&proId=${e.dataset.id}` , {method : 'POST'})
+    
+// }
+
+</script>
+
+
+<%- include('../layouts/admin/footer.ejs') %>

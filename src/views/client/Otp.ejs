@@ -13,7 +13,7 @@
 											
                       <% if(otpError){ %>
 
-                      <p id="otp" style="color: red;"> <%= otpError %></p>
+                      <p hidden id="otp-error" style="color: red;"> <%= otpError %></p>
 
                       <% } %>
 
@@ -23,7 +23,7 @@
                       <input type="text" name="inp4" id="otp4" class="otp-input" pattern="[0-9]" maxlength="1" onkeydown="moveToPrevious(this, 'otp3')" required>
                       
                                                     
-                          <input type="email" hidden value="<%= email %>" name="email">
+                          <input type="email" hidden value="<%= emailQuery %>" name="email">
 											
 							    		</div><!-- End .form-group -->
 
@@ -36,17 +36,35 @@
 
                         <div style="padding-top: 2rem; cursor: pointer;">
                           <p href="#" class="forgot-link" >Didn't Receive OTP? <small id="timer"></small></p>
-                
-                          
-                          
-						</div>
+						            </div>
 
-                        <div id="button-container" style="display: none;">
-                          <button id="backButton" class="small-button"><a href="/registration">Back</a></button>
 
-                          <button id="resend-btn" class="small-button" ><a href="/resent">Resent OTP</a></button>
-                         </div>
+                      <% if (locals.token !== null) { %>
+
+                        <input hidden type="text" value="<%= token %>" name="token">                     
+
+                        <div id="button-container" style="display: none;">  
+                          
+                          <button id="backButton" class="small-button"><a href="/forgotPassword">Back</a></button>
+                          
+                          <button id="resend-btn" class="small-button" ><a href="/resendOtp?email=<%= emailQuery %>&token=<%= token %>">Resend OTP</a></button>
+                          
+                        </div>
+                        
+                        <%  } else { %>
+                          
+                          <div id="button-container" style="display: none;">
+  
+                            <button id="backButton" class="small-button"><a href="/registration">Back</a></button>
+  
+                            <button id="resend-btn" class="small-button" ><a href="/resendOtP">Resent OTP</a></button>
+                            
+                           </div>
+
+                      <% } %>
+
                          </div><!-- End .form-footer -->
+
 							    	</form>
                     
 									
@@ -132,9 +150,10 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const createdAt = parseInt(urlParams.get("time"), 10); // OTP creation timestamp
+    const time = parseInt(urlParams.get('existing'),10)
   
     const currentTime = Date.now();
-    const totalOtpTime = 30; // Total time for OTP expiration
+    const totalOtpTime = time; // Total time for OTP expiration
     const elapsedSeconds = Math.floor((currentTime - createdAt) / 1000); // Calculate elapsed time
     let timeLeft = totalOtpTime - elapsedSeconds; // Calculate remaining time
   
@@ -173,57 +192,6 @@
     
   }
 
-  function startTimer() {
-
-const urlParams = new URLSearchParams(window.location.search);
-const createdAt = parseInt(urlParams.get("time"), 10); // OTP creation timestamp
-
-const currentTime = Date.now();
-const totalOtpTime = 30; // Total time for OTP expiration
-const elapsedSeconds = Math.floor((currentTime - createdAt) / 1000); // Calculate elapsed time
-let timeLeft = totalOtpTime - elapsedSeconds; // Calculate remaining time
-
-const timerElement = document.getElementById("timer");
-const buttonContainer = document.getElementById("button-container");
-
-if (timeLeft <= 0) {
-
-  timerElement.textContent = "Resend OTP";
-  document.getElementById("resend-btn").disabled = false;
-  buttonContainer.style.display = "block"; // Show the "Resend OTP" button
-
-} else {
-
-  timerElement.textContent = `Resend OTP in ${formatTime(timeLeft)}`;
-
-  const countdown = setInterval(() => {
-
-    if (timeLeft <= 0) {
-
-      clearInterval(countdown);
-      timerElement.textContent = "Resend OTP";
-      document.getElementById("resend-btn").disabled = false;
-      buttonContainer.style.display = "block"; // Show the "Resend OTP" button
-
-    } else {
-
-      timeLeft -= 1; // Decrement time left
-      timerElement.textContent = `Resend OTP in ${formatTime(timeLeft)}`;
-
-    }
-
-  }, 1000); // Update the countdown every second
-
-}
-
-}
-
-function formatTime(seconds) {
-const minutes = Math.floor(seconds / 60);
-const remainingSeconds = seconds % 60;
-return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-}
-
   
   function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -234,6 +202,29 @@ return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(
 
   window.onload = startTimer; // Start the timer when the page loads
   
-  </script>
 
+
+
+
+
+
+
+  </script>
+  <!-- sweet alert cdn -->
+<script  src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+<script>
+  const messages = document.getElementById('otp-error')
+  console.log(2323)
+    if(messages.textContent.trim() == 'Invalid OTP'){
+    console.log('haii')
+      Swal.fire({
+            position: "top-center",
+            icon: "error",
+            title:"Invalid OTP",
+            text:'Entered OTP Is Not Valid',
+            showConfirmButton: false,
+            timer: 2000
+      });
+    }
+</script>
 <%- include('../layouts/client/footer') %>

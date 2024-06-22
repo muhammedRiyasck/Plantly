@@ -19,9 +19,10 @@ const verifyLogin = async (req, res) => {
         
             const Email = req.body.email;
             const Password = req.body.password;
+            console.log(Email,Password)
 
         const userDataa = await User.findOne({ email: Email });
-
+        // console.log(userDataa,'logged in admin')
         
         if (userDataa && ( userDataa.is_admin == true )) {
 

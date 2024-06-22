@@ -1,0 +1,939 @@
+
+<%- include('../layouts/client/header') %>
+<div class="modal fade" id="editAddress" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         
+   <div class="modal-dialog">
+
+     <div class="modal-content">
+
+       <div class="modal-header">
+         <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Address</h1>
+         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+       </div>
+
+       <div class="modal-body">
+
+         <form id="editForm" style="padding-left: 15px;padding-right: 15px;">
+            <p type="hiding" hidden id="message"><%=message %></p>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <label for="name" class="col-form-label text-black">Name *</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Enter your Name" required >
+                    <div class="invalid-feedback">Please enter a valid name (3-50 characters, letters and spaces only).</div>
+                </div>
+        
+                <div class="col-lg-6">
+                    <label for="phone" class="col-form-label text-black">Mobile Number *</label>
+                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Enter your Mobile" required>
+                    <div class="invalid-feedback">Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.</div>
+                </div>
+        
+                <div class="col-lg-6">
+                    <label for="locality" class="col-form-label text-black">Locality *</label>
+                    <input type="text" class="form-control" name="locality" id="locality" placeholder="Enter your Locality" required >
+                    <div class="invalid-feedback">Please enter a valid locality (5-100 characters, alphanumeric and basic punctuation).</div>
+                </div>
+        
+                <div class="col-lg-6">
+                    <label for="pincode" class="col-form-label text-black">Pincode *</label>
+                    <input type="text" class="form-control" name="pincode" id="pincode" placeholder="Enter your pincode" required pattern="^[1-9][0-9]{5}$">
+                    <div class="invalid-feedback">Please enter a valid 6-digit pincode not starting with 0.</div>
+                </div>
+            </div>
+        
+            <div class="col-lg-12">
+                <label for="addresss" class="requird text-dark">Address *</label>
+                <textarea type="text" style="color: rgb(128, 128, 128);" id="addresss" class="form-control" rows="3" placeholder="Enter your Address" name="address" required ></textarea>
+                <div class="invalid-feedback">Please enter a valid address (10-200 characters).</div>
+            </div>
+        
+            <div class="row mb-1">
+                <div class="col-lg-6">
+                    <label for="city" class="col-form-label text-black">City *</label>
+                    <input type="text" class="form-control" name="city" id="city" placeholder="Enter your City" required >
+                    <div class="invalid-feedback">Please enter a valid city name (3-50 characters, letters and spaces only).</div>
+                </div>
+        
+                <div class="col-lg-6">
+                    <label for="state" class="col-form-label text-black">State *</label>
+                    <input type="text" class="form-control" name="state" id="state" placeholder="Enter your State" required >
+                    <div class="invalid-feedback">Please enter a valid state name (3-50 characters, letters and spaces only).</div>
+                </div>
+            </div>
+        
+            <input type="hidden" name="id" id="id">
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+                                                     
+       </div>
+
+
+     </div>
+
+   </div>
+
+ </div>
+
+      <!-- header -->
+      <!-- header area end -->
+      <!-- vertical menu and slider -->
+      <div id="home_vertical_menu">
+        <div class="row ">
+           <div class="col-lg-3 vertical_menu">
+              <div class="v_menu bg-white rounded">
+                 <div class="cat_menu bg-warning rounded-top"><a href="#" class="pe-auto text-uppercase d-md-none d-sm-none d-none d-lg-block font-weight-bolder"><i class="fas fa-bars"></i>all categories</a></div>
+                 <div class="navbar-header d-xl-none d-lg-none">
+                    <button type="button" class="btn-navbar navbar-toggle" onclick="openNav()" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fas fa-bars"></i></button>
+                 </div>
+                 <div id="mySidenav" class="sidenav  ">
+                    <div class="close-nav d-xl-none d-lg-none">
+                       <span class="categories">Menu</span>
+                       <a href="javascript:void(0)" class="closebtn pull-right" onclick="closeNav()"><i class="fas fa-times"></i></a>
+                    </div>
+                   <ul class="vertical_main_menu h_menu navbar navbar-nav">
+                       <li><a href="index.html">Home</a></li>
+                       <li class="">
+                          <a class="dropdown-toggle" href="shop-left-sidebar.html"  role="button" data-toggle="dropdown" aria-expanded="false">shop&nbsp;<span class="float-right"><i class="fas fa-angle-down"></i></span></a>
+                          <ul class="dropdown-menu">
+                             <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">left sidebar</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="shop-right-sidebar.html">right sidebar</a></li>
+                          </ul>
+                       </li>
+                       <li class="dropdown mega_menu m1_menu level-1 font-weight-bolderer">
+                          <a class="dropdown-toggle" href="single-product.html"  role="button" data-toggle="dropdown" aria-expanded="false">portfolio&nbsp;<span class="float-right"><i class="fas fa-angle-down"></i></span></a>
+                          <ul class="dropdown-menu">
+                             <li>
+                                <ul class="row mx-0">
+                                   <li class="mg_menu col-lg-6 col-md-12 ">
+                                      <ul>
+                                         <li class="h_title text-uppercase font-weight-bolder border-bottom">portfolio grid 2</li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="portfolio-grid-2.html">portfolio grid 2</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="portfolio-grid-3.html">portfolio grid 3</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="portfolio-grid-4.html">portfolio grid 4</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="mesonary-grid-2.html">mesonary grid 2</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="mesonary-grid-3.html">mesonary grid 3</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="mesonary-grid-4.html">mesonary grid 4</a></li>
+                                      </ul>
+                                   </li>
+                                   <li class="mg_menu col-lg-6 col-md-12">
+                                      <ul>
+                                         <li class="h_title text-uppercase font-weight-bolder border-bottom">theme elements</li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="title.html">title</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="category-style.html">category</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="services.html">services</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="product-tab.html">product tab</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="multi-slider-product.html">multi slider product</a></li>
+                                      </ul>
+                                   </li>
+                                </ul>
+                             </li>
+                          </ul>
+                       </li>
+                       <li>
+                          <a class="dropdown-toggle" href="blog.html"  role="button" data-toggle="dropdown" aria-expanded="false">
+                          blog&nbsp;<span class="float-right mt-1"><i class="fas fa-angle-down"></i></span></a>
+                          <ul class="dropdown-menu">
+                             <li><a class="dropdown-item font-weight-bolderer" href="blog.html">blog</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="blog-left-sidebar.html">left sidebar</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="blog-right-sidebar.html">right sidebar</a></li>
+                          </ul>
+                       </li>
+                       <li class="dropdown mega_menu level-1 font-weight-bolderer">
+                          <a class="dropdown-toggle" href="single-product.html"  role="button" data-toggle="dropdown" aria-expanded="false">Category&nbsp;<span class="float-right mt-1"><i class="fas fa-angle-down"></i></span></a>
+                          <ul class="dropdown-menu">
+                             <li>
+                                <ul class="row mx-0">
+                                   <li class="mg_menu col-lg-4 col-md-12 ">
+                                      <ul>
+                                         <li class="h_title text-uppercase font-weight-bolder border-bottom">Pot</li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Pigmyweeds</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Indoor Plants</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">outdoor Plants</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Flamingo plant</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Succulent Plant</a></li>
+                                      </ul>
+                                   </li>
+                                   <li class="mg_menu col-lg-4 col-md-12">
+                                      <ul>
+                                         <li class="h_title text-uppercase font-weight-bolder border-bottom">Plants</li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Nerve Plant</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Flowering Plants</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Plant Seed</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Luck Plants</a></li>
+                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Plant House</a></li>
+                                      </ul>
+                                   </li>
+                                </ul>
+                             </li>
+                          </ul>
+                       </li>
+                       <li class="dropdown level-1 font-weight-bolderer">
+                          <a class="dropdown-toggle" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">pages&nbsp;<span class="float-right mt-1"><i class="fas fa-angle-down"></i></span></a>
+                          <ul class="dropdown-menu">
+                             <li><a class="dropdown-item font-weight-bolderer" href="about-us.html">about us</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="login.html">login</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="registration.html">registration</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="single-product.html">single product</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="single-blog.html">single blog</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="cart.html">cart</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="compare.html">compare</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="wishlist.html">wishlist</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="checkout.html">check out</a></li>
+                             <li><a class="dropdown-item font-weight-bolderer" href="forgot.html">forgot password</a></li>
+                          </ul>
+                       </li>
+                       <li class="level-1 font-weight-bolderer"><a href="contact-us.html">contact-us</a></li
+                          >
+                    </ul>
+                 </div>
+              </div>
+              <!-- v_menu bg-white rounded -->
+           </div>
+        </div>
+        <!-- row -->
+     </div>
+     <!-- container  menu_slider mt-4 -->
+     <!-- vertical menu and slider end -->
+     <!-- checkout page -->
+     <div id="checkout_page" class="checkout-page animate__animated animate__fadeInUp">
+        <div class="sp_header bg-white p-3 ">
+           <div class="container custom_container ">
+              <div class="row ">
+                 <div class="col-12 ">
+                    <ul>
+                       <li class="d-inline-block font-weight-bolderer"><a href="index.html">home</a></li>
+                       <li class="d-inline-block hr_ font-weight-bolderer"><a href="#">checkout</a></li>
+                    </ul>
+                 </div>
+              </div>
+           </div>
+        </div>
+        
+        <div class="container custom_container">
+        
+           <div class="row">
+              <div class="col-lg-8 col-12">
+                 <div class="accordion" id="check_out_toggle">
+                    <!-- <div class="card rounded mb-2">
+                       <div class="card-header bg-white" id="checkout_info">
+                          <h2 class="mb-0">
+                             <button class="btn btn-link btn-block text-left text-body p-0 font-weight-bolder" type="button" data-toggle="collapse" data-target="#check_info" aria-expanded="true" aria-controls="check_info">
+                             Personal information<span class="float-right"><i class="fas fa-angle-down"></i></span>
+                             </button>
+                          </h2>
+                       </div>
+                       <div id="check_info" class="collapse show" aria-labelledby="checkout_info" data-parent="#check_out_toggle">
+                          <div class="card-body">
+                             <ul class="nav nav-tabs " role="tablist" >
+                                <li class="nav-item" >
+                                   <a class="nav-link p-0 font-weight-bolder active" id="order_guest_tab" data-toggle="tab" href="#order_guest" role="tab" aria-controls="order_guest" aria-selected="true">order as a guest</a>
+                                </li>
+                                <li class="hr_"></li>
+                                <li class="nav-item" >
+                                   <a class="nav-link p-0 font-weight-bolder" id="sign_in_tab" data-toggle="tab" href="#sign_in" role="tab" aria-controls="sign_in" aria-selected="false">sign in</a>
+                                </li>
+                             </ul>
+                             <div class="tab-content" >
+                                <div class="tab-pane fade show active" id="order_guest"  aria-labelledby="order_guest">
+                                   <div id="Registration" class="page-content mt-4 mb-0">
+                                      <form  class="needs-validation " method="post" novalidate>
+                                         <div class="form-group text-left">
+                                            <label class="font-weight-bolder">Social title</label><br>
+                                            <span class="form-check">
+                                            <input class="form-check-input" type="radio" name="gridRadios" id="gender_mr" checked>
+                                            <label class="form-check-label" for="gender_mr">
+                                            mr.
+                                            </label>
+                                            </span>
+                                            <span class="form-check">
+                                            <input class="form-check-input" type="radio" name="gridRadios" id="gender_mrs">
+                                            <label class="form-check-label" for="gender_mrs">
+                                            mrs.
+                                            </label>
+                                            </span>
+                                         </div>
+                                         <div class="form-group">
+                                            <label for="f_name" class="font-weight-bolder">First name</label>
+                                            <input type="text" class="form-control" id="f_name" placeholder="First name"  required>
+                                            <div class="invalid-feedback">Please enter your name.</div>
+                                         </div>
+                                         <div class="form-group" >
+                                            <label for="l_name" class="font-weight-bolder">Last name</label>
+                                            <input type="text" class="form-control" id="l_name" placeholder="Last Name" required>
+                                            <div class="invalid-feedback">Please enter your name.</div>
+                                         </div>
+                                         <div class="form-group">
+                                            <label for="r_email" class="font-weight-bolder">Email address</label>
+                                            <input type="email" class="form-control" id="r_email" aria-describedby="emailHelp" placeholder="Email" required>
+                                            <div class="invalid-feedback">Please enter your account name.</div>
+                                         </div>
+                                         <div class="form-group font-weight-bolder">
+                                            <label for="r_password" class="font-weight-bolder">Password</label>
+                                            <input type="password" class="form-control" id="r_password" placeholder="password" required>
+                                            <div class="invalid-feedback">Please enter your password.</div>
+                                         </div>
+                                         <div class="form-group">
+                                            <label class="font-weight-bolder">birth date</label>
+                                            <input class="form-control"  type="date" required/>
+                                            <div class="invalid-feedback">Please enter your birthdate.</div>
+                                         </div>
+                                         <div class="form-group form-check d-block">
+                                            <input type="checkbox" class="form-check-input" >
+                                            <label class="form-check-label" for="user_check">Sign up for our newsletter</label>
+                                         </div>
+                                         <div class="form-group form-check d-block">
+                                            <input type="checkbox" class="form-check-input" >
+                                            <label class="form-check-label" for="user_check">I agree to the terms and conditions and the privacy policy</label>
+                                         </div>
+                                         <div><input type="submit" name="submit" class="btn btn-primary mt-3" value="Save"></div>
+                                      </form>
+                                   </div>
+                                </div>
+                                <div class="tab-pane fade" id="sign_in"  aria-labelledby="sign_in_tab">
+                                   <div id="login" class="page-content  mt-4 ">
+                                      <form class="needs-validation " method="post" novalidate>
+                                         <div class="form-group">
+                                            <label for="user_email" class="font-weight-bolder">Email address</label>
+                                            <input type="email" class="form-control" id="user_email" aria-describedby="emailHelp" required>
+                                            <div class="invalid-feedback">Please enter account name.</div>
+                                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                         </div>
+                                         <div class="form-group font-weight-bolder" >
+                                            <label for="user_password" class="font-weight-bolder">Password</label>
+                                            <input type="password" class="form-control" id="user_password" required>
+                                            <div class="invalid-feedback">Please enter your Password.</div>
+                                         </div>
+                                         <div class="form-group form-check">
+                                            <input type="checkbox" class="form-check-input" id="user_check" >
+                                            <label class="form-check-label" for="user_check">Check me out</label>
+                                         </div>
+                                         <input type="submit" name="submit" class="btn btn-primary mb-3 d-inline-block" value="submit">
+                                         <div class="pass_acc d-inline-block float-right pt-3">
+                                            <span class="forgot_password font-weight-bolderer"><a href="forgot.html">Forgot your password? </a></span>
+                                         </div>
+                                      </form>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div> -->
+                    <div class="row">
+                     <% if (address !== null && address.addressData.length !== 0) { %>
+                           
+                       <% for (let i = 0; i < address.addressData.length; i++) { %>
+
+                        
+                                                                                                                                                                                                                                                                    
+         
+                             <div class="col-lg-6">
+         
+                                 <div class="card card-dashboard" style="margin-bottom: 1rem;">
+         
+                                     <div class="card-body">
+                                       
+                                       <!-- <button type="button" class="close" aria-label="Close mb-2 " style="font-size: 23px;padding-bottom: 20px;" onclick="deleteAddress('<%= userId %>' , '<%= address.addressData[i]._id %>')">
+                                             <span aria-hidden="true">&times;</span>
+                                         </button>  -->
+                                <!-- <%// if (address.addressData[i].status == true) { %> -->
+                                <input type="radio" name="address" style="font-size: 23px; padding-bottom: 20px;" onclick="submitAddress('<%= address.addressData[i]._id%>')" >
+                               <!-- <%// } else if (address.addressData[i].status == false && address.addressData.length == 1) { %> -->
+                                 <!-- <input type="radio" name="options" style="font-size: 23px; padding-bottom: 20px;" > -->
+                               <%// } %>
+                              
+                     
+                                    
+          
+                                <h3 class="card-title">Address</h3><!-- End .card-title -->
+
+                                     <p><span><%=address.addressData[i].name %></span></p> 
+                                     <p><span><%=address.addressData[i].address %></span>, 
+                                     <br><span><%= address.addressData[i].locality %>,</span> 
+                                     <span><%=address.addressData[i].state %>,</span> 
+                                     <span><%=address.addressData[i].city %>,</span> 
+                                     <span><%= address.addressData[i].pincode %> </span> 
+                                        <br>
+                                      <span>Phone: <%= address.addressData[i].phone %> </span>
+                                      </p>
+
+                                <a herf="#" style="cursor: pointer; color: rgb(207, 149, 77);" data-toggle="modal" data-target="#editAddress" onclick="editAddress('<%= address.addressData[i]._id %>')">Edit<i class="icon-edit"></i></a>
+
+                                      </div><!-- End .card-body -->
+         
+                                 </div><!-- End .card-dashboard -->
+         
+                             </div ><!-- End .col-lg-6 -->
+         
+                             <!--Edit Addres Modal-->
+         
+                                     <!-- Modal -->
+         
+                                   
+                             <!-- <div class="col-lg-6">
+                                 <div class="card card-dashboard">
+                                     <div class="card-body">
+                                         <h3 class="card-title">Shipping Address</h3>End .card-title
+         
+                                         <p>You have not set up this type of address yet.<br>
+                                         <a href="#">Edit <i class="icon-edit"></i></a></p>
+                                     </div>End .card-body
+                                 </div>End .card-dashboard
+                             </div>End .col-lg-6 -->
+         
+                            
+                          <%  } %>
+                             
+                       <%} %>
+                        
+                         <!-- <h3 style="margin-left: 24%;"><i>can't see any address</i></h3> -->
+                         <div class="col-lg-12">
+                         <div class="card rounded mb-2">
+                           <div class="card-header bg-white" id="chechout_add">
+                              <h2 class="mb-0">
+                                 <button class="btn btn-link btn-block text-center collapsed text-body p-0 font-weight-bolder" type="button" data-toggle="collapse" data-target="#check_add" aria-expanded="false" aria-controls="check_add">
+                               Add Address<span class="float-right"><i class="fas fa-angle-down"></i></span>
+                                 </button>
+                              </h2>
+                           </div>
+                           <div id="check_add" class="collapse" aria-labelledby="chechout_add" data-parent="#check_out_toggle">
+                              <div class="card-body">
+                                 <div id="c_address" class="page-content">
+                                    <form class="needs-validation" method="post" id="addform" novalidate>
+                                       <div class="form-group">
+                                           <label for="name" class="font-weight-bolder">Name</label>
+                                           <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                                           <div class="invalid-feedback">Please enter a valid name (3-50 characters, letters and spaces only).</div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="phone" class="font-weight-bolder">Mobile Number</label>
+                                           <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your mobile number" required >
+                                           <div class="invalid-feedback">Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.</div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="locality" class="font-weight-bolder">Locality</label>
+                                           <input type="text" class="form-control" id="locality" name="locality" placeholder="Enter your locality" required >
+                                           <div class="invalid-feedback">Please enter a valid locality (5-100 characters, alphanumeric and basic punctuation).</div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="pincode" class="font-weight-bolder">Pincode</label>
+                                           <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Enter your pincode" required >
+                                           <div class="invalid-feedback">Please enter a valid 6-digit pincode not starting with 0.</div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="address" class="font-weight-bolder">Address</label>
+                                           <textarea class="form-control" id="address" name="address" rows="3" placeholder="Enter your address" required ></textarea>
+                                           <div class="invalid-feedback">Please enter a valid address (10-200 characters).</div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="city" class="font-weight-bolder">City</label>
+                                           <input type="text" class="form-control" id="city" name="city" placeholder="Enter your city" required >
+                                           <div class="invalid-feedback">Please enter a valid city name (3-50 characters, letters and spaces only).</div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="state" class="font-weight-bolder">State</label>
+                                           <input type="text" class="form-control" id="state" name="state" placeholder="Enter your state" required >
+                                           <div class="invalid-feedback">Please enter a valid state name (3-50 characters, letters and spaces only).</div>
+                                       </div>
+                                       <input type="hidden" value="<%= userId %>" id="validUserId">
+                                       <input type="hidden" name="status" value="true" id="statusHidden">
+                                       <div>
+                                           <button id="clearButton" type="reset" class="f_13 btn btn-secondary mt-3">Reset</button>
+                                           <button type="submit" class="f_13 btn btn-primary mt-3 float-right">Add</button>
+                                       </div>
+                                   </form>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                       
+                           </div><!-- End .row -->
+                    <!-- card -->
+                   
+                    <!-- card address-1-->
+                    <!-- <div class="card rounded mb-2">
+                       <div class="card-header bg-white" id="checkout_shipping">
+                          <h2 class="mb-0">
+                             <button class="btn btn-link btn-block text-left collapsed text-body p-0 font-weight-bolder" type="button" data-toggle="collapse" data-target="#check_ship" aria-expanded="false" aria-controls="check_ship">
+                             Shipping Method<span class="float-right"><i class="fas fa-angle-down"></i></span>
+                             </button>
+                          </h2>
+                       </div>
+                       <div id="check_ship" class="collapse" aria-labelledby="checkout_shipping" data-parent="#check_out_toggle">
+                          <div class="card-body">
+                             <div id="ship_check" class="page-content">
+                                <form>
+                                   <div class="form-group text-left">
+                                      <label class="font-weight-bolder">Shipping Method</label><br>
+                                      <span class="form-check d-inline-block">
+                                      <input class="form-check-input" type="radio" name="gridRadios" id="free_ship" checked>
+                                      <label class="form-check-label" for="free_ship">
+                                      Free shipping
+                                      </label>
+                                      </span>
+                                      <span class="form-check d-inline-block ml-2">
+                                      <input class="form-check-input" type="radio" name="gridRadios" id="with_ship">
+                                      <label class="form-check-label" for="with_ship">
+                                      shipping
+                                      </label>
+                                      </span>
+                                   </div>
+                                </form>
+                             </div>
+                          </div>
+                       </div>
+                    </div> -->
+                    <!-- card -->
+                    <!-- <div class="card rounded mb-2">
+                       <div class="card-header bg-white" id="checkout_payment">
+                          <h2 class="mb-0">
+                             <button class="btn btn-link btn-block text-left collapsed text-body p-0 font-weight-bolder" type="button" data-toggle="collapse" data-target="#check_payment" aria-expanded="false" aria-controls="check_payment">
+                             Payment<span class="float-right"><i class="fas fa-angle-down"></i></span>
+                             </button>
+                          </h2>
+                       </div>
+                       <div id="check_payment" class="collapse" aria-labelledby="checkout_payment" data-parent="#check_out_toggle">
+                          <div class="card-body">
+                             <div id="pay_check" class="page-content">
+                                <form >
+                                   <div class="form-group text-left">
+                                      <label class="font-weight-bolder">payment Method</label><br>
+                                      <span class="form-check d-inline-block">
+                                      <input class="form-check-input" type="radio" name="gridRadios" id="pay_by_check" checked>
+                                      <label class="form-check-label" for="pay_by_check">
+                                      pay by check
+                                      </label>
+                                      </span>
+                                      <span class="form-check d-inline-block ml-2">
+                                      <input class="form-check-input" type="radio" name="gridRadios" id="pay_by_bank">
+                                      <label class="form-check-label" for="pay_by_bank">
+                                      pay by bank 
+                                      </label>
+                                      </span>
+                                   </div>
+                                   <div class="form-group form-check">
+                                      <input type="checkbox" class="form-check-input" id="user_pay_check" >
+                                      <label class="form-check-label" for="user_pay_check">I accept the Terms of Use & Privacy Policy</label>
+                                   </div>
+                                   <div class="text-center">
+                                      <button type="submit" class="btn btn-primary f_13">
+                                      Order with an obligation to pay
+                                      </button>
+                                   </div>
+                                </form>
+                             </div>
+                          </div>
+                       </div>
+                    </div> -->
+                    <!-- card -->
+                 </div>
+              </div>
+
+               <!-- <span class="float-right font-weight-bolder" id="tax"><%=// productPrice*9/100 %></span><div class="col-12 col-lg-4">
+                  <div class="border rounded bg-white final_payment">
+                     <div class="card-body  border-bottom">
+                       
+                        <p class="font-weight-bolderer">show details</p>
+                        <div>
+                           <span class="font-weight-bolder">subtotal</span>
+                          
+                        <div>
+                           <span class="font-weight-bolder">taxes</span>
+                           <span class="float-right font-weight-bolder">9%</span>
+                        </div>
+                        </div>
+                     </div>
+                     <div class="card-body ">
+                        <div>
+                           <span class="font-weight-bolder">(tax excl.)</span>
+                           
+                        </div>
+                     </div>
+                  </div>
+               </div> -->
+
+               <div class="col-lg-4 col-12 ">
+                  <div class="border rounded bg-white final_payment">
+                    <div class="card-body border-bottom">
+                      <p class="text-muted"><%= cartData.products.length %> items</p>
+                      <p class="font-weight-bolderer">show details</p>
+                      <b>products details:</b><br><br>
+                      <table>
+                        <thead>
+                          <tr> 
+                           <th style="padding-right:  2rem;">No</th>
+                            <th>Item</th>
+                            <th style="padding-left: 2rem;">Price</th>
+                            <th style="padding-left: 2rem;">Qty</th>
+                            <th style="padding-left: 2rem;">Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% cartData.products.forEach((elem,index) => { %>
+                            <tr>
+                              <td style="padding-right: 2rem;"><%= index+1 %></td>
+                              <td><%= elem.product_id.name %></td>
+                              <td style="padding-left: 2rem;">$<%= elem.product_id.price %></td>
+                              <td style="padding-left: 2rem;"><%= elem.price / elem.product_id.price %></td>
+                              <td style="padding-left: 2rem;">$<%= elem.product_id.price * (elem.price / elem.product_id.price) %></td>
+                            </tr>
+                          <% }); %>
+                        </tbody>
+                      </table>
+                
+                      <hr>
+                
+                      <div>
+                        <span class="font-weight-bolder">Subtotal</span>
+                        <span class="float-right font-weight-bolder" id="subtotal">$<%= cartData.totalCartPrice %>.00</span>
+                      </div>
+                      <div>
+                        <span class="font-weight-bolder">Taxes</span>
+                        <span class="float-right font-weight-bolder" id="tax">$<%= taxAmount %>.00</span>
+                      </div>
+                      <div>
+                        <span class="font-weight-bolder">Shipping</span>
+                        <span class="float-right font-weight-bolder">$2.00</span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div>
+                        <span class="font-weight-bolder">Total (tax incl.)</span>
+                        <span class="float-right font-weight-bolder">$<%= totalAmount %>.00</span>
+                      </div>
+                      <hr>
+                      <div>
+                        <label for="cod">
+                          <input type="radio" id="cod" name="payment" value="cod" checked> Cash on Delivery
+                        </label><br>
+                        <label for="wallet">
+                          <input  type="radio" id="wallet" name="payment" value="wallet" disabled> Wallet
+                        </label><br>
+                        <label for="online">
+                          <input type="radio" id="online" name="payment" value="online" disabled> Online Payment
+                        </label>
+                      </div>
+                      <br>
+                      <button type="submit" onclick="submitPayment( '<%= totalAmount %>')" class="btn btn-primary btn-block">Place Order</button>
+                    </div>
+                  </div>
+                </div>
+                
+           </div>
+        </div>
+     </div>
+
+     <style>
+     
+     </style>
+     <!-- checkout page -->
+     <!-- footer -->
+    
+     <%- include('../layouts/client/footer') %>
+
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <!-- swal -->
+     <script>
+    
+    
+      
+      let selectedAddressId = null;
+
+      function submitAddress(addressId) {
+         
+      selectedAddressId = addressId;
+      console.log(selectedAddressId)
+  }
+      function submitPayment(amount){
+        
+         if (!selectedAddressId) {
+            const Toast = Swal.mixin({
+  
+  toast: true,
+  position: "top-center",
+  showConfirmButton: false,
+    
+    timer: 1000,
+    timerProgressBar: false,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+   })
+   Toast.fire({
+   icon: "error",
+   title: "please add a address",
+   })
+   return
+ }
+   
+         
+         fetch('/orders', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+        body: JSON.stringify({ amount, selectedAddressId })
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Network response was not ok ' + res.statusText);
+        }
+        return res.json();
+    })
+    .then(data => {
+      if(data){
+        console.log(data);
+        window.location.href="/success"
+      }else{
+         // address backend check(if not)
+      }
+    })
+   
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+        // Handle the error here
+    });
+    
+         
+
+}
+
+function addAddress(id){
+
+// console.log(id);
+
+  const form = document.getElementById('addform');
+
+  const formData = new FormData(form)
+  const addressData = {}
+  
+  formData.forEach((value , key) => {
+
+    addressData[key] = value;
+    
+  });
+
+fetch(`/address?id=${id}` , {method : 'put' , headers : {'Content-Type' : 'application/json'} , body:JSON.stringify({addressData})})
+
+.then(res => res.json()).then(data => {
+
+  if(data.success){
+
+    Swal.fire({
+ 
+     title:'Address Added',
+     text:'Address Added Successfully',
+     icon:'success',
+     confirmButtonText: 'OK'
+ 
+    }).then((result) => {
+
+      window.location.reload()
+
+     
+    })
+
+  } else {
+
+    Swal.fire({
+    
+      title:'Failed',
+      text:'Address Adding Failed "(Already Exits)"',
+      icon:'error',
+      confirmButtonText: 'OK'
+    
+    })
+    // .then((result) => {
+
+    //  window.location.reload()
+        
+    // })
+
+  }
+
+})
+
+};
+
+function editAddress(addressId) {
+    console.log(addressId);
+    const namee = document.getElementById('name');
+    const phonee = document.getElementById('phone');
+    const localityy = document.getElementById('locality');
+    const pincodee = document.getElementById('pincode');
+    const addressss = document.getElementById('addresss');
+    const cityy = document.getElementById('city');
+    const statee = document.getElementById('state');
+    const idd = document.getElementById('id');
+
+    fetch('/editAddress', { method: 'put', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ addressId }) })
+        .then((res) => res.json())
+        .then((data) => {
+            const { name, phone, locality, pincode, address, city, state, _id } = data.editAddress.addressData[0];
+
+            namee.value = name;
+            phonee.value = phone;
+            pincodee.value = pincode;
+            localityy.value = locality;
+            addressss.value = address;
+            cityy.value = city;
+            statee.value = state;
+            idd.value = _id;
+        });
+}
+
+function validateForm(event) {
+    event.preventDefault();
+    
+    const form = document.getElementById('editForm');
+    const inputs = form.querySelectorAll('input, textarea');
+    let isValid = true;
+
+    const patterns = {
+        name: /^[A-Za-z]{3,50}(?: [A-Za-z]+)*$/,
+        phone: /^[6-9]\d{9}$/,
+        locality: /^[A-Za-z0-9\s,.'-]{2,100}$/,
+        pincode: /^[1-9][0-9]{5}$/,
+        address: /^.{10,200}$/,
+        city: /^[A-Za-z\s]{3,50}$/,
+        state: /^[A-Za-z\s]{3,50}$/
+    };
+
+    inputs.forEach(input => {
+        if (input.type !== 'hidden') {
+            const pattern = patterns[input.name];
+            if (pattern && !pattern.test(input.value.trim())) {
+                input.classList.add('is-invalid');
+                isValid = false;
+            } else if (input.required && input.value.trim() === '') {
+                input.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            }
+        }
+    });
+
+    if (!isValid) {
+        // Show error message(i am not showing any swal message)
+    } else {
+        // If valid, submit the form 
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('/addEditAddress?from=checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response
+          
+            Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title:"edited successfully",
+            text: "address edited successfully",
+            showConfirmButton: false,
+            timer: 1500
+       }).then(()=>{
+         window.location.reload()
+        })
+        
+            // Close the modal or update the UI as needed
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+}
+
+// Add event listener to the form
+document.getElementById('editForm').addEventListener('submit', validateForm);
+
+// Add input event listeners to remove invalid class when user starts typing
+document.querySelectorAll('#editForm input, #editForm textarea').forEach(input => {
+    input.addEventListener('input', function() {
+        this.classList.remove('is-invalid');
+        this.classList.remove('is-valid');
+    });
+});
+
+  const message = document.getElementById('message');
+  
+  if(message.textContent == 'Address Edited'){
+
+    Swal.fire({
+     
+      title:'Address Edited',
+      text:'Address Edited Successfully',
+      icon:'success',
+      confirmButtonText: 'OK'
+     
+    })
+
+  };
+
+  function form(event) {
+    event.preventDefault();
+    
+    const form = document.getElementById('addform');
+    const inputs = form.querySelectorAll('input, textarea');
+    let isValid = true;
+
+    const patterns = {
+        name: /^[A-Za-z]{3,50}(?: [A-Za-z]+)*$/,
+        phone: /^[6-9]\d{9}$/,
+        locality: /^[A-Za-z0-9\s,.'-]{2,100}$/,
+        pincode: /^[1-9][0-9]{5}$/,
+        address: /^.{10,200}$/,
+        city: /^[A-Za-z\s]{3,50}$/,
+        state: /^[A-Za-z\s]{3,50}$/
+    };
+
+    inputs.forEach(input => {
+        if (input.type !== 'hidden') {
+            const pattern = patterns[input.name];
+            if (pattern && !pattern.test(input.value.trim())) {
+                input.classList.add('is-invalid');
+                isValid = false;
+            } else if (input.required && input.value.trim() === '') {
+                input.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            }
+        }
+    });
+
+    if (!isValid) {
+     
+    } else {
+        const validId = document.getElementById('validUserId').value;
+        addAddress(validId);
+    }
+}
+
+// Add event listener to the form
+document.getElementById('addform').addEventListener('submit', form);
+
+// Add input event listeners to remove invalid class when user starts typing
+document.querySelectorAll('#addform input, #addform textarea').forEach(input => {
+    input.addEventListener('input', function() {
+        this.classList.remove('is-invalid');
+        this.classList.remove('is-valid');
+    });
+});
+
+     </script>

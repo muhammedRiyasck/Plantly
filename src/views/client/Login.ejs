@@ -135,6 +135,7 @@
               </div>
            </div>
         </div>
+        
         <div class="container custom_container ">
            <h3 class="text-center" >Log in to your account </h3>
            <% if(message) { %>
@@ -144,6 +145,12 @@
                <%= message %> </p>
 
           <% } %>
+
+          <% if(swal) {%>
+
+            <p id="swal" hidden> <%= swal %> </p>
+
+         <% } %>
           
           
 
@@ -164,7 +171,7 @@
                     <input type="checkbox" class="form-check-input" id="user_check" >
                     <label class="form-check-label" for="user_check">Check me out</label>
                  </div>
-                 <div class="button-container ">
+                 <div class="button-container ;">
 
                   <input type="submit" id="submit" name="submit" class="btn btn-primary mb-3" value="submit">
 
@@ -184,6 +191,8 @@
            </div>
         </div>
      </div>
+
+     <%- include('../layouts/client/footer') %>
 <!-- <script>
   const email=localStorage.getItem("email")||""
       console.log(email);
@@ -195,7 +204,24 @@
    }
 </script> -->
 
+<!-- sweet alert cdn -->
+<script  src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 <script>
+const messages = document.getElementById('swal')
+  
+    if(messages.textContent.trim() == 'password updated'){
+   
+      Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title:"Password Updated successfuly",
+            text:'New Password Updated successfuly',
+            showConfirmButton: false,
+            timer: 2000
+      });
+    }
+
+
 document.getElementById('submit').addEventListener('click', function(event) {
     if (!validateForm()) {
         event.preventDefault();
@@ -245,8 +271,21 @@ function validateForm() {
 }
 
 
-
    </script>
 
+<style>
 
-<%- include('../layouts/client/footer') %>
+   .swal2-popup {
+ 
+     /* font-size: 16px;  */
+     background-color: #ffffff;
+ 
+   }
+   .swal2-content, .swal2-title {
+ 
+     color: #29b926 !important;
+ 
+   }
+ 
+ </style>
+

@@ -1,0 +1,225 @@
+const {cart}= require('../../model/CartAndWishlist_model')
+const User = require('../../model/user_model')
+const Product = require('../../model/products_model')
+const Category = require('../../model/category_model')
+
+
+
+
+const loadCart= async(req,res)=>{
+
+    try {
+        
+        if(req.session.user){
+
+            const category = await Category.find({Listed:true})
+            const userId = req.session.user._id
+            
+            let cartData = await cart.findOne({user_id:userId}).populate('products.product_id')
+            
+            if(cartData){
+                
+                const unlistProduct = cartData.products.filter(val => val.product_id.status === false)
+
+                if(unlistProduct){
+                 
+                    for (const product of unlistProduct){
+                        
+                      var  UpdatedCartData = await cart.findOneAndUpdate({user_id:userId},{$pull:{products:{product_id:product.product_id._id}}},{new:true})
+                   
+                    }
+
+                }
+                
+                 cartData = UpdatedCartData ? UpdatedCartData : cartData
+
+                 let productPrice  = cartData.products.reduce((acc,curr)=>acc + curr.price,0)
+
+                //  if(cartData.coupenDiscount>=0){
+                //     price -= cartData.coupenDiscount
+                //  }
+
+                await cart.findOneAndUpdate({user_id:userId},{$set:{totalCartPrice:productPrice}},{new:true,upsert:true}).exec();
+
+                const updatedCartData = await cart.findOne({user_id:userId}).populate('products.product_id')
+
+               
+                let amount = await cart.findOne({user_id:userId},{totalCartPrice:true})
+                
+                let taxAmount =parseInt(amount.totalCartPrice*9/100)
+
+                // let totalAmoutOfItem = awai
+
+                const message = req.flash('message')
+                res.render('Cart',{userlogdata : req.session.user,message,cartData:updatedCartData,productPrice,totalAmount:productPrice+taxAmount})
+     
+
+            }else{
+                const message = req.flash('message')
+                return res.render('Cart',{userlogdata : req.session.user,message})
+            }
+
+        }else{
+            console.log("a");
+            res.redirect('/login')
+            req.flash('message','Please Login. To See Your Cart')
+        }
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const addToCart = async(req,res)=>{
+
+    try {
+
+        if(req.session.user){
+
+                const productId = req.body.id 
+                const quantiyy = req.body.qtyValue || 1
+            
+                const userId = req.session.user._id
+
+               const cartProduct = await Product.findOne({_id : productId})
+
+               const exist = await cart.findOne({user_id:userId,products:{$elemMatch:{product_id:productId}}})
+
+               if(!exist){
+
+                const total = cartProduct.price * quantiyy
+
+                const addedd = await cart.findOneAndUpdate({ user_id:userId},{$addToSet:{products:{
+
+                    product_id:productId,
+                    price:total,
+                    quantity:quantiyy
+
+                }}},{new:true,upsert:true});
+
+                if(addedd){
+
+                    res.send({success:true})
+
+                }
+
+                } else {
+
+                    res.send({exist : true})
+
+                }
+       
+        }else{
+
+            res.send({login:false})
+            // req.flash('message','please login first')
+            // res.redirect('/login')
+           
+
+        }
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const removeItem =async(req,res)=>{
+
+    try {  
+
+        const userId = req.session.user._id
+        const itemId = req.body.id
+
+        console.log(itemId);
+        
+        const removeCart = await cart.updateOne({ user_id: userId }, { $pull: { products: { 'product_id': itemId } } });
+
+        console.log(removeCart,'ahi')
+
+
+        const removeItem = await cart.deleteOne({ 'products.product_id._id': itemId })
+
+        console.log(removeCart)
+
+        if(removeItem){
+
+            res.send(true)
+
+        }else{
+
+            console.log('false in cart')
+        }
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const cartUpdate = async(req,res)=>{
+
+    try {
+        
+      const productId = req.body.productId;
+      const cartId = req.body.cartId
+      const quantiy = req.body.quantity
+      const Tprice = req.body.price
+
+      const product = await Product.findOne({_id:productId})
+     
+      const updatedPrice= product.price*quantiy
+
+
+   
+       
+      const updatedCart = await cart.findOneAndUpdate({_id:cartId,'products.product_id':productId},
+        {
+            $set:{
+                'products.$.price':updatedPrice          
+            },
+        },
+        {new:true}
+      )
+
+      const totalCartPrice = updatedCart.products.reduce(
+        (acc,curr)=>acc+curr.price,0)
+
+        await cart.findOneAndUpdate({_id:cartId},{$set:{totalCartPrice:totalCartPrice}})
+
+        let taxAmount = totalCartPrice*9/100
+
+        res.send({success:totalCartPrice,productPrice:updatedPrice,taxAmount})
+      
+
+    } catch (error) {
+        
+    }
+
+}
+
+const loadWishList = async (req,res)=>{
+
+    try {
+        
+        if(req.session.user){
+
+            res.render('WishList',{userlogdata:req.session.user})
+
+        }else{
+            console.log('plese loggedin')
+            res.redirect('/login')
+
+        }
+
+    } catch (error) {
+        console.log(error.message)
+    }
+
+}
+
+module.exports= {
+    loadCart,
+    addToCart,
+    loadWishList,
+    removeItem,
+    cartUpdate
+}

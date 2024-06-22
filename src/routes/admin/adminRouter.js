@@ -3,6 +3,7 @@ const adminControllers = require('../../controllers/admin/AdminController');
 const adminCategory=require('../../controllers/admin/AdminCategory')
 const adminProducts=require('../../controllers/admin/AdminProduct')
 const adminUsers=require('../../controllers/admin/AdminUser')
+const adminOrders= require('../../controllers/admin/AdminOrder')
 const adminRoute = express()
 
 const admin_auth = require('../.././middleware/admin_auth')
@@ -64,6 +65,10 @@ adminRoute.put('/productAction',adminProducts.productAction)
 adminRoute.get('/editProduct',admin_auth.isLogin,adminProducts.loadEditProduct)
 
 adminRoute.post('/editProduct/:id',upload.fields([{ name: 'image0', maxCount: 1 }, { name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]),adminProducts.editProduct)
+
+adminRoute.get('/orders',adminOrders.loadOrders)
+adminRoute.get('/orderDetails',adminOrders.loadOrdersDetails)
+adminRoute.put('/orderStatusHandling',adminOrders.orderProductStatus)
 
 adminRoute.post('/logout',adminControllers.logOut)
 

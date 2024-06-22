@@ -15,7 +15,6 @@
     .card {
         width: 600px; 
         border-radius: 4px; 
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
         position: relative; 
         transition: all 0.3s ease-in-out; 
     }
@@ -62,12 +61,27 @@
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div class="container-fluid">
+   
+
+     <div class="sp_header bg-white p-3">
+        <div class="container custom_container">
+            <div class="row ">
+                <div class="col-12 " >
+                    <ul>
+                       <li class="d-inline-block font-weight-bolder"><a href="/home">home</a></li>
+                       <li class="d-inline-block hr_ font-weight-bolder"><a href="#">Registration</a></li>
+                    </ul>
+                 </div>
+             </div>
+        </div>
+     </div>
+
+    <div style="margin-top: 4rem;">
+        <h1 class="text-center h1_">Log in to your account </h1>
+    </div>
     <div class="row justify-content-center">
         <div class="col-md-8 form-container">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Create an Account</h3> 
-                </div>
                
                 <div class="card-body">
                     <form  action="/registration" method="post">
@@ -85,38 +99,38 @@
 
                         <div class="form-group">
 
-                            <label for="name">Name *</label>
-                            <input type="text" class="form-control" id="name" maxlength="20" name="name" oninput="NameCheck(this)" style="border: solid 1px rgb(69, 66, 66);" >
+                            <label for="name">FullName </label>
+                            <input type="text" class="form-control" id="name" maxlength="20" name="name" style="height: 40px;border-width: 1px;border-style: solid;border-color: rgb(238, 238, 238);border-image: initial;">
                             <div class="error" id="name-error"></div>
 
                         </div>
                         <div class="form-group">
-                            <label for="email">Email *</label>
-                            <input type="email" class="form-control" id="email" oninput="EmailCheck(this)" name="email" style="border: solid 1px rgb(69, 66, 66);" >
+                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email"  name="email" style="height: 40px;border-width: 1px;border-style: solid;border-color: rgb(238, 238, 238);border-image: initial;" >
                             <div class="error" id="email-error"></div>
                         </div>
                         <div class="form-group">
-                            <label for="mobile">Mobile Number *</label>
-                            <input type="text" class="form-control" id="mobile" maxlength="15"  name="mobile" style="border: solid 1px rgb(69, 66, 66);" >
-                            <div class="error" id="mobile-error"></div>
+                            <label for="mobile">Mobile Number </label>
+                            <input type="text" class="form-control" id="mobile" maxlength="15"  name="mobile" style="height: 40px;border-width: 1px;border-style: solid;border-color: rgb(238, 238, 238);border-image: initial;" >
+               <div class="error" id="mobile-error"></div>
                         </div>
                         <div class="form-group">
-                            <label for="password">Password *</label>
-                            <input type="password" class="form-control" id="password" name="password" style="border: solid 1px rgb(69, 66, 66);" >
-                            <div class="error " id="password-error"></div>
+                            <label for="password">Password </label>
+                            <input type="password" class="form-control" id="password" name="password" style="height: 40px;border-width: 1px;border-style: solid;border-color: rgb(238, 238, 238);border-image: initial;" >
+               <div class="error " id="password-error"></div>
                             <div class="password-strength" id="password-strength"></div>
                             <div class="live-validation " id="password-validation" style="color: #CA1515;"></div>
                         </div>
                         <div class="form-group">
-                            <label for="confirm_password">Confirm Password *</label>
-                            <input type="password" class="form-control" id="cpassword" name="c_password" style="border: solid 1px rgb(69, 66, 66);" >
-                            <div class="error" id="cpassword-error"></div>
+                            <label for="confirm_password">Confirm Password </label>
+                            <input type="password" class="form-control" id="cpassword" name="c_password" style="height: 40px;border-width: 1px;border-style: solid;border-color: rgb(238, 238, 238);border-image: initial;" >
+               <div class="error" id="cpassword-error"></div>
                             <div class="live-validation" id="cpassword-validation" style="color:  #CA1515;"></div>
                         </div>
-                        <div class="d-flex w-100 px-2 " style="align-items: center; justify-content: center;  padding: 1rem;">
-                            <button type="submit" id="submit"  class="btn btn-primary w-50">Create an Account</button> 
+                        <div class="d-flex w-100 px-2 " style="align-items: center; justify-content: center;  padding: 1rem;gap: 8rem;">
+                            <button type="submit" id="submit"  class="btn btn-primary w-20">Create an Account</button> 
 
-                            <a href="/auth/google" class="btn google-account red-btn" style="margin-left: 21px; margin-bottom: 12px;">
+                            <a href="/auth/google" class="btn google-account red-btn" style="margin-left: 21px; margin-bottom: px;">
                                 <img width="30" height="30"  src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/>
                                 <span >Sign Up with Google</span>                                     
                              </a>
@@ -132,7 +146,7 @@
         </div>
     </div>
 </div>
-
+<%- include('../layouts/client/footer') %>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -164,7 +178,7 @@
             } else if(name.length < 3){
                 nameError.innerText = 'Name should be at least 3 characters long';
                 return false;
-            } else if (name.length > 20) {
+            } else if (name.length >= 20) {
                 nameError.innerText = 'Name should be within 20 characters';
                 return false;
             } else {
@@ -186,7 +200,7 @@
                 emailError.innerText = 'Email is invalid';
                 return false;
             } else {
-                const { data } = await axios.put('/emailCheck', { email: email });
+                const { data } = await axios.put('/emailCheck', { email });
                 if (data.exist) {
                     emailError.innerText = 'Email already exists';
                     return false;
@@ -273,7 +287,7 @@
                 cpasswordValidation.style.color = 'green';
                 return true;
             } else {
-                cpasswordValidation.innerHTML = 'Passwords do not match.';
+                cpasswordValidation.innerHTML = 'Password is not match.';
                 cpasswordValidation.style.color = 'red';
                 return false;
             }
@@ -336,4 +350,4 @@
 
      
 
-<%- include('../layouts/client/footer') %>
+

@@ -116,7 +116,7 @@ const loadEditProduct = async(req,res)=>{
 
         const currentCategory = await Category.findOne({_id:productData.category_id})
 
-        const category = await Category.find({ Listed: true,_id: { $ne: productData.category} })
+        const category = await Category.find({ Listed: true,_id: { $ne: productData.category_id} })
 
         res.render('Edit_product',{productData,category,currentCategory})
 
@@ -136,7 +136,7 @@ const editProduct = async (req, res) => {
         if(category_name){
             category_id = await Category.findOne({name:category_name},{_id:1})
         }
-      
+      console.log(category_id)
 
         let imag = [];
 
@@ -164,7 +164,7 @@ const editProduct = async (req, res) => {
                 name: name,
                 price: price,
                 stock: stock,
-                category: category_id,
+                category_id: category_id,
                 description: discription
             }
         });
