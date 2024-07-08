@@ -1,37 +1,20 @@
 
 const User = require('../../model/user_model')
 const otp = require('../../model/otp_model')
+const Product = require('../../model/products_model')//category poppulating
+const Wallet = require('../../model/wallet_model')
+const otp_generator = require('otp-generator');
+const generateOTP = require('../../helpers/generateOtp')
+const securePassword = require('../../helpers/securePassword')
+const sendOTPmail = require('../../utilities/nodemailer')
+
 // const validation = require('../../model/validation_Schema') 
 
-const otp_generator = require('otp-generator');
-
-const Product = require('../../model/products_model')
-// const Category = require('../../model/category_model') (poppulating)
-
-
-require('dotenv').config()
-const bcrypt=require('bcrypt')
-const nodemailer= require('nodemailer')
+const bcrypt = require('bcrypt')
 const session = require('express-session')
 
-
-
-
-const securePassword=async(password)=>{
-
-    try {
-
-        const passwordhash=await bcrypt.hash(password,10)
-        return passwordhash
-
-    } catch (error) {
-        console.log(error.meassage)
-    }
-}
-
-
 const loadHome = async (req, res) => {
-    // const message=req.flash('msg')
+
     try {
 
         if (req.session.user) {
@@ -44,11 +27,9 @@ const loadHome = async (req, res) => {
         }
         
     } catch (error) {
-        
+    
         console.log(error.message);
-
     }
-
 }
 
 const loadBlog=async(req,res)=>{
@@ -67,30 +48,25 @@ const loadBlog=async(req,res)=>{
         console.log(error.message)
     }
 }
+
 const loadAbout=async (req,res)=>{
     try {
         if(req.session.user){
 
             res.render('About' , {userlogdata : req.session.user})
-
-
         } else {
-
             res.render('About')
-
         }
     } catch (error) {
         console.log(error.message)
     }
-    
 }
+
 const loadContactUs=async(req,res)=>{
     try {
         if(req.session.user){
 
             res.render('Contact' , {userlogdata : req.session.user})
-
-
         } else {
 
             res.render('Contact')
@@ -101,6 +77,7 @@ const loadContactUs=async(req,res)=>{
     }
     
 }
+
 const loadLogin=async(req,res)=>{
     try {
         const message = req.flash('message')
@@ -116,6 +93,7 @@ const loadLogin=async(req,res)=>{
     }
    
 }
+
 const loadRegisteration=async(req,res)=>{
     try {
         const msg=req.flash('msg')
@@ -125,6 +103,7 @@ const loadRegisteration=async(req,res)=>{
     }
    
 }
+
 const loadForgetPassword=async(req,res)=>{
     try {
         let message = req.flash('message')
@@ -154,6 +133,7 @@ const loadSingleBlog=async(req,res)=>{
         console.log(error.message)
     }
 }
+
 const loadSingleProduct=async(req,res)=>{
     try {
         const id = req.query.id
@@ -195,6 +175,34 @@ const loadOtp=async(req,res)=>{
 
 }
 
+const loadWallet = async (req, res , next) => {
+    
+    try {
+
+        
+
+        if (req.session.user) {
+
+            const walletData = await Wallet.findOne({ user_id: req.session.user._id });
+
+            res.render('Wallet', { userlogdata: req.session.user,walletData });
+
+        } else {
+
+            res.redirect('/login')
+
+        }
+        
+    } catch (error) {
+
+        next(error,req,res);
+
+        
+    }
+
+};
+
+
 const existEmail = async(req,res)=>{
    
     const user = await User.findOne({email:req.body.email})
@@ -209,26 +217,6 @@ const existEmail = async(req,res)=>{
 
 }
 
-const search = async (req, res) => {
-    // try {
-    //     const query = req.body.query;
-
-    //     const results = await Product.find({
-    //         $or: [
-    //             { name: new RegExp(query, 'i') },
-    //             // { description: new RegExp(query, 'i') },
-    //             // { price: query }, // Direct comparison for price (assuming it's a number)
-    //             // Add other fields if necessary
-    //         ]
-    //     });
-
-    //     console.log(results);
-    //     res.json(results);
-    // } catch (error) {
-    //     console.error(error);
-    //     res.status(500).json({ error: 'Server error' });
-    // }
-};
 
 const insertUser = async (req, res, next) => {
     
@@ -312,109 +300,6 @@ const insertUser = async (req, res, next) => {
 
   };
 
-const generateOTP = () => {
-    
-    const digits = '0123456789';
-
-    let OTP = '';
-
-    for (let i = 0; i < 4; i++) {
-
-        OTP += digits[Math.floor(Math.random() * 10)];
-    };  
-    
-    console.log(OTP)
-    
-    return OTP;
-
-};
-
-const sendOTPmail = async (username, email, Otp,req,content='Welcome To plantly') => { 
-
-    try {
-
-      const transporter = nodemailer.createTransport({
-
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL,
-          pass: process.env.EMAIL_PASSWORD,
-        },
-
-      }); 
-  
-      // compose email
-
-      const mailOption = {
-
-        from: process.env.EMAIL,
-        to: email,
-        subject: "For Otp Verification",
-        html:  `Dear <h2>${username},</h2><br>
-        
-        ${content}.<br> Please use the One-Time Password (OTP) below to complete the verification process:<br><br>
-        
-        <h3>**Your OTP:**<h3> <h2>${Otp}</h2><br>
-        
-        This OTP is valid for the next some minutes<br> For security reasons, please do not share this code with anyone.<br>
-        
-        If you did not request this verification, please ignore this email or contact our support team immediately.<br>
-        
-        Thank you for helping us keep your account secure.<br>
-        
-    
-
-        If you have any concerns or didn't request this, contact us at <h4>plantlyplant@gmailcom<h4><br>
-        
-        Kind regards,<br>
-        PLANTLY<br>
-   
-        
-        Note: This is an automated message, please do not reply to this email.`
-        
-      };
-  
-      //send mail
-
-      transporter.sendMail(mailOption, function (error, info) {
-
-        if (error) {
-
-          console.log("Error sending mail :- ", error.message);
-
-        } else {
-
-          console.log("Email has been sended :- ", info.response);
-
-        }
-
-      });
-
-      // otp schema adding
-
-      const userOTP = new otp({
-
-        emailId: email,
-        otp: Otp,
-
-      });
-
-      if(userOTP){
-
-        userOTP.save()
-        const createdAt = Date.now();
-        req.session.time = createdAt
-
-      }
-
-    } catch (error) {
-
-      console.log(error.message);
-
-    }
-
-};
-  
 const verifyOtp=async(req,res)=>{
 
     try {
@@ -464,7 +349,7 @@ const verifyOtp=async(req,res)=>{
                         
                     });
 
-                    userSessionData.save();
+                  await userSessionData.save();
 
                     // req.session.otp = undefined;    //  Deleting The otp after login user
 
@@ -494,8 +379,6 @@ const verifyOtp=async(req,res)=>{
     }
 
 };
-
-
 
 const ResendOtp = async (req, res ) => {
     
@@ -729,6 +612,15 @@ const loadSuccess = async(req,res)=>{
         console.log(error.message)
     }
 }
+const loadFailurePage= async(req,res)=>{
+    try {
+        res.render('Payment_Failuer')
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+
 
 const logout = async(req , res)=>{
 
@@ -768,7 +660,8 @@ module.exports = {
     logout,
     existEmail,
     loadSuccess,
-    search,
+    loadFailurePage,
+    loadWallet
     
    
 }

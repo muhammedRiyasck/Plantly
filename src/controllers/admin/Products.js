@@ -1,11 +1,11 @@
 
 const Product = require('../../model/products_model.js')
-
 const Category = require('../../model/category_model.js')
 
 const fs = require("fs");
 
 const path = require("path");
+
 
 const loadProducts=async(req,res)=>{
 
@@ -40,9 +40,12 @@ const addProducts = async(req , res)=>{
 
     try {
 
-        const {name,price,category_name,stock,radio,discription} = req.body;
-       
-
+        let {name,price,category_name,stock,radio,discription,discount} = req.body;
+        if(!discount){
+            discount=0
+        }
+        console.log(discount)
+        const offerPrice = Math.round((price / 100) * (100 - discount));
         
         let img = [];
         const images = req.files;
@@ -55,18 +58,20 @@ const addProducts = async(req , res)=>{
 
         });
 
-       const categoryName = await Category.findOne({name:category_name})
+       const category= await Category.findOne({name:category_name})
         
         const productData =await Product.create({
             
-            name : name,
-            category_id : categoryName._id,
-            price : price,
-            stock:stock,
-            images : img,
-            status : radio,
-            description:discription
 
+            name:name.trim(),
+            description: discription,
+            price : price,
+            category_id : category._id,
+            status: radio,
+            stock:stock,
+            discount_price: offerPrice,
+            discount:discount ,
+            images : img,
         })
 
         
@@ -98,7 +103,7 @@ const productAction = async(req,res)=>{
 
         productData.save();
         
-        req.flash('message','succu')
+        req.flash('message', `SORRY. '${productData.name}' PLANT IS OUT OF STOCK`);
         res.send({set : true});
         
 
@@ -130,7 +135,14 @@ const editProduct = async (req, res) => {
         const productId = req.params.id;
         const editProductt = await Product.findOne({ _id: productId });
 
-        const { name, price, stock, discription,category_name } = req.body;
+        let { name, price, stock, discription,category_name,discount } = req.body;
+        console.log(req.body)
+        if(!discount){
+            discount=0
+        }
+        console.log(discount)
+        const offerPrice = Math.round((price / 100) * (100 - discount));
+        
 
         let category_id
         if(category_name){
@@ -161,11 +173,13 @@ const editProduct = async (req, res) => {
 
         await Product.findOneAndUpdate({ _id: productId }, {
             $set: {
-                name: name,
+                name: name.trim(),
                 price: price,
                 stock: stock,
                 category_id: category_id,
-                description: discription
+                description: discription,
+                discount_price: offerPrice,
+                discount:discount
             }
         });
 

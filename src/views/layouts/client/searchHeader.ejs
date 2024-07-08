@@ -154,7 +154,7 @@
       </div>
       <!-- compare_model -->
       <!-- heart-model -->
-      <div class="modal fade" id="heart_model" tabindex="-1"  aria-hidden="true">
+      <!-- <div class="modal fade" id="heart_model" tabindex="-1"  aria-hidden="true">
          <div class="modal-dialog">
             <div class="modal-content">
                <div class="modal-header">
@@ -173,7 +173,7 @@
                </div>
             </div>
          </div>
-      </div>
+      </div> -->
       <!-- heart_model -->
       <!-- shipping -->
       <div class="modal fade" id="shippingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -382,6 +382,9 @@
                                  </a>
                               
                               </li>
+                       
+                              <a href="/wishlist" style="padding-top: 5px;">  <img width="30" height="30" src="https://img.icons8.com/sf-regular/48/like.png" alt="like"/></a>
+                          
                            </ul>
                         </div>
                         <!-- col-sm-4 head-right text-right -->
@@ -410,7 +413,7 @@
 
                </li>
                </li>
-               <li class="dropdown mega_menu m1 level-1 font-weight-bolderer">
+               <!-- <li class="dropdown mega_menu m1 level-1 font-weight-bolderer">
                   <a class="dropdown-toggle" href="single-product.html"  role="button" data-toggle="dropdown" aria-expanded="false">category&nbsp;<span class="float-right"><i class="fas fa-angle-down"></i></span></a>
                   <ul class="dropdown-menu">
                      <li>
@@ -453,7 +456,7 @@
                         </ul>
                      </li>
                   </ul>
-               </li>
+               </li> -->
                <li>
 
                      <a class="dropdown-item font-weight-bolder" href="/blog">blog</a>
@@ -491,7 +494,25 @@
       </header>
 
 <script>
-      function search(){
+   function search(){
+      var sortValue = document.querySelector('input[name="sort"]:checked')
+      selectedSort=sortValue?sortValue.value:null;
+      console.log(selectedSort)
+         const min = document.getElementById('min').value||0
+         const max = document.getElementById('max').value  
+
+         const checkboxes = document.querySelectorAll('.checkbox-item');
+    
+         const categoryVal=[]
+     // Iterate over each checkbox to get their values
+      checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            categoryVal.push(checkbox.value)
+            // console.log('Checkbox value:', checkbox.value);
+        }
+    });
+    
+      console.log(categoryVal,'kittin')
          
          const searchQuery = document.getElementById('Search').value
          
@@ -499,11 +520,10 @@
          
          const result = document.getElementById('products')
          
-         // const status = true
          
          if(true){
             
-            fetch(`/search` , {method : 'POST' , headers:{'Content-Type':'application/json'} , body : JSON.stringify({searchQuery})})
+            fetch(`/search` , {method : 'POST' , headers:{'Content-Type':'application/json'} , body : JSON.stringify({searchQuery,categoryVal,max,min,selectedSort})})
          
             .then(res => res.json())
          
@@ -563,6 +583,5 @@
             $('#reloadDiv').load('/product #reloadDiv')
             
            }
-         } 
-         ;
+         } ;
 </script>

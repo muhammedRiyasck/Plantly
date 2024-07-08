@@ -65,6 +65,7 @@ const loadDashboard = async (req, res) => {
     }
 }
 
+
 const logOut = async (req,res)=>{
     try {
         req.session.admin = undefined

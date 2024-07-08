@@ -15,7 +15,7 @@
                   <a href="javascript:void(0)" class="closebtn pull-right" onclick="closeNav()"><i class="fas fa-times"></i></a>
                </div>
                <ul class="vertical_main_menu h_menu navbar navbar-nav">
-                  <li><a href="index.html">Home</a></li>
+                  <li><a href="/home">Home</a></li>
                   <li class="">
                      <a class="dropdown-toggle" href="shop-left-sidebar.html"  role="button" data-toggle="dropdown" aria-expanded="false">shop&nbsp;<span class="float-right"><i class="fas fa-angle-down"></i></span></a>
                      <ul class="dropdown-menu">
@@ -125,7 +125,7 @@
          <div class="row ">
             <div class="col-12 ">
                <ul class="p-md-3 p-2 bg-light">
-                  <li class="d-inline-block font-weight-bolderer"><a href="index.html">home</a></li>
+                  <li class="d-inline-block font-weight-bolderer"><a href="/home">home</a></li>
                   <li class="d-inline-block  font-weight-bolderer"><a href="#" class="hr_">Cart</a></li>
                </ul>
             </div>
@@ -143,7 +143,14 @@
          <!-- col-12 -->
       </div>
       <!-- row -->
-      <p style="color: red; padding-left: 44%;"><%= message %></p>
+      <% message.forEach(element => { %>
+         
+         <span style="color: red;display: flex;justify-content: center; text-transform: uppercase;"><%= element %></span><br>       
+      <% }); %> <br>
+
+         <span style="color: red;display: flex;justify-content: center; text-transform: uppercase;" ><%= querymessage %></span>
+
+
       <div class="row" style="justify-content: center;">
          <div class="col-12 col-lg-8">
             <div class="card">
@@ -209,7 +216,7 @@
                               </div>
                               <div class=" col-xl-8 col-lg-7 col-md-8 col-8 pr-0" >
                                  <h4 class="product-name font-weight-bolder mb-2 mb-sm-3 mb-xl-3 mt-sm-2 mt-md-2"><a href="#"><%= element.product_id.name %></a></h4>
-                                 <div><span class="font-weight-bolderer price">$<%= element.product_id.price %>.00</span> <del class="text-muted">$110</div>
+                                 <div><span class="font-weight-bolderer price">$<%= element.product_id.discount_price>0?element.product_id.discount_price:element.product_id.price %>.00</span>&nbsp; <del class="text-muted">$<%= element.product_id.discount_price>0?element.product_id.price:'00' %>.00</div>
                                  <!-- <div class="my-1 f_13">
                                     <span>size:</span>
                                     <span>s</span>
@@ -224,7 +231,7 @@
                         <div class="col-12 col-md-6 mt-4">
                            <div class="d-flex">
                               <div class="col-md-3 col-sm-4 col-5 text-left text-md-right my-2 ">
-                                 <span class="font-weight-bolder" id="price<%= element.product_id._id %>">$<%= element.price %>.00</span>
+                                 <span class="font-weight-bolder" id="price<%= element.product_id._id%>">$<%= element.price %>.00</span>
                               </div>
                               <!-- <div class="col-md-9 col-sm-4 col-5">
                                  <input type="number" class="form-control border"  placeholder="" readonly>
@@ -235,9 +242,10 @@
                                          <button type="button"  class="btn btn-default btn-number p-0" data-type="minus" ><span class="minus">-</span></button>
                                      </span>
                                     
-                                     <input type="number" name="qty" oninput="cartUpdate(this,'<%=element.price%>','<%=element.product_id._id%>')" class="form-control input-number" value="<%=element.price/element.product_id.price%>" min="1" max="<%= element.product_id.stock %>" readonly>
+                                     <input type="number" name="qty" oninput="cartUpdate(this,'<%=element.price%>','<%=element.product_id._id%>')" class="form-control input-number" value="<%=element.quantity%>" min="1" max="<%= element.product_id.stock %>" readonly>
                                      <span class="input-group-btn">
-                                         <button type="button" class="btn btn-default btn-number p-0" data-type="plus" onclick="minus(this), cartUpdate(this.parentNode.previousElementSibling,'<%=element.price%>','<%=element.product_id._id%>','<%=cartData._id%>')"><span class="plus">+</span></button>
+                                         <button type="button" class="btn btn-default btn-number p-0" data-type="plus" onclick="minus(this), cartUpdate(this.parentNode.previousElementSibling,'<%= element.product_id.discount_price>0?element.product_id.discount_price:element.product_id.price %>','<%=element.product_id._id%>','<%=cartData._id%>')"><span class="plus">+</span></button>
+                                        
                                      </span>
                                  </div>
                              </div>
@@ -355,7 +363,11 @@
    
 <%- include('../layouts/client/footer') %>
 
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
 <script>
 
   function deleteItem(id){
@@ -438,5 +450,9 @@ function cartUpdate(e,price,productId,cartId){
       
 
 }
+
+
+
+
 
 </script>

@@ -29,8 +29,11 @@ const addAddress = async(req,res)=>{
     try {
 
         const userId = req.query.id
-      
-        const exist = await Address.findOne({user_id:userId,'addressData.address':req.body.addressData.address},{'addressData.$' : 1})
+        const escapeRegex = (text) => {
+            return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+          };
+       const addressRegex = new RegExp(`^${escapeRegex(req.body.addressData.address.trim())}$`, 'i');
+        const exist = await Address.findOne({user_id:userId,'addressData.address':addressRegex},{'addressData.$':1})
   
 
       console.log(exist,'undd..........................')
@@ -47,7 +50,7 @@ const addAddress = async(req,res)=>{
                             pincode:req.body.addressData.pincode,
                             phone:req.body.addressData.phone,
                             locality:req.body.addressData.locality,
-                            address:req.body.addressData.address,
+                            address:req.body.addressData.address.trim(),
                             status:req.body.addressData.status
                         },
                     },
@@ -62,7 +65,7 @@ const addAddress = async(req,res)=>{
             }
         }else{
             res.status(400).send({exist:true})
-            console.log('address indalo')
+           
         }
 
     } catch (error) {
@@ -94,7 +97,7 @@ const addEditAddress = async(req,res)=>{
         if(editAddress&&from){
            res.send(true)
         }
-        if(editAddress){
+        else if(editAddress){
             req.flash('flash','Address Edited')
             res.redirect('/address')
         }

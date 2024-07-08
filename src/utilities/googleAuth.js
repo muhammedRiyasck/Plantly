@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
 
-const User = require('./src/model/user_model')
+const User = require('../model/user_model')
 
-const user_middilware = require('./src/middleware/user_auth')
+const user_middilware = require('../middleware/user_auth')
 
 const axios = require('axios')
 

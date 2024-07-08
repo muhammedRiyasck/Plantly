@@ -25,51 +25,8 @@
       <div class="dashboard">
         <div class="container">
           <div class="row">
-            <aside class="col-md-4 col-lg-3">
-              <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" id="tab-dashboard-link" href="/profile"> My Profile</a>
-                </li>
 
-                <li class="nav-item">
-                  <a class="nav-link" id="tab-orders-link" href="/orders" role="tab">Orders</a>
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" id="tab-orders-link" href="/cart" role="tab">Cart</a>
-                </li>
-                <!-- <li class="nav-item">
-                                      <a class="nav-link" id="tab-downloads-link" href="#" role="tab">Wishlist</a>
-                                  </li> -->
-
-                <li class="nav-item">
-                  <a class="nav-link" id="tab-address-link" href="/address">Address</a>
-                </li>
-
-                <!-- <li class="nav-item">
-                                      <a class="nav-link" id="tab-wallet-link" href="/wallet" role="tab">Wallet</a>
-                                  </li> -->
-
-                <!-- <li class="nav-item">
-                                      <a class="nav-link" id="tab-coupons-link" href="/coupen" role="tab">Coupons</a>
-                                  </li>
-                                   -->
-                <!-- <li class="nav-item">
-                                    
-                                    <form action="/logout" method="post">
-
-                                      <button class="bg-transparent pt-1 border-0 d-flex  text-dark">
-
-                                      <p class="text-dark" style="padding-left: 1rem;">SignOut</p>
-
-                                      </button>
-
-                                    </form>
-
-                                  </li>
-                                   -->
-              </ul>
-            </aside>
+           <%- include('../layouts/client/profileNavbar') %>
 
             <div class="col-md-8 col-lg-9">
               <div class="tab-content">
@@ -434,7 +391,7 @@
 <%- //include('../layouts/mobileView.ejs') %>
 <!--Connect Mobaile View-->
 
-<button id="scroll-top" title="Back to Top">
+
   <i class="icon-arrow-up"></i>
 </button>
 

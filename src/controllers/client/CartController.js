@@ -9,16 +9,16 @@ const Category = require('../../model/category_model')
 const loadCart= async(req,res)=>{
 
     try {
-        
+     
         if(req.session.user){
 
-            const category = await Category.find({Listed:true})
+            
             const userId = req.session.user._id
             
             let cartData = await cart.findOne({user_id:userId}).populate('products.product_id')
-            
+            let querymessage = req.query.message
             if(cartData){
-                
+                    
                 const unlistProduct = cartData.products.filter(val => val.product_id.status === false)
 
                 if(unlistProduct){
@@ -46,17 +46,21 @@ const loadCart= async(req,res)=>{
                
                 let amount = await cart.findOne({user_id:userId},{totalCartPrice:true})
                 
-                let taxAmount =parseInt(amount.totalCartPrice*9/100)
+                let taxAmount = Math.round(amount.totalCartPrice*(9/100))
 
-                // let totalAmoutOfItem = awai
+                console.log(taxAmount)
 
                 const message = req.flash('message')
-                res.render('Cart',{userlogdata : req.session.user,message,cartData:updatedCartData,productPrice,totalAmount:productPrice+taxAmount})
+                // console.log(message,'message from controller')
+
+                // console.log(querymessage,'querry ')
+                res.render('Cart',{userlogdata : req.session.user,message,cartData:updatedCartData,productPrice,totalAmount:Math.round(productPrice+taxAmount),querymessage})
      
 
             }else{
                 const message = req.flash('message')
-                return res.render('Cart',{userlogdata : req.session.user,message})
+                
+                return res.render('Cart',{userlogdata : req.session.user,message,querymessage})
             }
 
         }else{
@@ -87,8 +91,8 @@ const addToCart = async(req,res)=>{
 
                if(!exist){
 
-                const total = cartProduct.price * quantiyy
-
+                const total = cartProduct.discount > 0 ? cartProduct.discount_price * quantiyy : cartProduct.price * quantiyy
+                
                 const addedd = await cart.findOneAndUpdate({ user_id:userId},{$addToSet:{products:{
 
                     product_id:productId,
@@ -134,8 +138,6 @@ const removeItem =async(req,res)=>{
         
         const removeCart = await cart.updateOne({ user_id: userId }, { $pull: { products: { 'product_id': itemId } } });
 
-        console.log(removeCart,'ahi')
-
 
         const removeItem = await cart.deleteOne({ 'products.product_id._id': itemId })
 
@@ -166,15 +168,16 @@ const cartUpdate = async(req,res)=>{
 
       const product = await Product.findOne({_id:productId})
      
-      const updatedPrice= product.price*quantiy
-
+    //   const updatedPrice= product.price*quantiy
+      const updatedPrice = product.discount > 0 ? product.discount_price * quantiy : product.price * quantiy
 
    
        
       const updatedCart = await cart.findOneAndUpdate({_id:cartId,'products.product_id':productId},
         {
             $set:{
-                'products.$.price':updatedPrice          
+                'products.$.price':updatedPrice,
+                'products.$.quantity':quantiy        
             },
         },
         {new:true}

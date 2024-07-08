@@ -33,7 +33,7 @@ const cartSchema = new mongoose.Schema({
 
     }
 
-})
+},{timestamps:true})
 
 const cart = mongoose.model('cart',cartSchema)
 
@@ -44,13 +44,18 @@ const wishlistSchema = new mongoose.Schema({
         ref:'user',
         require:true
     },
-    products_id:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'product',
-        required:true
+    products: [{
+        
+        product_id: {
+           
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'product',
+            required:true
+        }
+
     }]
 
-})
+} ,  { timestamps:true })
 
 const wishlist = mongoose.model('wishlist',wishlistSchema)
 

@@ -1,4 +1,5 @@
 // const { ref, required } = require('joi')
+const { required } = require('joi')
 const mongoose = require('mongoose')
 
 const OrderSchema  = mongoose.Schema({
@@ -10,6 +11,10 @@ const OrderSchema  = mongoose.Schema({
     },
     orderAmount:{
         type:Number,
+        required:true
+    },
+    order_Id:{
+        type:String,
         required:true
     },
     payment:{
@@ -44,19 +49,38 @@ const OrderSchema  = mongoose.Schema({
             type:String,
             required:true
         },
-        orderStatus:{
+        productStatus:{
             type:String,
             required:true,
-            enum:['pending','shipped','delivered','cancelled','returned'],
+            enum:['pending','placed','shipped','delivered','cancelled','returned'],
             default:'pending'
         },
-        totalSaved:{
-            type:Number,
-            required:false,
-            default:0
-        },
-
+        canceled: { type: Boolean, default: false },
+        
+        reason: { type: String, default: '' },
+    
+        retruned: { type: Boolean, default: false },
+        
     }],
+    orderStatus:{
+        type:String,
+        enum:['pending','placed','shipped','delivered','cancelled','returned'],
+        required:true,
+        default:'pending'
+    },
+    // deliveryCharge:{
+    //     type:Number,
+    //     required:true
+    // },
+    totalSaved:{
+        type:Number,
+        required:false,
+        default:0
+    },
+    
+   
+
+
 })
 
 module.exports = mongoose.model('order',OrderSchema)

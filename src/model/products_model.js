@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
 
     category_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'category' },
     
-    createdAt: { type: Date, default:Date.now() },
+    // createdAt: { type: Date, default:Date.now() },
     
     status: { type: Boolean, default: true },
     
@@ -22,6 +22,7 @@ const productSchema = new mongoose.Schema({
 
     discount: { type: Number, default: 0 },
     
-});
+    
+},{timestamps:true});
 
 module.exports = mongoose.model("product", productSchema); 

@@ -1,9 +1,12 @@
 const express = require('express');
-const adminControllers = require('../../controllers/admin/AdminController');
-const adminCategory=require('../../controllers/admin/AdminCategory')
-const adminProducts=require('../../controllers/admin/AdminProduct')
-const adminUsers=require('../../controllers/admin/AdminUser')
-const adminOrders= require('../../controllers/admin/AdminOrder')
+const adminControllers = require('../../controllers/admin/Controller');
+const adminCategory=require('../../controllers/admin/Categories')
+const adminProducts=require('../../controllers/admin/Products')
+const adminUsers=require('../../controllers/admin/Users')
+const adminOrders= require('../../controllers/admin/Orders')
+const adminOfferController = require('../../controllers/admin/OfferModule')
+const adminCoupenController = require('../../controllers/admin/Coupen')
+const salesReportController = require('../../controllers/admin/SalesReport')
 const adminRoute = express()
 
 const admin_auth = require('../.././middleware/admin_auth')
@@ -11,34 +14,8 @@ const admin_auth = require('../.././middleware/admin_auth')
 const path = require('path');
 adminRoute.use(express.static(path.join(__dirname, 'src/public/admin')));
 adminRoute.set('views', './src/views/admin');  
-//  Path :-
-const fs = require('fs');
-const multer = require('multer');
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, '../../public/productImages');
-
-        // Check if directory exists, if not create it
-        if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-        }
-
-        cb(null, uploadPath);
-    },
-    filename: (req, file, cb) => {
-        const name = Date.now() + '-' + file.originalname;
-        cb(null, name);
-    },
-});
-
-const upload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-        cb(null, true); // You can add more advanced file filtering here
-    },
-});
-
+const multer = require('../../utilities/multer')
 
 adminRoute.get('/',admin_auth.isLogout, adminControllers.loadLogin)
 adminRoute.get('/login',admin_auth.isLogout, adminControllers.loadLogin)
@@ -60,15 +37,27 @@ adminRoute.post('/valSet' , adminCategory.valSett);
 adminRoute.post('/categoryEdit',adminCategory.categoryEdit)
 adminRoute.post('/categoryDelete',adminCategory.categoryDelete)
 
-adminRoute.post('/addProduct', upload.array('images', 3), adminProducts.addProducts);
+adminRoute.post('/addProduct',multer.upload.array('images', 3), adminProducts.addProducts);
 adminRoute.put('/productAction',adminProducts.productAction)
 adminRoute.get('/editProduct',admin_auth.isLogin,adminProducts.loadEditProduct)
 
-adminRoute.post('/editProduct/:id',upload.fields([{ name: 'image0', maxCount: 1 }, { name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]),adminProducts.editProduct)
+adminRoute.post('/editProduct/:id',multer.upload.fields([{ name: 'image0', maxCount: 1 }, { name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]),adminProducts.editProduct)
 
-adminRoute.get('/orders',adminOrders.loadOrders)
-adminRoute.get('/orderDetails',adminOrders.loadOrdersDetails)
-adminRoute.put('/orderStatusHandling',adminOrders.orderProductStatus)
+adminRoute.get('/orders',admin_auth.isLogin,adminOrders.loadOrders)
+adminRoute.get('/orderDetails',admin_auth.isLogin,adminOrders.loadOrdersDetails)
+adminRoute.put('/orderStatusHandling',admin_auth.isLogin,adminOrders.orderProductStatus)
+
+adminRoute.route('/offerModule').get(admin_auth.isLogin,adminOfferController.loadOffer).post(adminOfferController.addOffer)
+adminRoute.put('/offerRemove',adminOfferController.offerRemove)
+
+adminRoute.route('/coupen').get(admin_auth.isLogin,adminCoupenController.loadAdminCoupen).post(multer.upload.array('image',1),adminCoupenController.addCoupen)
+adminRoute.post('/copenAction',adminCoupenController.coupenAction)
+adminRoute.put('/deleteCoupen',adminCoupenController.deleteCoupen)
+
+adminRoute.post('/returnManage',adminOrders.returnManage)
+
+adminRoute.get('/salesReport/:id', admin_auth.isLogin, salesReportController.loadReport);
+
 
 adminRoute.post('/logout',adminControllers.logOut)
 

@@ -302,7 +302,7 @@
         <div class="sp_ri_leftpart">
           <div class="sp_product_detail">
             <h1 class=""><a href="#"><%= singleProduct.name %></a></h1>
-            <span class="sp_price font-weight-bold">$<%= singleProduct.price %></span>
+            <span class="sp_price font-weight-bold">$<%= singleProduct.discount_price>0?singleProduct.discount_price:singleProduct.price %></span>
             <div class="text-secondary sp_tax">Tax included.</div>
             <div class="sp_add_info my-3">
               <ul>
@@ -396,7 +396,7 @@
                        <div class="input-group">
                           <span class="input-group-btn">
                           <button type="button" class="btn btn-default btn-number p-0" disabled="disabled" data-type="minus" data-field="qty"><span class="minus">-</span></button>
-                          </span>
+                          </span> 
                           <input type="number" name="qty"class="form-control input-number" value="1"  min="1" max="<%= singleProduct.stock %>" readonly>
                           <span class="input-group-btn">
                           <button type="button" class="btn btn-default btn-number p-0" data-type="plus" data-field="qty"><span class="plus">+</span></button>
@@ -406,7 +406,11 @@
                  </div>
               </div>
               <!-- <span class="sp_c_count2"> -->
-              <a onclick="addToCart('<%= singleProduct._id %>')" class="btn btn-primary primary">add to cart</a>
+                <% if (singleProduct.stock>0) { %>        
+                  <a onclick="addToCart('<%= singleProduct._id %>')" class="btn btn-primary primary">add to cart</a>
+               <% } else {%>
+                <span class="btn btn-primary primary" style="background:red;">out of stock</span>
+                <% } %>
               <!-- </span> -->
            </div>
             <div class="form-check sp_check my-3">

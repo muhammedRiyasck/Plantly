@@ -2,8 +2,8 @@ const {wishlist,cart}= require('../../model/CartAndWishlist_model')
 const Product = require('../../model/products_model')
 const Category = require('../../model/category_model')
 const Address = require('../../model/address_model')
+const Wallet = require('../../model/wallet_model')
 const User = require('../../model/user_model')
-
 
 
 const loadChekout = async(req,res)=>{
@@ -17,8 +17,8 @@ const loadChekout = async(req,res)=>{
             if(cartData.products.length>=1){
             
                 let amount = await cart.findOne({user_id:userId},{totalCartPrice:true})
-                let taxAmount =parseInt(amount.totalCartPrice*9/100)
-                let totalAmount = amount.totalCartPrice+taxAmount+2
+                let taxAmount =Math.round(amount.totalCartPrice*(9/100))
+                let totalAmount = Math.round(amount.totalCartPrice+taxAmount)
                 
 
             const address = await Address.findOne({user_id:userId})
@@ -40,8 +40,21 @@ const loadChekout = async(req,res)=>{
     }
 }
 
-
+const checkWalletAmount=async(req,res)=>{
+    try {
+        
+        if(req.session.user){
+        let userWallet= await Wallet.findOne({user_id:req.session.user_id})
+            console.log(userWallet.balance)
+        }else{
+            console.log('please login for check the wallet amount')
+        }
+    } catch (error) {
+        
+    }
+}
 
 module.exports={
-    loadChekout
+    loadChekout,
+    checkWalletAmount
 }

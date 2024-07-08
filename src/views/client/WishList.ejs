@@ -127,14 +127,14 @@
               <div class="row ">
                  <div class="col-12 ">
                     <ul>
-                       <li class="d-inline-block font-weight-bolder"><a href="index.html">home</a></li>
+                       <li class="d-inline-block font-weight-bolder"><a href="/home">home</a></li>
                        <li class="d-inline-block hr_ font-weight-bolder"><a href="#">wishlist</a></li>
                     </ul>
                  </div>
               </div>
            </div>
         </div>
-        <div class="container custom_container">
+        <div id="reloadDiv" class="container custom_container">
            <!-- 			<div class="row w_head sh_page border-bottom">
               <div class="col-12 col-md-6 pr-0">
                   <div class="d-flex">
@@ -160,23 +160,29 @@
                   </div>
               </div>
               </div> -->
-           <div class="row sh_page border-bottom">
+           <!-- <div class="row sh_page border-bottom">
               <div class="col-12">
                  <span class="font-weight-bold">wishlist</span>
               </div>
-           </div>
+           </div> -->
+           <% if(wishlistData&&wishlistData.products.length>0){%>
+           
+           <% wishlistData.products.forEach(val => { %>
+            
            <div class="row sh_page border-bottom">
-               <div class="col-md-12 col-sm-12 col-12 text-right wishlist-p-dlt">
-                       <a href="#"><i class="fas fa-trash-alt "></i></a>
-                    </div>
+
+               <div class="col-md-12 col-sm-12 col-12 text-right">
+                       <button onclick="removeWishlist('<%= val.product_id._id %>')" class="btn"><i class="fas fa-trash-alt "></i></button>
+               </div>
+
               <div class="col-12 col-md-6 pr-0">
                  <div class="d-flex">
                     <div class=" col-xl-4 col-lg-5 col-md-5 col-4 px-0">
-                       <a href="#"><img src="assets/img/product/product_13.jpg" class="fst-image mx-auto d-block img-fluid" alt="product_13"></a>
+                       <a href="#"><img src="assets/productImages/<%= val.product_id.images[0] %>" class="fst-image mx-auto d-block img-fluid" alt="product_13"></a>
                     </div>
                     <div class=" col-xl-8 col-lg-7 col-md-7 col-8 pr-0">
-                       <h5 class="w_product_name  mb-2 mb-sm-3 mb-xl-3 mt-sm-2 mt-md-2"><a href="#">Aliquam Top Erat Volutpat</a></h5>
-                       <ul>
+                       <h5 class="w_product_name  mb-2 mb-sm-3 mb-xl-3 mt-sm-5 mt-md-5"><a href="#"><%= val.product_id.name %></a></h5>
+                       <!-- <ul>
                           <li class="my-1 f_13">
                              <span>size:</span>
                              <span>s</span>
@@ -185,22 +191,37 @@
                              <span>color:</span>
                              <span>white</span>
                           </li>
-                       </ul>
+                       </ul> -->
                     </div>
                  </div>
               </div>
-              <div class="col-12 col-md-6 mt-4 pl-0">
+              <div class="col-12 col-md-6 mt-5 pl-0">
                  <div class="d-flex">
                     <div class="col-md-4 col-sm-4 col-4 ">
-                       <span class="font-weight-bold">$45.00</span>
+                       <span class="font-weight-bold">$<%= val.product_id.price %></span>
                     </div>
                     <div class="col-md-4 col-sm-4 col-5 text-center">
-                       <span class="font-weight-bolder"><span class="d-xl-inline-block d-none">availability : </span> in stock</span>
+                       <span class="font-weight-bolder"><span class="d-xl-inline-block d-none ">availability : </span> <%= val.product_id.stock==0? 'out of stock':val.product_id.stock %></span>
                     </div>
+                    <div class="col-md-4 col-sm-4 col-5 text-center">
+                       <% if(val.product_id.stock == 0){ %>
+                    <input type="button" disabled class="btn btn-success" onclick="addToCart('<%=val.products_id._id%>')" value="add to cart">
+                    <% }else{ %>
+                     <input type="button"  class="btn btn-success" onclick="addToCart('<%=val.product_id._id%>')" value="add to cart">
+                     <% } %>
+                  </div>
+
                  </div>
               </div>
            </div>
-           <div class="row sh_page">
+           <% }); %>
+           <% }else{ %>
+            <div class="mt-5">
+               <i style="display: flex;justify-content: center;">your wishlist is empty .</i>
+                  <a href="/shop" style="display: flex;justify-content: center;">click here</a>
+            </div>
+            <% } %>
+           <!-- <div class="row sh_page">
                <div class="col-md-12 col-sm-12 col-12 text-right wishlist-p-dlt">
                        <a href="#"><i class="fas fa-trash-alt "></i></a>
                     </div>
@@ -234,11 +255,83 @@
                     </div>
                  </div>
               </div>
-           </div>
+           </div> -->
         </div>
         <!-- container custom_container -->
      </div>
      <!-- portfolio_2_page -->
-     <!-- wishlist page 
+    
 
 <%- include('../layouts/client/footer') %>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+   function removeWishlist(proId){
+
+      fetch(`/removewishlist?id=${proId}`,{method:'post'})
+
+      .then(res=>res.json())
+
+      .then(data=>{
+
+         if(data.success){
+
+            $('#reloadDiv').load('/wishlist #reloadDiv') 
+
+         }
+
+      })
+}
+
+   function addToCart(id){
+
+      fetch('/cart',{method:'post',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})})
+      .then(res=>res.json())
+      .then(data=>{
+         if(data.success){
+          
+          const Toast = Swal.mixin({
+              
+              toast: true,
+              position: "top-center",
+              showConfirmButton: false,
+                
+                timer: 2000,
+                timerProgressBar: false,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Product added to Cart",
+              });
+                removeWishlist(id)
+         }else if(data.exist){
+            const Toast = Swal.mixin({
+         
+         toast: true,
+         position: "top-center",
+         showConfirmButton: false,
+            
+            timer: 2000,
+            timerProgressBar: false,
+            didOpen: (toast) => {
+               toast.onmouseenter = Swal.stopTimer;
+               toast.onmouseleave = Swal.resumeTimer;
+            },
+
+         });
+         Toast.fire({
+            icon: "warning",
+            title: "Already Added",
+            });
+
+         }
+      })
+
+   }
+</script>

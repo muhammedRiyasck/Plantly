@@ -146,11 +146,11 @@
                      <div class="collapse " id="shop_range_collapse">
                         <div class="col-md-6 col-sm-12 pl-0 pr-md-2 pr-sm-0 pr-0">
                            <label class="font-weight-bolder" >min</label>
-                           <input type="number" onblur="sort()" id="min" class="form-control"  placeholder="$0">
+                           <input type="number"  id="min" class="form-control"  placeholder="$0">
                         </div>
                         <div class="col-md-6 col-sm-12 pr-0 pl-md-2 pl-sm-0 pl-0 ">
                            <label class="font-weight-bolder" >max</label>
-                           <input type="number" onblur="sort()" id="max" class="form-control"  placeholder="$0">
+                           <input type="number"  id="max" class="form-control"  placeholder="$0">
                         </div>
                      </div>
                   </div>
@@ -158,40 +158,40 @@
                      <h6 class="text-uppercase  border-bottom font-weight-bold">sort<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_color_collapse"></button></h6>
                      <div class="collapse" id="shop_color_collapse">
                         <label class="form-check">
-                        <input onclick="sort(1)" name="radio" id="aAzZ" class="form-check-input" type="radio" value="">
+                        <input onclick="search()" name="sort" id="sort" class="form-check-input" type="radio" value="AtoZ">
                         <span  class="form-check-label font-weight-bolder" style="text-transform:none;">Name, A to Z</span>
-                        <span class="text-right float-right font-weight-bolder">(1)</span>
+                        <span class="text-right float-right font-weight-bolder">(<%= count  %>)</span>
                         </label>
                         <label class="form-check">
-                        <input onclick="sort(-1)" id="zZaA" name="radio" class="form-check-input " type="radio" value="">
+                        <input onclick="search()" id="sort" name="sort" class="form-check-input " type="radio" value="ZtoA">
                         <span class="form-check-label font-weight-bolder"  style="text-transform: none;">Name, Z to A</span>
-                        <span class="text-right float-right font-weight-bolder">(1)</span>
+                        <span class="text-right float-right font-weight-bolder">(<%= count  %>)</span>
                         </label>
                         <label class="form-check">
-                        <input  onclick="sort(1,'price')" id="lowToHigh" name="radio" class="form-check-input" type="radio" value="">
+                        <input  onclick="search()" id="sort" name="sort" class="form-check-input" type="radio" value="LowToHigh">
                         <span class="form-check-label font-weight-bolder">low to high</span>
-                        <span class="text-right float-right font-weight-bolder">(1)</span>
+                        <span class="text-right float-right font-weight-bolder">(<%= count  %>)</span>
                         </label>
                         <label class="form-check">
-                        <input onclick="sort(-1,'price')" id="highToLow" name="radio" class="form-check-input"  type="radio" value="">
+                        <input onclick="search()" id="sort" name="sort" class="form-check-input"  type="radio" value="HighToLow">
                         <span class="form-check-label font-weight-bolder">high to low</span>
-                        <span class="text-right float-right font-weight-bolder">(1)</span>
+                        <span class="text-right float-right font-weight-bolder">(<%= count  %>)</span>
                         </label>
                      </div>
                   </div>
                   <div class="s_filter">
                      <h6 class="text-uppercase border-bottom font-weight-bold">categories<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_brand_collapse"></button></h6>
-                     <% category.forEach((val,i)=> { %>
+                     <% category.forEach((val, i) => { %>
                         <div class="collapse" id="shop_brand_collapse">
-                           <label class="form-check">
-                           <input class="form-check-input checkbox-item" type="checkbox" value="<%= val._id %>" id="checkbox_<%= i %>">
-                           <span class="form-check-label font-weight-bolder"><%=val.name %></span>
-                           <span class="text-right float-right font-weight-bolder">(1)</span>
-                           </label>
-                           
+                            <label class="form-check">
+                                <input class="form-check-input checkbox-item" type="checkbox" value="<%= val._id %>" id="checkbox_<%= i %>">
+                                <span class="form-check-label font-weight-bolder"><%= val.name %></span>
+                                <span class="text-right float-right font-weight-bolder">
+                                    (<%= categoryCountMap[val._id] || 0 %>)
+                                </span>
+                            </label>
                         </div>
-                        
-                  <%   }); %>
+                    <% }); %>
                   </div>
                   <!-- <div class="s_filter">
                      <h6 class="text-uppercase border-bottom font-weight-bold">size<button class="toggle collapsed" data-toggle="collapse" data-target="#shop_size_collapse"></button></h6>
@@ -217,12 +217,13 @@
                         <span class="text-right float-right font-weight-bolder">(1)</span>
                         </label>
 
-                        
+               
                      </div>
                   </div> -->
                   <div>
-               <button id="clearButton" data-search-url="#" class="btn btn-primary clear_btn" type="reset">Clear all</button>
-               <button id="applyButton" data-search-url="#" class="btn btn-primary clear_btn" type="submit" style="margin-left:100px;" onclick="sort()" >apply filter</button>
+               <button type="button"  class="btn btn-primary clear_btn"  onclick="clearSelection()">Clear all</button>
+               
+               <button id="applyButton" data-search-url="#" class="btn btn-primary clear_btn" type="submit" style="margin-left:100px;" onclick="search()" >apply filter</button>
 
                  </div>
                </div>
@@ -259,13 +260,23 @@
             <div id="products" class="row" >
                    
                <!-- item -->
+                
               
-               <% productData.forEach(val => {%>
+               <% productData.slice().reverse().forEach(val => {%>
                <div class="item col-xl-3" >
                   <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
+
+                     
+
+                     <div class="pro_image"style="position: relative;">
                         <a href="/single-product?id=<%= val._id %>"><img src='/assets/productImages/<%= val.images[0] %>'  class="fst-image mx-auto d-block img-fluid" alt="product_13"></a>
                         <a href="/single-product?id=<%= val._id %>"><img src='/assets/productImages/<%= val.images[1] %>'  class="second-img mx-auto d-block img-fluid"  alt="product_13"></a>
+                       
+            <% if (val.stock <= 0) { %>
+               <span class="product-label text-white p-1 label-out-of-stock " style="position: absolute; top: 0; left: 0; width:60%; text-align: center; background-color: rgba(196, 25, 25, 0.75);">Out of Stock</span>
+           <% } else { %>
+                  <span class="product-label  p-1 text-white <%= val.discount > 0 ? 'bg-danger' : '' %>" style="position: absolute; top: 0; left: 0; width: 40%; text-align: center;"><%= val.discount > 0 ? val.discount + '% OFF' : '' %></span>
+           <% } %>
                      </div>
                      <div class="text-center main_text pt-3">
                         <div>
@@ -277,19 +288,32 @@
                               <i class="fa fa-star" aria-hidden="true"></i>
                            </div>
                            <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="/single-product?id=<%= val._id %>"><%= val.name %></a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$<%= val.price %>.00 </span> <del class="text-muted"></del></span>
+                          <% if(val.discount > 0){ %>
+                           
+                           <span style=" text-decoration: line-through !important; color: rgb(255, 3, 3) !important; opacity: 0.5 !important; ">$<%= val.price %>.00</span>&nbsp;
+                           <% } else{%>
+                           <span >$<%= val.price %>.00</span>&nbsp;
+                           <% } %>
+
+                           <% if(val.discount > 0){ %>
+
+                              <span class="text-success">$<%= val.discount_price %>.00</span>
+
+                           <% } %>
                            <p class="description mt-1 text-muted"><%= val.description %></p>
                            <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
+                              <a onclick="addToWishlist('<%=val._id%>')"  class="symbol pro_heart ml-0" data-toggle="modal" ></a>
                               <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
                               <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
                            </div>
                            <!-- <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
                            + ADD TO CART
                            </a>							 -->
-
+                           <% if(val.stock>0){ %>
                            <a class="btn symbol add_to_cart" onclick="addToCart('<%= val._id %>')">+ ADD TO CART</a>
-
+                          <% }else{ %> 
+                           <span class="btn symbol add_to_cart" style="color: red;">OUT OF STOCK</span>
+                           <% } %>
                         </div>
                      </div>
                   </div>
@@ -417,26 +441,13 @@ const zZaA = document.getElementById('zZaA')
 const lowToHigh = document.getElementById('lowToHigh')
 const highToLow = document.getElementById('highToLow')
 
-const min = document.getElementById('min').value||0
-const max = document.getElementById('max').value
+
 
 const result = document.getElementById('products')
 
-const checkboxes = document.querySelectorAll('.checkbox-item');
-    
-const categoryVal=[]
-    // Iterate over each checkbox to get their values
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            categoryVal.push(checkbox.value)
-            // console.log('Checkbox value:', checkbox.value);
-        }
-    });
-// const status = true
-console.log(categoryVal,'kittin')
 
 if(true){
-   fetch(`/sortAndFilter` , {method : 'POST' , headers:{'Content-Type':'application/json'} , body : JSON.stringify({sortby,Price,min,max,categoryVal})})
+   fetch(`/sortAndFilter` , {method : 'POST' , headers:{'Content-Type':'application/json'} , body : JSON.stringify({sortby,Price})})
 
    .then(res => res.json())
 
@@ -444,47 +455,97 @@ if(true){
 
       if(data.length>0){
 
-           result.classList.remove('justify-content-center')
+         //   result.classList.remove('justify-content-center')
 
-            result.innerHTML= `${data.map((product,i) => (`
+         //    result.innerHTML= `${data.map((product,i) => (`
                
-                 <div class="item col-xl-3" >
-                  <div class="product_thumb bg-white rounded">
-                     <div class="pro_image">
+         //         <div class="item col-xl-3" >
+         //          <div class="product_thumb bg-white rounded">
+         //             <div class="pro_image">
 
-                         <a href="/single-product?id=${product._id}"> <img src="/assets/productImages/${product.images[0]}" class="fst-image mx-auto d-block img-fluid" alt="product_img"></a>
-                         <a href="/single-product?id=${product._id}"> <img src="/assets/productImages/${product.images[1]}" class="second-img mx-auto d-block img-fluid"  alt="product_img"></a>
+         //                 <a href="/single-product?id=${product._id}"> <img src="/assets/productImages/${product.images[0]}" class="fst-image mx-auto d-block img-fluid" alt="product_img"></a>
+         //                 <a href="/single-product?id=${product._id}"> <img src="/assets/productImages/${product.images[1]}" class="second-img mx-auto d-block img-fluid"  alt="product_img"></a>
 
-                     </div>
-                     <div class="text-center main_text pt-3">
-                        <div>
-                           <div class="star mb-2">
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                              <i class="fa fa-star" aria-hidden="true"></i>
-                           </div>
-                           <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="/single-product?id=${product._id}">${product.name}</a></h2>
-                           <span class="text-center prices"><span class="font-weight-bolder price">$${product.price}.00 </span> <del class="text-muted"></del></span>
-                           <p class="description mt-1 text-muted">${product.description}</p>
-                           <div class="button-group">
-                              <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                              <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                              <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                           </div>
-                           <!-- <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                           + ADD TO CART
-                           </a>							 -->
+         //             </div>
+         //             <div class="text-center main_text pt-3">
+         //                <div>
+         //                   <div class="star mb-2">
+         //                      <i class="fa fa-star" aria-hidden="true"></i>
+         //                      <i class="fa fa-star" aria-hidden="true"></i>
+         //                      <i class="fa fa-star" aria-hidden="true"></i>
+         //                      <i class="fa fa-star" aria-hidden="true"></i>
+         //                      <i class="fa fa-star" aria-hidden="true"></i>
+         //                   </div>
+         //                   <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="/single-product?id=${product._id}">${product.name}</a></h2>
+         //                   <span class="text-center prices"><span class="font-weight-bolder price">$${product.price}.00 </span> <del class="text-muted"></del></span>
+         //                   <p class="description mt-1 text-muted">${product.description}</p>
+         //                   <div class="button-group">
+         //                      <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
+         //                      <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
+         //                      <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
+         //                   </div>
+         //                   <!-- <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
+         //                   + ADD TO CART
+         //                   </a>							 -->
 
-                           <a class="btn symbol add_to_cart" onclick="addToCart('${product._id}')">+ ADD TO CART</a>
+         //                   <a class="btn symbol add_to_cart" onclick="addToCart('${product._id}')">+ ADD TO CART</a>
 
+         //                </div>
+         //             </div>
+         //          </div>
+         //       </div>
+
+         // `)).join('')}`
+         result.innerHTML = data.map(product => {
+    let labelHTML = '';
+    let discountHTML = '';
+
+    // Conditional logic for product label
+    if (product.stock <= 0) {
+        labelHTML = `<span class="product-label text-white p-1 label-out-of-stock" style="position: absolute; top: 0; left: 0; width:60%; text-align: center; background-color: rgba(118, 8, 8, 0.75);">Out of Stock</span>`;
+    } else {
+        labelHTML = `<span class="product-label bg-success p-1 text-white ${product.discount > 0 ? 'bg-danger' : 'rounded'}" style="position: absolute; top: 0; left: 0; width: 40%; text-align: center;">${product.discount > 0 ? product.discount + '% OFF' : 'New'}</span>`;
+    }
+
+    // Conditional logic for discount
+    if (product.discount > 0) {
+        discountHTML = `<span class="text-success">$${product.discount_price}.00</span>`;
+    }
+
+    return `
+        <div class="item col-xl-3">
+            <div class="product_thumb bg-white rounded">
+                <div class="pro_image" style="position: relative;">
+                    <a href="/single-product?id=${product._id}"><img src='/assets/productImages/${product.images[0]}' class="fst-image mx-auto d-block img-fluid" alt="product_13"></a>
+                    <a href="/single-product?id=${product._id}"><img src='/assets/productImages/${product.images[1]}' class="second-img mx-auto d-block img-fluid" alt="product_13"></a>
+                    ${labelHTML}
+                </div>
+                <div class="text-center main_text pt-3">
+                    <div>
+                        <div class="star mb-2">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
                         </div>
-                     </div>
-                  </div>
-               </div>
+                        <h2 class="pro-heading font-weight-bolder mb-1"><a href="/single-product?id=${product._id}">${product.name}</a></h2>
+                        <span style="${product.discount > 0 ? 'text-decoration: line-through !important; color: red !important; opacity: 0.5 !important;' : ''}">$${product.price}.00</span>&nbsp;
+                        ${discountHTML}
+                        <p class="description mt-1 text-muted">${product.description}</p>
+                        <div class="button-group">
+                            <a href="#" class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
+                            <a href="#" class="symbol pro_eye" data-toggle="modal" data-target="#eye_model"></a>
+                            <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model"></a>
+                        </div>
+                        <a class="btn symbol add_to_cart" onclick="addToCart('${product._id}')">+ ADD TO CART</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}).join('');
 
-         `)).join('')}`
 
       }else {
         result.innerHTML = '<p style="margin-left: 22rem">No products found</p>'; // Display message if no products found
@@ -498,7 +559,64 @@ if(true){
   }
 };
 
+function clearSelection() {
+  // Uncheck all checkboxes
+  var checkboxes = document.querySelectorAll('.checkbox-item');
+    checkboxes.forEach(function(checkbox) {
+    checkbox.checked = false;
+  });
 
+  // Uncheck all radio buttons
+  var radios = document.querySelectorAll('input[type="radio"][name="sort"]');
+  radios.forEach(function(radio) {
+    radio.checked = false;
+  });
+  document.getElementById('min').value = '';
+  document.getElementById('max').value = '';
+  document.getElementById('Search').value= '';
+ 
+//   sort()
+window.location.reload()
+}
+
+function addToWishlist(productID){
+
+   fetch(`/wishlist?idd=${productID}`,{method:'post'})
+
+   .then(res=>res.json())
+
+   .then(data=>{
+
+      if(data.success){
+
+         Swal.fire({
+                    html: "<b>product add to wishlist</b>",
+                    iconHtml: 'G',
+                    iconColor: 'green',
+                    background: '#f9f6e8',
+                    width: '280px',
+                    padding: '10px',
+                    icon: 'success',
+                    toast: true,
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+      }else{
+         Swal.fire({
+                    html: "<b>product already exist in your wishlist</b>",
+                    iconHtml: 'X',
+                    iconColor: 'red',
+                    background: '#f9f6e8',
+                    width: '280px',
+                    padding: '10px',
+                    icon: 'error',
+                    toast: true,
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+      }
+   })
+}
 
 </script>
 

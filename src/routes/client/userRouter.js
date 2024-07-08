@@ -11,6 +11,8 @@ const wishlistController = require('../../controllers/client/WishlistController'
 const checkoutController = require('../../controllers/client/CheckoutController')
 const addressController = require('../../controllers/client/AddressController')
 const orderController = require('../../controllers/client/OrderController')
+const coupenController = require('../../controllers/client/CoupenController')
+const PaymentController = require('../../controllers/client/PaymentController')
 
 userRoute.get('/',userController.loadHome)
 userRoute.get('/home',user_middilware.isBlocked,userController.loadHome)
@@ -46,14 +48,17 @@ userRoute.route('/changePassword').post(userProfile.changePassword)
 userRoute.route('/cart').get(user_middilware.isBlocked,cartController.loadCart).post(cartController.addToCart)
 
 userRoute.route('/cartItemRemove').post(cartController.removeItem)
-
 userRoute.route('/cartUpdate').post(cartController.cartUpdate)
 
-userRoute.route('/wishlist').get(user_middilware.isBlocked,wishlistController.loadWishList)
+userRoute.route('/wishlist').get(user_middilware.isBlocked,wishlistController.loadWishList).post(wishlistController.addWishlist)
+userRoute.post('/removewishlist',wishlistController.removeWishlist)
+
+userRoute.route('/wallet').get(user_middilware.isBlocked,userController.loadWallet)
 
 userRoute.route('/checkout').get(user_middilware.isBlocked,checkoutController.loadChekout)
 
 userRoute.route('/success').get(userController.loadSuccess)
+userRoute.route('/failuer').get(userController.loadFailurePage)
 
 userRoute.route('/address').get(user_middilware.user,addressController.loadAddress).put(addressController.addAddress)
 userRoute.route('/editAddress').put(addressController.editAddress)
@@ -62,7 +67,15 @@ userRoute.route('/deleteAddress').delete(addressController.deleteAddress)
 
 userRoute.post('/sortAndFilter',ShopController.sortAndFilter);
 userRoute.post('/search',ShopController.search)
+userRoute.post('/checkWallet',checkoutController.checkWalletAmount)
+userRoute.route('/orders').get(user_middilware.isBlocked,orderController.loadOrders).post(orderController.setOrders)
+userRoute.route('/orderdetails').get(user_middilware.isBlocked,orderController.loadOrderDetail)
 
-userRoute.route('/orders').get(orderController.loadOrders).post(orderController.setOrders)
-userRoute.route('/orderdetails').get(orderController.loadOrderDetail)
+userRoute.post('/cancelOrder',orderController.orderCancel)
+userRoute.put('/returnOrder',orderController.returnOrder)
+
+userRoute.route('/coupen').get(coupenController.loadCoupen)
+
+
+userRoute.post('/razorpay',PaymentController.verifyPayment)
 module.exports = userRoute
