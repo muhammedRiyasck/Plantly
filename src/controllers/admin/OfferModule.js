@@ -15,11 +15,25 @@ const loadOffer = async (req, res , next) => {
     
     try {
 
+        const page = parseInt(req.query.page)||1
+        const limit = 5
+        const skip = (page-1)*limit
         const category = await Category.find({ Listed: true })
 
-        const offer = await Offer.find().populate('category_id')
+        const[offer,offerCount] = await Promise.all([
+            Offer.find().populate('category_id').skip(skip).limit(limit),
+            Offer.countDocuments()
+        ]) 
+        const totalPages = offerCount/limit
         const message = req.flash('message')
-        res.render('OfferModule' , {offer,category,message});
+        res.render('OfferModule' , {
+            offer,
+            category,
+            message,
+            totalPages,
+            currentPage:page,
+            skip
+        });
         
     } catch (error) {
 
@@ -41,16 +55,15 @@ const addOffer = async (req, res , next) => {
 
         const findedProduct = await Product.find({'category_id': findedCategory._id }).populate('category_id');
 
+        function escapeRegex(string) {
+            return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        }
+        
         const exist = await Offer.findOne({
-
             $or: [
-            
-                { name: { $regex: new RegExp(offername, 'i') } },
-
-                { category_id: findedCategory._id } 
-
+                { name: { $regex: new RegExp(`^${escapeRegex(offername)}$`, 'i') } },
+                { category_id: findedCategory._id }
             ]
-
         }).populate('category_id');
         
         if (!exist) {
@@ -74,7 +87,7 @@ const addOffer = async (req, res , next) => {
             res.redirect("/admin/offerModule");
 
         } else {
-            console.log('offer alredy exist')
+            console.log('offer alredy exist',exist)
             req.flash('message','This offer alredy exists')
             res.redirect('/admin/offerModule')
 

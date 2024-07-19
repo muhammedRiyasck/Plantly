@@ -37,7 +37,11 @@ const UserSchema = new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
-
+    refferal:{
+        type:String,
+        unique:true,
+        required:true
+    }
     
 })
 

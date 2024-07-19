@@ -1,20 +1,31 @@
 const Users=require('../../model/user_model')
 
-const loadUsers=async(req,res)=>{
+const loadUsers=async(req,res,next)=>{
 
     try {
 
-        const user = await Users.find({is_admin:{$ne:true}});
-        // console.log(user)
-        res.render('Users' , {user})
+        const page = parseInt(req.query.page)||1
+        const limit = 10
+        const skip = (page-1)*limit
+        const [user,usersCount] = await Promise.all([
+            Users.find({is_admin:{$ne:true}}).skip(skip).limit(limit),
+            Users.countDocuments({is_admin:{$ne:true}})
+    ]);
+        const totalPages = Math.ceil(usersCount/limit)
+        res.render('Users' , {
+            user,
+            totalPages,
+            currentPage:page,
+            skip
+        })
 
 
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
-const statusUpdation = async(req , res)=>{
+const statusUpdation = async(req , res, next)=>{
 
     try {
 
@@ -36,7 +47,7 @@ const statusUpdation = async(req , res)=>{
 
     } catch (error) {
 
-        console.log(error.message);
+        next(error)
         
     }
 

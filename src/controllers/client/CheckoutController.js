@@ -1,4 +1,5 @@
 const {wishlist,cart}= require('../../model/CartAndWishlist_model')
+const Coupen = require('../../model/coupen_model')
 const Product = require('../../model/products_model')
 const Category = require('../../model/category_model')
 const Address = require('../../model/address_model')
@@ -6,7 +7,7 @@ const Wallet = require('../../model/wallet_model')
 const User = require('../../model/user_model')
 
 
-const loadChekout = async(req,res)=>{
+const loadChekout = async(req,res,next)=>{
     try {
         if(req.session.user){
             const userId = req.session.user._id
@@ -15,17 +16,26 @@ const loadChekout = async(req,res)=>{
             const userData = await User.findOne({_id:userId})
    
             if(cartData.products.length>=1){
-            
+                let totalAmount
                 let amount = await cart.findOne({user_id:userId},{totalCartPrice:true})
-                let taxAmount =Math.round(amount.totalCartPrice*(9/100))
-                let totalAmount = Math.round(amount.totalCartPrice+taxAmount)
+                let taxAmount =0
+                if(cartData.coupenDiscount<0){
+                   totalAmount = Math.round(amount.totalCartPrice+taxAmount)
+                    
+                }else{
+                     totalAmount = Math.round(amount.totalCartPrice)
+                }
                 
-
+            let coupenData = await Coupen.find({status:true,used:false})
+            let userWallet= await Wallet.findOne({user_id:req.session.user._id})
+            console.log(userWallet?.balance,'wlaatatet')
             const address = await Address.findOne({user_id:userId})
-            // console.log(address,'undo?')
+            
             const message = req.flash('flash')
-            // console.log(address.addressData.length,'length from backend')
-            res.render('Checkout',{userlogdata:req.session.user,address,userId,message,cartData,taxAmount,totalAmount,userData})
+            const coupenDiscount = req.flash('coupenDiscount')
+            const coupenSpan = req.flash('coupenSpan')
+            const coupen_id = req.flash('coupen_id')
+            res.render('Checkout',{userlogdata:req.session.user,address,userId,message,cartData,taxAmount,totalAmount,userData,coupenData,coupenDiscount,coupenSpan,userWallet,coupen_id})
 
             }else{
                 req.flash('message','please add product to cart')
@@ -36,25 +46,12 @@ const loadChekout = async(req,res)=>{
             res.redirect('/login')
         }
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
-const checkWalletAmount=async(req,res)=>{
-    try {
-        
-        if(req.session.user){
-        let userWallet= await Wallet.findOne({user_id:req.session.user_id})
-            console.log(userWallet.balance)
-        }else{
-            console.log('please login for check the wallet amount')
-        }
-    } catch (error) {
-        
-    }
-}
+
 
 module.exports={
     loadChekout,
-    checkWalletAmount
 }

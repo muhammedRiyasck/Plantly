@@ -1,8 +1,9 @@
 const User = require('../../model/user_model')
 const Product = require('../../model/products_model')
 const bcrypt = require('bcrypt')
+const securePassword = require('../../helpers/securePassword')
 
-const loadUserProfile = async(req,res)=>{
+const loadUserProfile = async(req,res,next)=>{
     try {
         if(req.session.user){
         const userData =await User.findById({_id:req.session.user._id})
@@ -18,13 +19,13 @@ const loadUserProfile = async(req,res)=>{
         }
 
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
 
 
-const editProfile = async(req,res)=>{
+const editProfile = async(req,res,next)=>{
 
     try {
         
@@ -49,27 +50,11 @@ const editProfile = async(req,res)=>{
     // }
         
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
-const securePassword = async (password) => {
-    
-    try {
-        
-        const passwordHash = await bcrypt.hash(password , 10);
-        return passwordHash;
-        
-    } catch (error) {
-        
-        next(error,req,res);
-
-        
-    }
-    
-};
-
-const changePassword = async(req,res)=>{
+const changePassword = async(req,res,next)=>{
 
     try {
        const {CurrentPassword,NewPassword,ConfirmPassword}=req.body
@@ -85,7 +70,7 @@ const changePassword = async(req,res)=>{
         if(NewPassword === ConfirmPassword){
 
         const hassedPass = await securePassword(NewPassword)
-            console.log(hassedPass)
+        console.log(hassedPass)
 
       const passwordUpdated =  await User.updateOne({_id:userId},{$set:{password:hassedPass}})
 
@@ -107,7 +92,7 @@ const changePassword = async(req,res)=>{
       }
 
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 
 }

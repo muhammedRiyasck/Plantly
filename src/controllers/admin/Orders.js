@@ -1,6 +1,8 @@
 
 //  Impoert Order Modal :-
 const Order = require('../../model/order_model');
+const products_model = require('../../model/products_model');
+const wallet_model = require('../../model/wallet_model');
 
 
 
@@ -8,17 +10,23 @@ const loadOrders = async (req, res , next) => {
     
     try {
         
-       
-
-        const totaluserCount = await Order.countDocuments()
-        
-
-        const orderData = await Order.find({  $and: [
-            { orderStatus: { $ne: 'pending' } },
-            { orderAmount: { $gt: 0 } }
-        ]}).populate('products.product_id')
-        
-        res.render('Orderslist', {  orderData });
+        let page = parseInt(req.query.page)||1
+        let limit = 5
+        let skip = (page-1)*limit
+        const [orderData,orderCount]= await Promise.all([
+            Order.find({  $and: [
+                { orderStatus: { $ne: 'pending' } },
+                { orderAmount: { $gt: 0 } }
+            ]}).populate('products.product_id').skip(skip).limit(limit),
+            Order.countDocuments()
+        ])
+        let totalPages = orderCount/limit
+        res.render('Orderslist', { 
+            orderData,
+            totalPages,
+            currentPage:page,
+            skip
+         });
         
     } catch (error) {
 
@@ -130,91 +138,75 @@ const returnManage = async (req, res , next) => {
     try {
 
         const ordId = req.query.id      // Order Id
-        const proIdd = req.query.proId  // Order Pro Main Id
-        console.log('haiaiaiaiaiiaiaiaiaiaiaiaiaiaiiaiiaiaiaiaiaiiaaiaiaaia')
-        await Order.findOneAndUpdate(
+        const proIdd = req.query.proId 
+        const userId=req.query.userId // Order Pro Main Id
+       
+        const order=await Order.findOneAndUpdate(
             
-            { _id: ordId, "products._id": proIdd },
+            { _id: ordId, "products.product_id": proIdd },
             
-            { $set: { "products.$.productStatus": "returned" } },
+            { $set: { "products.$.productStatus": "returned" ,"products.$.retruned":true} },
             
             { new: true }
         );
-        console.log('haiaiaiaiaiiaiaiaiaiaiaiaiaiaiiaiiaiaiaiaiaiiaaiaiaaia')
+        let cancelOrder = order
+        let totalOrder = order
+        let Price // Product Price
+        let updatePrice
+        let updateTax
 
-        //  Find Single Product And Other Things :-
-        
-    //     const findOrder = await Order.findOne(
-        
-    //         {
-    //             _id: ordId,
-    //             "products._id": proIdd,
-    //             "products.retruned": true,
-    //         },
+        if (cancelOrder) {
+  
+            var Quantity = cancelOrder.products[0].quantity;     //  Find Pro Quantity
+    
+            await products_model.findOneAndUpdate({_id: proIdd }, { $inc: { stock: Quantity } });
 
-    //         { "products.$": 1, user_id: 1, orderAmount: 1 }
-          
-    //     );
+            //  Manage The Money :-
 
-    //     if (findOrder) {
-            
-    //         //  There is Stock Menaging :-
+            Price = Number(cancelOrder.products[0].price-((cancelOrder.products[0].price*cancelOrder.percentage)/100))
 
-    //         const ProIdd = findOrder.products[0].product_id; //  Find ProId
+           updateTax=0
+           console.log(updateTax,Price)
 
-    //         const findStock = findOrder.products[0].quantity;   //  Find Quantity
+           updatePrice=Price+updateTax;
+           updatePrice=totalOrder.orderAmount-updatePrice<0?0:totalOrder.orderAmount-updatePrice
 
-    //         await Product.findOneAndUpdate(
-            
-                        
-    //             { _id: ProIdd },
+            console.log(updatePrice,'enthaaaaa avasthaa')
 
-    //             { $inc: { stock: findStock } },
+            // if(totalOrder.products.length>1){  
 
-    //             { new: true }
-
-    //         );
-
-    //         //  Money Managing :-
-      
-    //         let moneyDecreses = findOrder.products[0].price;
-      
-    //         //  There Is If Coupen Used Product Came (Menaging) :-
-            
-    //         if (findOrder.percentage >= 1) {
-
-    //             let newVal = Math.floor((findOrder.orderAmount) - (moneyDecreses - (moneyDecreses * findOrder.percentage / 100)));
+                await Order.findOneAndUpdate({ order_Id: ordId, 'products.product_id': proIdd }, { $set: { orderAmount:updatePrice } });
                 
-    //             await Order.findOneAndUpdate({ _id: ordId, 'products._id': proIdd }, { $set: { orderAmount: newVal } });
+            // }else{
+                
+            //     await Order.findOneAndUpdate({ order_Id: ordId, 'products.product_id': proId }, { $set: { orderAmount:0 } });
 
-    //         } else {
+            //  }
 
-    //             await Order.findOneAndUpdate({ _id: ordId, "products._id": proIdd }, { $inc: { orderAmount: -moneyDecreses } });
-    //         }
+        }
+      
 
-    //         if (findOrder.products[0].retruned && ordId.peyment !== 'Cash on Delivery') {
-
-    //             if (findOrder.percentage >= 1) {
+              const wal=  await wallet_model.findOneAndUpdate({ user_id: userId },
+                
+                    {
+                        $inc: { balance: Price },
+                        $push: { transaction: { amount: Price, creditOrDebit: 'credit' } }
+                    },
                     
-    //                 let newVall = Math.floor((moneyDecreses - (moneyDecreses * findOrder.percentage / 100)));
-                     
-    //                 await Wallet.findOneAndUpdate({ userId: findOrder.userId }, { $inc: { balance: newVall }, $push: { transaction: { amount: newVall, creditOrDebit: 'credit' } } }, { new: true, upsert: true });
-
-    //             } else {
-
-    //                 await Wallet.findOneAndUpdate({ userId: findOrder.userId }, { $inc: { balance: moneyDecreses }, $push: { transaction: { amount: moneyDecreses, creditOrDebit: 'credit' } } }, { new: true, upsert: true });
-
-    //             }
+                    { new: true, upsert: true }
                 
-    //         }
-                        
-    //     };
- 
-    // } catch (error) {
+                );
+                console.log(wal);
 
-    //     next(error,req,res);
+
+            res.send({ succ: true });
+
+     
+        console.log('returned ')
+
+     
     } catch(error){
-        
+        next(error)
     }
 
 };

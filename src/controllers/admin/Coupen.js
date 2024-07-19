@@ -31,11 +31,23 @@ const loadAdminCoupen = async (req, res , next) => {
     
     try {
 
+        const page = parseInt(req.query.page)||1
+        const limit = 4
+        const skip = Math.ceil(page-1)*limit
+        
+        const [coupenData,coupenCount] = await Promise.all([
+            Coupen.find().skip(skip).limit(limit),
+            Coupen.countDocuments()
+        ]);
+        const totalPages = coupenCount/limit
+
         const msg = req.flash("good");
-
-        const coupenData = await Coupen.find();
-
-        res.render("Coupen", { coupenData , msgg : msg});
+        res.render("Coupen", {
+            coupenData,
+            msgg : msg,
+            totalPages,
+            currentPage:page
+        });
         
     } catch (error) {
 
@@ -59,8 +71,8 @@ const addCoupen = async (req, res , next) => {
 
             name: coupon,
             discount: discount,
-            from: min,
-            to: max,
+            // from: min,
+            // to: max,
             coupen_id: uniqueId,
             image: req.files[0].filename
 

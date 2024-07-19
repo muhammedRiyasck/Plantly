@@ -8,12 +8,16 @@ const generateOTP = require('../../helpers/generateOtp')
 const securePassword = require('../../helpers/securePassword')
 const sendOTPmail = require('../../utilities/nodemailer')
 
+const { customAlphabet } = require('nanoid');
+const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+
 // const validation = require('../../model/validation_Schema') 
 
 const bcrypt = require('bcrypt')
 const session = require('express-session')
 
-const loadHome = async (req, res) => {
+const loadHome = async (req, res,next) => {
 
     try {
 
@@ -28,11 +32,11 @@ const loadHome = async (req, res) => {
         
     } catch (error) {
     
-        console.log(error.message);
+       next(error)
     }
 }
 
-const loadBlog=async(req,res)=>{
+const loadBlog=async(req,res,next)=>{
     try{
         if(req.session.user){
 
@@ -45,11 +49,11 @@ const loadBlog=async(req,res)=>{
 
         }
     }catch(error){
-        console.log(error.message)
+        next(error)
     }
 }
 
-const loadAbout=async (req,res)=>{
+const loadAbout=async (req,res,next)=>{
     try {
         if(req.session.user){
 
@@ -58,11 +62,11 @@ const loadAbout=async (req,res)=>{
             res.render('About')
         }
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
-const loadContactUs=async(req,res)=>{
+const loadContactUs=async(req,res,next)=>{
     try {
         if(req.session.user){
 
@@ -73,12 +77,12 @@ const loadContactUs=async(req,res)=>{
 
         }
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
     
 }
 
-const loadLogin=async(req,res)=>{
+const loadLogin = async(req,res,next)=>{
     try {
         const message = req.flash('message')
         const swal = req.flash('swal')
@@ -89,32 +93,32 @@ const loadLogin=async(req,res)=>{
         res.render('Login',{message,email,swal})
         
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
    
 }
 
-const loadRegisteration=async(req,res)=>{
+const loadRegisteration = async(req,res,next)=>{
     try {
         const msg=req.flash('msg')
         res.render('Registration',{msg})
     } catch (error) {
-        console.log(error.meassage)
+        next(error)
     }
    
 }
 
-const loadForgetPassword=async(req,res)=>{
+const loadForgetPassword = async(req,res,next)=>{
     try {
         let message = req.flash('message')
         res.render('ForgotPassword',{message})
     } catch (error) {
-        console.log(error.meassage)
+        next(error)
     }
     
 }
 
-const loadResetPassword = async(req,res)=>{
+const loadResetPassword = async(req,res,next)=>{
     try {
         const message = req.flash('message')
         const email = req.query.email || req.session.user.email
@@ -122,19 +126,19 @@ const loadResetPassword = async(req,res)=>{
         console.log(email,'email setdded to body')
         res.render('ResetPassword',{message,email,changePassword})
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
-const loadSingleBlog=async(req,res)=>{
+const loadSingleBlog = async(req,res,next)=>{
     try {
         res.render('SingleBlog') 
     } catch (error) {
-        console.log(error.message)
+        next(error,req,res)
     }
 }
 
-const loadSingleProduct=async(req,res)=>{
+const loadSingleProduct = async(req,res,next)=>{
     try {
         const id = req.query.id
 
@@ -142,12 +146,12 @@ const loadSingleProduct=async(req,res)=>{
        
         res.render('SingleProduct',{singleProduct,userlogdata:req.session.user})
     } catch (error) {
-        console.log(error.meassage)
+        next(error)
     }
     
 }
 
-const loadOtp=async(req,res)=>{
+const loadOtp = async(req,res,next)=>{
 
     try {
 
@@ -169,41 +173,57 @@ const loadOtp=async(req,res)=>{
         
     } catch (error) {
 
-        console.log(error.message)
+        next(error)
 
     }
 
 }
 
-const loadWallet = async (req, res , next) => {
-    
+const loadWallet = async (req, res, next) => {
     try {
-
-        
-
         if (req.session.user) {
+            const page = parseInt(req.query.page) || 1;
+            const limit = 10; // Number of transactions per page
 
             const walletData = await Wallet.findOne({ user_id: req.session.user._id });
 
-            res.render('Wallet', { userlogdata: req.session.user,walletData });
+            if (walletData) {
+                const totalTransactions = walletData.transaction.length;
+                const totalPages = Math.ceil(totalTransactions / limit);
 
+                const startIndex = (page - 1) * limit;
+                const endIndex = page * limit;
+
+                const paginatedTransactions = walletData.transaction.slice().reverse().slice(startIndex, endIndex);
+
+                res.render('Wallet', {
+                    userlogdata: req.session.user,
+                    walletData: {
+                        ...walletData.toObject(),
+                        transaction: paginatedTransactions
+                    },
+                    currentPage: page,
+                    totalPages: totalPages,
+                    startIndex
+                });
+            } else {
+                res.render('Wallet', {
+                    userlogdata: req.session.user,
+                    walletData: null,
+                    currentPage: 1,
+                    totalPages: 1,
+                });
+            }
         } else {
-
-            res.redirect('/login')
-
+            res.redirect('/login');
         }
-        
     } catch (error) {
-
-        next(error,req,res);
-
-        
+        next(error, req, res);
     }
-
 };
 
 
-const existEmail = async(req,res)=>{
+const existEmail = async(req,res,next)=>{
    
     const user = await User.findOne({email:req.body.email})
 
@@ -217,6 +237,20 @@ const existEmail = async(req,res)=>{
 
 }
 
+const validateRefferral = async(req,res,next)=>{
+    try {
+        const refferal_code = req.body.refferal_code
+        const query = req.query.id
+        const findRefferalCode = await User.findOne({reffrel:refferal_code})
+        if(findRefferalCode){
+            res.json({success:true,refferedUser:findRefferalCode.fullName})
+        }else{
+            res.json({success:false})
+        }
+    } catch (error) {
+        next(error)
+    }
+}
 
 const insertUser = async (req, res, next) => {
     
@@ -229,11 +263,9 @@ const insertUser = async (req, res, next) => {
        
        
        const {name,email,mobile,password,c_password} = req.body
-       
-    //    const spassword = await securePassword(password)
-       
-       // insert user
-       
+       const generateReferralCode = customAlphabet(alphabet, 16);
+       const refferal_code = generateReferralCode()
+       console.log(refferal_code)
         const user = new User({
             
             fullName: name,
@@ -243,6 +275,7 @@ const insertUser = async (req, res, next) => {
             is_admin: false,
             is_blocked: false,
             is_verified:false,
+            refferal : refferal_code
             
         });
         
@@ -250,10 +283,6 @@ const insertUser = async (req, res, next) => {
         req.session.UserData = user;
         
         if (password == c_password) {
-            
-            // const userData = await user.save()
-            
-            // saving the input details into the session
             
             if (req.session.UserData) {
 
@@ -294,13 +323,13 @@ const insertUser = async (req, res, next) => {
 
       } catch (error) {
 
-      console.log(error.message);
+      next(error)
 
     }
 
   };
 
-const verifyOtp=async(req,res)=>{
+const verifyOtp=async(req,res,next)=>{
 
     try {
 
@@ -373,14 +402,14 @@ const verifyOtp=async(req,res)=>{
 
     } catch (error) {
 
-       console.log(error.meassage)
+       next(error)
 
         
     }
 
 };
 
-const ResendOtp = async (req, res ) => {
+const ResendOtp = async (req, res ,next ) => {
     
     try {
 
@@ -449,13 +478,13 @@ const ResendOtp = async (req, res ) => {
     }
     catch (error) {
 
-        console.log(error.message);
+        next(error)
         
     }
 
 };
 
-const verifyLogin = async (req, res) => {
+const verifyLogin = async (req, res, next) => {
     
     try {
         const Email = req.body.email;
@@ -511,14 +540,14 @@ const verifyLogin = async (req, res) => {
 
     } catch (error) {
 
-        console.log(error.message);
+        next(error)
         
     }
 };
 
 
 
-const forgetPassword = async(req,res)=>{
+const forgetPassword = async(req,res,next)=>{
     try {
 
         const email = req.body.email
@@ -561,11 +590,11 @@ const forgetPassword = async(req,res)=>{
         } 
 
     } catch (error) {
-        console.log(error.meassage)
+        next(error)
     }
 }
 
-const ResetPassword = async(req,res)=>{
+const ResetPassword = async(req,res,next)=>{
     try {
         
         if(req.body.password === req.body.confirm_password){
@@ -601,28 +630,30 @@ const ResetPassword = async(req,res)=>{
         }
 
     } catch (error) {
-        console.log(error.message)
+        nextt(error)
     }
 }
 
-const loadSuccess = async(req,res)=>{
+const loadSuccess = async(req,res,next)=>{
     try {
-        res.render('Success')
+        res.render('Payment_Success')
     } catch (error) {
         console.log(error.message)
     }
 }
-const loadFailurePage= async(req,res)=>{
+const loadFailurePage= async(req,res,next)=>{
     try {
-        res.render('Payment_Failuer')
+        let order_Id = req.session.user.order_Id
+        let amount = req.session.user.amount
+        res.render('Payment_Failuer',{order_Id,amount})
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
 
 
-const logout = async(req , res)=>{
+const logout = async(req , res , next)=>{
 
     try {
 
@@ -632,7 +663,7 @@ const logout = async(req , res)=>{
         
     } catch (error) {
         
-        console.log(error.message);
+        next(error)
 
     }
 
@@ -651,6 +682,7 @@ module.exports = {
     loadSingleBlog,
     loadSingleProduct,
     loadOtp,
+    validateRefferral,
     insertUser,
     verifyOtp,
     ResendOtp,

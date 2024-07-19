@@ -7,22 +7,36 @@ const fs = require("fs");
 const path = require("path");
 
 
-const loadProducts=async(req,res)=>{
-
+const loadProducts=async(req,res,next)=>{
+    
     try {
+    
+            let page = parseInt(req.query.page)||1
+            let limit = 10
+            let skip = (page-1)*limit
+        const [products,productsCount] = await Promise.all([
+            Product.find({}).populate('category_id').skip(skip).limit(limit),
+            Product.countDocuments({})
+        ])
+        let totalPages = productsCount/limit
 
-        let products = await Product.find({}).populate('category_id')
         const messages = req.flash('swal')
        
-        res.render('Products',{products, messages })
-
+        res.render('Products',{
+            products,
+            messages,
+            totalPages,
+            currentPage:page,
+            skip
+        })
+   
     } catch (error) {
 
-        console.log(error.message)
+        next(error)
     }
 }
 
-const loadAddProducts = async(req,res)=>{
+const loadAddProducts = async(req,res,next)=>{
     try {
 
         const category = await Category.find({ Listed: true })
@@ -32,11 +46,11 @@ const loadAddProducts = async(req,res)=>{
         res.render('Add_Products',{category})
 
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
-const addProducts = async(req , res)=>{
+const addProducts = async(req , res , next)=>{
 
     try {
 
@@ -88,13 +102,13 @@ const addProducts = async(req , res)=>{
         
     } catch (error) {
 
-        console.log(error.message);
+        next(error)
         
     }
 
 }
 
-const productAction = async(req,res)=>{
+const productAction = async(req,res,next)=>{
     try {
         const productId = req.query.id
         const productData = await Product.findOne({ _id: productId });
@@ -108,11 +122,11 @@ const productAction = async(req,res)=>{
         
 
     } catch (error) {
-        console.log(error.message)
+        next()
     }
 }
 
-const loadEditProduct = async(req,res)=>{
+const loadEditProduct = async(req,res,next)=>{
     try {
 
         const productId = req.query.id
@@ -126,11 +140,12 @@ const loadEditProduct = async(req,res)=>{
         res.render('Edit_product',{productData,category,currentCategory})
 
     } catch (error) {
-        console.log(error.message)
+
+        next(error)
     }
 }
 
-const editProduct = async (req, res) => {
+const editProduct = async (req, res,next) => {
     try {
         const productId = req.params.id;
         const editProductt = await Product.findOne({ _id: productId });
@@ -188,7 +203,7 @@ const editProduct = async (req, res) => {
         res.redirect("/admin/products");
         console.log('product eddited');
     } catch (error) {
-        console.log(error.message);
+        next(error)
     }
 };
 

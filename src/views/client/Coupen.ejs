@@ -1,98 +1,129 @@
 <%- include('../layouts/client/header') %>
 
 <div class="page-wrapper" id="reloadDiv">
-
-
+  
+  
   <main class="main">
 
     <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        <div class="container">
-            <h1 class="page-title pt-5 text-black-50">My Profile</h1>
-        </div><!-- End .container -->
+      <div class="container">
+        <h1 class="page-title pt-5 text-black-50">My Profile</h1>
+      </div><!-- End .container -->
     </div><!-- End .page-header -->
-        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
-            <div class="container">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/order">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Coupen</li>
-                </ol>
-            </div><!-- End .container -->
-        </nav><!-- End .breadcrumb-nav -->
-
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/order">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Coupen</li>
+        </ol>
+      </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+    
          <div class="page-content">
 
-            <div class="dashboard">
+           <div class="dashboard">
         
-                <div class="container">
+             <div class="container">
+               
+               <div class="row">
+                 
+                 <%- include('../layouts/client/profileNavbar') %>
+                 
+                 <div class="col-md-8 col-lg-9">
 
-                    <div class="row">
+                 <div class="tab-content">
+                   
+                   <aside class="col col-xl-9 col-lg-8 col-md-6 col-sm-6 mb-4 mb-lg-0">
+                                              
+                     <div class="row w-100" style="gap: 2rem">
+                       
+                       <div class="container">
+                         
+                         <% if(coupenData&&coupenData.length!==0) {%>
+                          <div class="row">
+                            <% coupenData.slice().reverse().forEach(val => { %>
+                              
+                              
+                              <div class="flip-card col-lg-4" >
+                                
+                                <div class="flip-card-inner">
+                                  
+                                  <div class="flip-card-front" style="background: url('/assets/productImages/<%= val.image %>'); background-size: cover;">
+                                    
+                                    <p class="title text-white" style="padding-bottom: 13rem;"><%= val.name %></p>
+                                    
+                                  </div>
+                                  
+                                  <div class="flip-card-back">
+                                    
+                                    <p class="title text-white pb-1"><%= val.name %></p>
+                                    <h6 class="text-dark" style="font-weight: bold;"><%= val.discount %>% OFF</h6>
+                                    
+                                    <di class="coupon-row pt-1">
+                                      <span id="coupenCode"><%= val.coupen_id %></span>
+                                      <span onclick="copyCode('<%= val.coupen_id %>' , this)" id="coupenBtn">Copy Code</span>
+                                    </di>
+                                    
+                                  </div>
+                                  
+                                </div>
+                                
+                              </div>
+                              
+                              <%  }); %>
+                              
+                            </div>
+                            <% }else{ %>
+                              <div style="display: flex;justify-content: center;">no coupen found</div>
+                              <% } %>
+                              
+                            </div>
+                            
+                          </div>
+                          
+                        </aside>
+                        
+                      </div>
+                      
+                    </div>
+                  </div> 
+  <div class="row">
+          <div class="col-12">
+              <nav class="float-right mt-5 mt-col-3">
+                  <ul class="pagination">
+                      <% if (currentPage > 1) { %>
+                          <li class="page-item">
+                              <a class="page-link" href="?page=<%= currentPage - 1 %>">
+                                  <span aria-hidden="true">&laquo;</span>
+                              </a>
+                          </li>
+                      <% } %>
+                      
+                      <% for(let i = 1; i <= totalPages; i++) { %>
+                          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                              <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                          </li>
+                      <% } %>
+                      
+                      <% if (currentPage < totalPages) { %>
+                          <li class="page-item">
+                              <a class="page-link" href="?page=<%= currentPage + 1 %>">
+                                  <span aria-hidden="true">&raquo;</span>
+                              </a>
+                          </li>
+                      <% } %>
+                  </ul>
+              </nav>
+        </div>
+</div>
 
-                       <%- include('../layouts/client/profileNavbar') %>
-
-                                   <div class="col-md-8 col-lg-9">
-
-                                        <div class="tab-content">
-
-                                            <aside class="col col-xl-9 col-lg-8 col-md-6 col-sm-6 mb-4 mb-lg-0">
-
-                                                <div class="row w-100" style="gap: 2rem">
-
-                                                     <div class="container">
-
-                                                       <% if(coupenData&&coupenData.length!==0) {%>
-                                                            <div class="row">
-                                                                <% coupenData.slice().reverse().forEach(val => { %>
-
-                                                                    
-                                                                    <div class="flip-card col-lg-3" >
-                                                                    
-                                                                    <div class="flip-card-inner">
-                                                                        
-                                                                        <div class="flip-card-front" style="background: url('/assets/productImages/<%= val.image %>'); background-size: cover;">
-
-                                                                            <p class="title text-white" style="padding-bottom: 13rem;"><%= val.name %></p>
-                                                                            
-                                                                        </div>
-                                                                        
-                                                                        <div class="flip-card-back">
-
-                                                                            <p class="title text-white pb-1"><%= val.name %></p>
-                                                                            <h6 class="text-dark" style="font-weight: bold;"><%= val.discount %>% OFF</h6>
-
-                                                                              <di class="coupon-row pt-1">
-                                                                                <span id="coupenCode"><%= val.coupen_id %></span>
-                                                                                <span onclick="copyCode('<%= val.coupen_id %>' , this)" id="coupenBtn">Copy Code</span>
-                                                                               </di>
-
-                                                                        </div>
-
-                                                                        </div>
-                                                                        
-                                                                    </div>
-                                                                    
-                                                                <%  }); %>
-
-                                                            </div>
-                                                            <% }else{ %>
-                                                              <div style="display: flex;justify-content: center;">no coupen found</div>
-                                                              <% } %>
-
-                                                         </div>
-
-                                                        </div>
-
-                                                      </aside>
-                                                      
-                                                    </div>
-                                                    
-                                                  </div>
-                                                  
+                    
 </main><!-- End .main -->
 
-  <!-- End .main -->
+<!-- End .main -->
 
-  <!-- Connect Footer -->
-  <!-- Connect Footer -->
+<!-- Connect Footer -->
+<!-- Connect Footer -->
 
 </div>
 
@@ -139,7 +170,6 @@
     padding: 10px 20px;
 	  display: none;
     border-right: 0;
-
 }
 #coupenBtn{
     border: 1px solid #fff;
@@ -157,6 +187,7 @@
   height: 200px;
   perspective: 1000px;
   font-family: sans-serif;
+  margin-bottom:1rem
 }
 
 .title {

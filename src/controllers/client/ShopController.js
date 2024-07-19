@@ -3,22 +3,31 @@ const Product = require('../../model/products_model')
 const Category = require('../../model/category_model')
 
 
-const loadShop = async (req, res) => {
-
+const loadShop = async (req, res,next) => {
     try {
+        const page = parseInt(req.query.page) || 1; // Get the page number from query params
+        const limit =8; // Number of products per page
+        const skip = (page - 1) * limit;
+
         const query = { status: true };
 
-        const [productData, count] = await Promise.all([
-          Product.find(query).populate('category_id').exec(),
-          Product.countDocuments(query).exec()
-        ]);        
-        const category = await Category.find({ Listed: true })
+        const [productData, totalProducts, category] = await Promise.all([
+            Product.find(query)
+                .populate('category_id')
+                .skip(skip)
+                .limit(limit)
+                .exec(),
+            Product.countDocuments(query).exec(),
+            Category.find({ Listed: true })
+        ]);
+
+        const totalPages = Math.ceil(totalProducts / limit);
 
         const categoryCounts = await Product.aggregate([
             { $match: query },
             { $group: { _id: '$category_id', count: { $sum: 1 } } },
             { $lookup: {
-                from: 'categories', // The name of the categories collection
+                from: 'categories',
                 localField: '_id',
                 foreignField: '_id',
                 as: 'category'
@@ -27,55 +36,64 @@ const loadShop = async (req, res) => {
             { $project: { _id: 0, categoryId: '$_id', categoryName: '$category.name', count: 1 } }
         ]).exec();
 
-        // Map category counts for easier access in the front end
         const categoryCountMap = categoryCounts.reduce((map, obj) => {
             map[obj.categoryId] = obj.count;
             return map;
         }, {});
-             
-            
-         
+
+        const data = {
+            productData,
+            category,
+            totalProducts,
+            currentPage: page,
+            totalPages,
+            categoryCountMap
+        };
 
         if (req.session.user) {
-            res.render('Shop', { userlogdata: req.session.user, productData, category, count,categoryCountMap })
-        } else {
-            res.render('Shop', { productData, category,count,categoryCountMap })
+            data.userlogdata = req.session.user;
         }
+
+        res.render('Shop', data);
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
-const sortAndFilter = async (req, res) => {
+// const sortAndFilter = async (req, res) => {
 
+//     try {
+//         const { sortby, Price, } = req.body;
+
+//         if (sortby && Price) {
+//             const sortedByPrice = await Product.find({ status: true }).sort({ price: sortby })
+//             res.send(sortedByPrice)
+//         }
+//         else if (sortby) {
+//             const sortedByName = await Product.find({ status: true }).sort({ name: sortby })
+//             console.log(sortby, sortedByName, 'kittin')
+//             res.send(sortedByName);
+//         } else {
+//             const products = await Product.find()
+//             res.send(products)
+
+//         }
+//     } catch (error) {
+//         // next(error,req,res);
+//         console.log(error.meassage);
+
+
+//     }
+
+// };
+
+const sortAndFilterAndSearch = async (req, res,next) => {
     try {
-        const { sortby, Price, } = req.body;
 
-        if (sortby && Price) {
-            const sortedByPrice = await Product.find({ status: true }).sort({ price: sortby })
-            res.send(sortedByPrice)
-        }
-        else if (sortby) {
-            const sortedByName = await Product.find({ status: true }).sort({ name: sortby })
-            console.log(sortby, sortedByName, 'kittin')
-            res.send(sortedByName);
-        } else {
-            const products = await Product.find()
-            res.send(products)
+        const { categoryVal, searchQuery, max, min, selectedSort, page = 1 } = req.body
+        const limit = 8; // Number of products per page
+        const skip = (page - 1) * limit;
 
-        }
-    } catch (error) {
-        // next(error,req,res);
-        console.log(error.meassage);
-
-
-    }
-
-};
-
-const search = async (req, res) => {
-    try {
-        const { categoryVal, searchQuery, max, min, selectedSort } = req.body
         let sortCriteria = {};
         let aAzZ = null
         let zZaA = null
@@ -83,69 +101,108 @@ const search = async (req, res) => {
         let HighToLow = null
         if (selectedSort === 'AtoZ') {
             sortCriteria = { name: 1 };
-            aAzZ = await Product.find().sort(sortCriteria)
+            aAzZ = await Product.find().sort(sortCriteria).skip(skip).limit(limit)
         } else if (selectedSort === 'ZtoA') {
             sortCriteria = { name: -1 };
-            zZaA = await Product.find().sort(sortCriteria)
+            zZaA = await Product.find().sort(sortCriteria).skip(skip).limit(limit)
         } else if (selectedSort === 'LowToHigh') {
             sortCriteria = { price: 1 };
-            LowToHigh = await Product.find().sort(sortCriteria)
+            LowToHigh = await Product.find().sort(sortCriteria).skip(skip).limit(limit)
         } else if (selectedSort === 'HighToLow') {
             sortCriteria = { price: -1 };
-            HighToLow = await Product.find().sort(sortCriteria)
+            HighToLow = await Product.find().sort(sortCriteria).skip(skip).limit(limit)
         }
+
+        let productData;
+        let totalProducts;
+
         if (!categoryVal.length == 0 && searchQuery) {
             const search = new RegExp(`.*${searchQuery}.*`, 'i');
 
-            const productData = await Product.find({
-                'category_id': { $in: categoryVal },
-                status: true,
-                $or: [
-                    { name: search },
-                    { price: Number(searchQuery) || undefined },
-                ],
-            }).sort(sortCriteria)
-
-            return res.send(productData)
+            [productData, totalProducts] = await Promise.all([
+                Product.find({
+                    'category_id': { $in: categoryVal },
+                    status: true,
+                    $or: [
+                        { name: search },
+                        { price: Number(searchQuery) || undefined },
+                    ],
+                }).sort(sortCriteria).skip(skip).limit(limit),
+                Product.countDocuments({
+                    'category_id': { $in: categoryVal },
+                    status: true,
+                    $or: [
+                        { name: search },
+                        { price: Number(searchQuery) || undefined },
+                    ],
+                })
+            ]);
         }
         else if (!categoryVal.length == 0) {
             if (max) {
-                const productData = await Product.find({ 'category_id': { $in: categoryVal }, status: true, price: { $gte: min, $lte: max } }).sort(sortCriteria)
-                res.send(productData)
+                [productData, totalProducts] = await Promise.all([
+                    Product.find({ 'category_id': { $in: categoryVal }, status: true, price: { $gte: min, $lte: max } }).sort(sortCriteria).skip(skip).limit(limit),
+                    Product.countDocuments({ 'category_id': { $in: categoryVal }, status: true, price: { $gte: min, $lte: max } })
+                ]);
+            } else {
+                [productData, totalProducts] = await Promise.all([
+                    Product.find({ 'category_id': { $in: categoryVal }, status: true }).sort(sortCriteria).skip(skip).limit(limit),
+                    Product.countDocuments({ 'category_id': { $in: categoryVal }, status: true })
+                ]);
             }
-            const productData = await Product.find({ 'category_id': { $in: categoryVal }, status: true }).sort(sortCriteria)
-            return res.send(productData)
         } else if (max) {
-            const sortbyrange = await Product.find({ price: { $gte: min, $lte: max } }).sort(sortCriteria)
-            res.send(sortbyrange)
+            [productData, totalProducts] = await Promise.all([
+                Product.find({ price: { $gte: min, $lte: max } }).sort(sortCriteria).skip(skip).limit(limit),
+                Product.countDocuments({ price: { $gte: min, $lte: max } })
+            ]);
         }
         else {
             const search = new RegExp(`.*${searchQuery}.*`, 'i');
-            const searchProduct = await Product.find({ $and: [{ $or: [{ name: { $regex: search } },] }, { status: true }] }).sort(sortCriteria)
-            if (searchProduct.length > 0) {
-                res.send(searchProduct)
-            } else if (aAzZ) {
-                return res.send(aAzZ)
-            } else if (zZaA) {
-                return res.send(zZaA)
-            } else if (LowToHigh) {
-                return res.send(LowToHigh)
-            } else if (HighToLow) {
-                return res.send(HighToLow)
-            } else if (typeof Number(searchQuery) === 'number' && !isNaN(searchQuery)) {
-                const price = await Product.find({ price: Number(searchQuery) })
-                res.send(price)
-            } else {
-                res.status(400).json([]); // Respond with an empty array if no products found
+            [productData, totalProducts] = await Promise.all([
+                Product.find({ $and: [{ $or: [{ name: { $regex: search } },] }, { status: true }] }).sort(sortCriteria).skip(skip).limit(limit),
+                Product.countDocuments({ $and: [{ $or: [{ name: { $regex: search } },] }, { status: true }] })
+            ]);
+            
+            if (productData.length === 0) {
+                if (aAzZ) {
+                    productData = aAzZ;
+                    totalProducts = await Product.countDocuments();
+                } else if (zZaA) {
+                    productData = zZaA;
+                    totalProducts = await Product.countDocuments();
+                } else if (LowToHigh) {
+                    productData = LowToHigh;
+                    totalProducts = await Product.countDocuments();
+                } else if (HighToLow) {
+                    productData = HighToLow;
+                    totalProducts = await Product.countDocuments();
+                } else if (typeof Number(searchQuery) === 'number' && !isNaN(searchQuery)) {
+                    [productData, totalProducts] = await Promise.all([
+                        Product.find({ price: Number(searchQuery) }).skip(skip).limit(limit),
+                        Product.countDocuments({ price: Number(searchQuery) })
+                    ]);
+                }
             }
         }
+
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        res.json({
+            productData,
+            currentPage: parseInt(page),
+            totalPages,
+            totalProducts
+        });
+
     } catch (error) {
-        console.log(error.message)
+       next(error)
     }
 }
 
+    
+
 module.exports = {
     loadShop,
-    sortAndFilter,
-    search
+    sortAndFilterAndSearch,
+    
 }

@@ -12,7 +12,7 @@
 
           <div class="main-panel">
             <div class="content-wrapper" id="reloadDiv">
-
+              <div>
             <div class="d-flex">
             
               <!-- Add Brand Modal -->
@@ -143,7 +143,7 @@
 
                      <tr>
 
-                      <td><%= indx + 1 %></td>
+                      <td><%= indx + 1 + skip %></td>
 
                       <td><%= val.name %></td>
 
@@ -228,10 +228,10 @@
                     </tbody>
 
               </table>
-
+              </div>
                 <br>
                 <br>
-                        
+              <%-include('../layouts/admin/pagination') %>      
           </div>
 
         </div>

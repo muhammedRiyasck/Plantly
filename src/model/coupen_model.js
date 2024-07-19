@@ -7,17 +7,17 @@ const coupenSchema = mongoose.Schema({
         required:true
     },
     discount:{
-        type:String,
-        required:true
-    },
-    from:{
         type:Number,
         required:true
     },
-    to:{
-        type:Number,
-        required:true
-    },
+    // from:{
+    //     type:Number,
+    //     required:true
+    // },
+    // to:{
+    //     type:Number,
+    //     required:true
+    // },
     coupen_id:{
         type:String,
         required:true
@@ -30,6 +30,27 @@ const coupenSchema = mongoose.Schema({
     status:{
         type:Boolean,
         default:true
+    },
+    used:{
+        type:Boolean,
+        default:false
+    }
+    ,
+    coupenDiscount: {
+        
+        type: Number,
+        required: true,
+        default: 0
+
+    },
+
+    percentage: {
+        
+        type: Number,
+        required: true,
+        default: 0
+        
+
     }
 })
 

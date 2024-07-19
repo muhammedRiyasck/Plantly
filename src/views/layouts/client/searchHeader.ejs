@@ -492,96 +492,146 @@
 
          <!-- header_bottom shadow-sm rounded  -->
       </header>
-
-<script>
-   function search(){
-      var sortValue = document.querySelector('input[name="sort"]:checked')
-      selectedSort=sortValue?sortValue.value:null;
-      console.log(selectedSort)
-         const min = document.getElementById('min').value||0
-         const max = document.getElementById('max').value  
-
-         const checkboxes = document.querySelectorAll('.checkbox-item');
+      <script>
+function search(page = 1) {
+    var sortValue = document.querySelector('input[name="sort"]:checked');
+    selectedSort = sortValue ? sortValue.value : null;
+    const min = document.getElementById('min').value || 0;
+    const max = document.getElementById('max').value || '';
     
-         const categoryVal=[]
-     // Iterate over each checkbox to get their values
-      checkboxes.forEach((checkbox) => {
+    const checkboxes = document.querySelectorAll('.checkbox-item');
+    const categoryVal = [];
+    checkboxes.forEach((checkbox) => {
         if (checkbox.checked) {
-            categoryVal.push(checkbox.value)
-            // console.log('Checkbox value:', checkbox.value);
+            categoryVal.push(checkbox.value);
         }
     });
     
-      console.log(categoryVal,'kittin')
-         
-         const searchQuery = document.getElementById('Search').value
-         
-         console.log(searchQuery)
-         
-         const result = document.getElementById('products')
-         
-         
-         if(true){
+    const searchQuery = document.getElementById('Search').value;
+    
+    const result = document.getElementById('products');
+   
+    fetch('/sortAndFilterAndSearch', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify({searchQuery, categoryVal, max, min, selectedSort, page})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.productData.length > 0) {
+            result.classList.remove('justify-content-center');
             
-            fetch(`/search` , {method : 'POST' , headers:{'Content-Type':'application/json'} , body : JSON.stringify({searchQuery,categoryVal,max,min,selectedSort})})
-         
-            .then(res => res.json())
-         
-            .then(data => {
-         
-               if(data.length>0){
-         
-                    result.classList.remove('justify-content-center')
-         
-                     result.innerHTML= `${data.map((product,i) => (`
-                        
-                          <div class="item col-xl-3" >
-                           <div class="product_thumb bg-white rounded">
-                              <div class="pro_image">
-         
-                                  <a href="/single-product?id=${product._id}"> <img src="/assets/productImages/${product.images[0]}" class="fst-image mx-auto d-block img-fluid" alt="product_img"></a>
-                                  <a href="/single-product?id=${product._id}"> <img src="/assets/productImages/${product.images[1]}" class="second-img mx-auto d-block img-fluid"  alt="product_img"></a>
-         
-                              </div>
-                              <div class="text-center main_text pt-3">
-                                 <div>
-                                    <div class="star mb-2">
-                                       <i class="fa fa-star" aria-hidden="true"></i>
-                                       <i class="fa fa-star" aria-hidden="true"></i>
-                                       <i class="fa fa-star" aria-hidden="true"></i>
-                                       <i class="fa fa-star" aria-hidden="true"></i>
-                                       <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <h2 class="pro-heading  font-weight-bolder mb-1	"><a href="/single-product?id=${product._id}">${product.name}</a></h2>
-                                    <span class="text-center prices"><span class="font-weight-bolder price">$${product.price}.00 </span> <del class="text-muted"></del></span>
-                                    <p class="description mt-1 text-muted">${product.description}</p>
-                                    <div class="button-group">
-                                       <a href="#"  class="symbol pro_heart ml-0" data-toggle="modal" data-target="#heart_model"></a>
-                                       <a href="#" class="symbol pro_eye"  data-toggle="modal" data-target="#eye_model"></a>
-                                       <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model "></a>	
-                                    </div>
-                                    <!-- <a href="#" class="symbol add_to_cart" data-toggle="modal" data-target="#cart_model">
-                                    + ADD TO CART
-                                    </a>							 -->
-         
-                                    <a class="btn symbol add_to_cart" onclick="addToCart('${product._id}')">+ ADD TO CART</a>
-         
-                                 </div>
-                              </div>
-                           </div>
+            result.innerHTML = data.productData.map((product) => `
+                <div class="item col-xl-3">
+                    <div class="product_thumb bg-white rounded">
+                        <div class="pro_image" style="position: relative;">
+                            <a href="/single-product?id=${product._id}">
+                                <img src="/assets/productImages/${product.images[0]}" class="fst-image mx-auto d-block img-fluid" alt="product_img">
+                            </a>
+                            <a href="/single-product?id=${product._id}">
+                                <img src="/assets/productImages/${product.images[1]}" class="second-img mx-auto d-block img-fluid" alt="product_img">
+                            </a>
+                            
+                            ${product.stock <= 0 
+                                ? `<span class="product-label text-white p-1 label-out-of-stock" style="position: absolute; top: 0; left: 0; width:60%; text-align: center; background-color: rgba(196, 25, 25, 0.75);">Out of Stock</span>`
+                                : `<span class="product-label p-1 text-white ${product.discount > 0 ? 'bg-danger' : ''}" style="position: absolute; top: 0; left: 0; width: 40%; text-align: center;">${product.discount > 0 ? product.discount + '% OFF' : ''}</span>`
+                            }
                         </div>
-         
-                  `)).join('')}`
-         
-               }else {
-                 result.innerHTML = '<p style="margin-left: 22rem">No products found</p>'; // Display message if no products found
-               }
-            })
-         
-         } else {
-         
-            $('#reloadDiv').load('/product #reloadDiv')
-            
-           }
-         } ;
+                        <div class="text-center main_text pt-3">
+                            <div>
+                                <div class="star mb-2">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                </div>
+                                <h2 class="pro-heading font-weight-bolder mb-1"><a href="/single-product?id=${product._id}">${product.name}</a></h2>
+                                
+                                ${product.discount > 0 
+                                    ? `<span style="text-decoration: line-through !important; color: rgb(255, 3, 3) !important; opacity: 0.5 !important;">$${product.price}.00</span>&nbsp;
+                                       <span class="text-success">$${product.discount_price}.00</span>`
+                                    : `<span>$${product.price}.00</span>&nbsp;`
+                                }
+                                
+                                <p class="description mt-1 text-muted">${product.description}</p>
+                                <div class="button-group">
+                                    <a onclick="addToWishlist('${product._id}')" class="symbol pro_heart ml-0" data-toggle="modal"></a>
+                                    <a href="#" class="symbol pro_eye" data-toggle="modal" data-target="#eye_model"></a>
+                                    <a href="#" class="symbol pro_compare" data-toggle="modal" data-target="#compare_model"></a>
+                                </div>
+                                ${product.stock > 0
+                                    ? `<a class="btn symbol add_to_cart" onclick="addToCart('${product._id}')">+ ADD TO CART</a>`
+                                    : `<span class="btn symbol add_to_cart" style="color: red;">OUT OF STOCK</span>`
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            updatePagination(data.currentPage, data.totalPages);
+        } else {
+            result.innerHTML = '<p style="margin-left: 22rem">No products found</p>';
+            updatePagination(1, 1); // Reset pagination if no products found
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}  
+
+function updatePagination(currentPage, totalPages) {
+   console.log(currentPage,totalPages)
+    const paginationContainer = document.querySelector('.pagination');
+    let paginationHTML = '';
+
+    if (currentPage > 1) {
+        paginationHTML += `
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0);" onclick="search(${currentPage - 1})">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        `;
+    }
+
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="javascript:void(0);" onclick="search(${i})">${i}</a>
+            </li>
+        `;
+    }
+
+    if (currentPage < totalPages) {
+        paginationHTML += `
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0);" onclick="search(${currentPage + 1})">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        `;
+    }
+
+    paginationContainer.innerHTML = paginationHTML;
+
+    const pageLinks = paginationContainer.querySelectorAll('.page-link');
+    pageLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            const page = parseInt(this.textContent);
+            if (!isNaN(page)) {
+                search(page);
+            } else if (this.querySelector('span')) {
+                // Handle previous/next buttons
+                const direction = this.querySelector('span').textContent;
+                search(direction === '«' ? currentPage - 1 : currentPage + 1);
+            }
+        });
+    });
+}
+
+// Initial load
+search(1);
 </script>

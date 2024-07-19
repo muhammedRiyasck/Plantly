@@ -31,7 +31,22 @@ const cartSchema = new mongoose.Schema({
         type:Number,
         required : true
 
-    }
+    },
+    coupenDiscount: {
+        
+        type: Number,
+        required: true,
+        default: 0
+
+    },
+
+    percentage: {
+        
+        type: Number,
+        required: true,
+        default: 0
+    },
+
 
 },{timestamps:true})
 

@@ -1,5 +1,68 @@
 
 <%- include('../layouts/client/header') %>
+
+<div class="modal fade" id="coupenModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+   <div class="modal-dialog">
+
+      <div class="modal-content">
+
+
+      <div class="modal-body p-5 h-100 ">
+
+         <div class="row w-100 g-3 ">
+               <% if(coupenData.length>0){ %>
+                <% coupenData.slice().reverse().forEach((val,i) => { %>
+
+                    <div class="flip-card pt-3 col-lg-6" >
+                                                        
+                        <div class="flip-card-inner">
+                                                            
+                           <div class="flip-card-front" style="background: url('/assets/productImages/<%= val.image %>'); background-size: cover;">
+                                                                                                                
+                                <p class="title text-white" ><%= val.name %></p>
+                                                                
+                            </div>
+                                                            
+                            <div class="flip-card-back">
+
+                                <p class="title text-white pb-1"><%= val.name %></p>
+                                <h6 class="text-dark" style="font-weight: bold;"><%= val.discount %>% OFF</h6>
+
+                                <di class="coupon-row pt-1">
+
+                                    <span id="coupenCode"><%= val.coupen_id %></span>
+                                    <span onclick="copyCode('<%= val.coupen_id %>',this)" id="coupenBtn">Copy Code</span>
+
+                                </di>
+
+                            </div>
+
+                         </div>
+                                                            
+                    </div>
+                                                        
+                <%  }); %>
+
+                <% }else{ %>
+                  <p>sorry.you dont have any coupens</p>
+               <% } %>
+
+         </div>
+         
+      </div>
+
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+
+      </div>
+
+   </div>
+
+   </div>
+
 <div class="modal fade" id="editAddress" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
          
    <div class="modal-dialog">
@@ -79,126 +142,7 @@
 
  </div>
 
-      <!-- header -->
-      <!-- header area end -->
-      <!-- vertical menu and slider -->
-      <div id="home_vertical_menu">
-        <div class="row ">
-           <div class="col-lg-3 vertical_menu">
-              <div class="v_menu bg-white rounded">
-                 <div class="cat_menu bg-warning rounded-top"><a href="#" class="pe-auto text-uppercase d-md-none d-sm-none d-none d-lg-block font-weight-bolder"><i class="fas fa-bars"></i>all categories</a></div>
-                 <div class="navbar-header d-xl-none d-lg-none">
-                    <button type="button" class="btn-navbar navbar-toggle" onclick="openNav()" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fas fa-bars"></i></button>
-                 </div>
-                 <div id="mySidenav" class="sidenav  ">
-                    <div class="close-nav d-xl-none d-lg-none">
-                       <span class="categories">Menu</span>
-                       <a href="javascript:void(0)" class="closebtn pull-right" onclick="closeNav()"><i class="fas fa-times"></i></a>
-                    </div>
-                   <ul class="vertical_main_menu h_menu navbar navbar-nav">
-                       <li><a href="index.html">Home</a></li>
-                       <li class="">
-                          <a class="dropdown-toggle" href="shop-left-sidebar.html"  role="button" data-toggle="dropdown" aria-expanded="false">shop&nbsp;<span class="float-right"><i class="fas fa-angle-down"></i></span></a>
-                          <ul class="dropdown-menu">
-                             <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">left sidebar</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="shop-right-sidebar.html">right sidebar</a></li>
-                          </ul>
-                       </li>
-                       <li class="dropdown mega_menu m1_menu level-1 font-weight-bolderer">
-                          <a class="dropdown-toggle" href="single-product.html"  role="button" data-toggle="dropdown" aria-expanded="false">portfolio&nbsp;<span class="float-right"><i class="fas fa-angle-down"></i></span></a>
-                          <ul class="dropdown-menu">
-                             <li>
-                                <ul class="row mx-0">
-                                   <li class="mg_menu col-lg-6 col-md-12 ">
-                                      <ul>
-                                         <li class="h_title text-uppercase font-weight-bolder border-bottom">portfolio grid 2</li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="portfolio-grid-2.html">portfolio grid 2</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="portfolio-grid-3.html">portfolio grid 3</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="portfolio-grid-4.html">portfolio grid 4</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="mesonary-grid-2.html">mesonary grid 2</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="mesonary-grid-3.html">mesonary grid 3</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="mesonary-grid-4.html">mesonary grid 4</a></li>
-                                      </ul>
-                                   </li>
-                                   <li class="mg_menu col-lg-6 col-md-12">
-                                      <ul>
-                                         <li class="h_title text-uppercase font-weight-bolder border-bottom">theme elements</li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="title.html">title</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="category-style.html">category</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="services.html">services</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="product-tab.html">product tab</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="multi-slider-product.html">multi slider product</a></li>
-                                      </ul>
-                                   </li>
-                                </ul>
-                             </li>
-                          </ul>
-                       </li>
-                       <li>
-                          <a class="dropdown-toggle" href="blog.html"  role="button" data-toggle="dropdown" aria-expanded="false">
-                          blog&nbsp;<span class="float-right mt-1"><i class="fas fa-angle-down"></i></span></a>
-                          <ul class="dropdown-menu">
-                             <li><a class="dropdown-item font-weight-bolderer" href="blog.html">blog</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="blog-left-sidebar.html">left sidebar</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="blog-right-sidebar.html">right sidebar</a></li>
-                          </ul>
-                       </li>
-                       <li class="dropdown mega_menu level-1 font-weight-bolderer">
-                          <a class="dropdown-toggle" href="single-product.html"  role="button" data-toggle="dropdown" aria-expanded="false">Category&nbsp;<span class="float-right mt-1"><i class="fas fa-angle-down"></i></span></a>
-                          <ul class="dropdown-menu">
-                             <li>
-                                <ul class="row mx-0">
-                                   <li class="mg_menu col-lg-4 col-md-12 ">
-                                      <ul>
-                                         <li class="h_title text-uppercase font-weight-bolder border-bottom">Pot</li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Pigmyweeds</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Indoor Plants</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">outdoor Plants</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Flamingo plant</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Succulent Plant</a></li>
-                                      </ul>
-                                   </li>
-                                   <li class="mg_menu col-lg-4 col-md-12">
-                                      <ul>
-                                         <li class="h_title text-uppercase font-weight-bolder border-bottom">Plants</li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Nerve Plant</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Flowering Plants</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Plant Seed</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Luck Plants</a></li>
-                                         <li><a class="dropdown-item font-weight-bolderer" href="shop-left-sidebar.html">Plant House</a></li>
-                                      </ul>
-                                   </li>
-                                </ul>
-                             </li>
-                          </ul>
-                       </li>
-                       <li class="dropdown level-1 font-weight-bolderer">
-                          <a class="dropdown-toggle" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">pages&nbsp;<span class="float-right mt-1"><i class="fas fa-angle-down"></i></span></a>
-                          <ul class="dropdown-menu">
-                             <li><a class="dropdown-item font-weight-bolderer" href="about-us.html">about us</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="login.html">login</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="registration.html">registration</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="single-product.html">single product</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="single-blog.html">single blog</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="cart.html">cart</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="compare.html">compare</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="wishlist.html">wishlist</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="checkout.html">check out</a></li>
-                             <li><a class="dropdown-item font-weight-bolderer" href="forgot.html">forgot password</a></li>
-                          </ul>
-                       </li>
-                       <li class="level-1 font-weight-bolderer"><a href="contact-us.html">contact-us</a></li
-                          >
-                    </ul>
-                 </div>
-              </div>
-              <!-- v_menu bg-white rounded -->
-           </div>
-        </div>
-        <!-- row -->
-     </div>
-     <!-- container  menu_slider mt-4 -->
-     <!-- vertical menu and slider end -->
+    
      <!-- checkout page -->
      <div id="checkout_page" class="checkout-page animate__animated animate__fadeInUp">
         <div class="sp_header bg-white p-3 ">
@@ -219,111 +163,62 @@
            <div class="row">
               <div class="col-lg-8 col-12">
                  <div class="accordion" id="check_out_toggle">
-                    <!-- <div class="card rounded mb-2">
-                       <div class="card-header bg-white" id="checkout_info">
-                          <h2 class="mb-0">
-                             <button class="btn btn-link btn-block text-left text-body p-0 font-weight-bolder" type="button" data-toggle="collapse" data-target="#check_info" aria-expanded="true" aria-controls="check_info">
-                             Personal information<span class="float-right"><i class="fas fa-angle-down"></i></span>
-                             </button>
-                          </h2>
-                       </div>
-                       <div id="check_info" class="collapse show" aria-labelledby="checkout_info" data-parent="#check_out_toggle">
-                          <div class="card-body">
-                             <ul class="nav nav-tabs " role="tablist" >
-                                <li class="nav-item" >
-                                   <a class="nav-link p-0 font-weight-bolder active" id="order_guest_tab" data-toggle="tab" href="#order_guest" role="tab" aria-controls="order_guest" aria-selected="true">order as a guest</a>
-                                </li>
-                                <li class="hr_"></li>
-                                <li class="nav-item" >
-                                   <a class="nav-link p-0 font-weight-bolder" id="sign_in_tab" data-toggle="tab" href="#sign_in" role="tab" aria-controls="sign_in" aria-selected="false">sign in</a>
-                                </li>
-                             </ul>
-                             <div class="tab-content" >
-                                <div class="tab-pane fade show active" id="order_guest"  aria-labelledby="order_guest">
-                                   <div id="Registration" class="page-content mt-4 mb-0">
-                                      <form  class="needs-validation " method="post" novalidate>
-                                         <div class="form-group text-left">
-                                            <label class="font-weight-bolder">Social title</label><br>
-                                            <span class="form-check">
-                                            <input class="form-check-input" type="radio" name="gridRadios" id="gender_mr" checked>
-                                            <label class="form-check-label" for="gender_mr">
-                                            mr.
-                                            </label>
-                                            </span>
-                                            <span class="form-check">
-                                            <input class="form-check-input" type="radio" name="gridRadios" id="gender_mrs">
-                                            <label class="form-check-label" for="gender_mrs">
-                                            mrs.
-                                            </label>
-                                            </span>
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="f_name" class="font-weight-bolder">First name</label>
-                                            <input type="text" class="form-control" id="f_name" placeholder="First name"  required>
-                                            <div class="invalid-feedback">Please enter your name.</div>
-                                         </div>
-                                         <div class="form-group" >
-                                            <label for="l_name" class="font-weight-bolder">Last name</label>
-                                            <input type="text" class="form-control" id="l_name" placeholder="Last Name" required>
-                                            <div class="invalid-feedback">Please enter your name.</div>
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="r_email" class="font-weight-bolder">Email address</label>
-                                            <input type="email" class="form-control" id="r_email" aria-describedby="emailHelp" placeholder="Email" required>
-                                            <div class="invalid-feedback">Please enter your account name.</div>
-                                         </div>
-                                         <div class="form-group font-weight-bolder">
-                                            <label for="r_password" class="font-weight-bolder">Password</label>
-                                            <input type="password" class="form-control" id="r_password" placeholder="password" required>
-                                            <div class="invalid-feedback">Please enter your password.</div>
-                                         </div>
-                                         <div class="form-group">
-                                            <label class="font-weight-bolder">birth date</label>
-                                            <input class="form-control"  type="date" required/>
-                                            <div class="invalid-feedback">Please enter your birthdate.</div>
-                                         </div>
-                                         <div class="form-group form-check d-block">
-                                            <input type="checkbox" class="form-check-input" >
-                                            <label class="form-check-label" for="user_check">Sign up for our newsletter</label>
-                                         </div>
-                                         <div class="form-group form-check d-block">
-                                            <input type="checkbox" class="form-check-input" >
-                                            <label class="form-check-label" for="user_check">I agree to the terms and conditions and the privacy policy</label>
-                                         </div>
-                                         <div><input type="submit" name="submit" class="btn btn-primary mt-3" value="Save"></div>
-                                      </form>
-                                   </div>
-                                </div>
-                                <div class="tab-pane fade" id="sign_in"  aria-labelledby="sign_in_tab">
-                                   <div id="login" class="page-content  mt-4 ">
-                                      <form class="needs-validation " method="post" novalidate>
-                                         <div class="form-group">
-                                            <label for="user_email" class="font-weight-bolder">Email address</label>
-                                            <input type="email" class="form-control" id="user_email" aria-describedby="emailHelp" required>
-                                            <div class="invalid-feedback">Please enter account name.</div>
-                                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                                         </div>
-                                         <div class="form-group font-weight-bolder" >
-                                            <label for="user_password" class="font-weight-bolder">Password</label>
-                                            <input type="password" class="form-control" id="user_password" required>
-                                            <div class="invalid-feedback">Please enter your Password.</div>
-                                         </div>
-                                         <div class="form-group form-check">
-                                            <input type="checkbox" class="form-check-input" id="user_check" >
-                                            <label class="form-check-label" for="user_check">Check me out</label>
-                                         </div>
-                                         <input type="submit" name="submit" class="btn btn-primary mb-3 d-inline-block" value="submit">
-                                         <div class="pass_acc d-inline-block float-right pt-3">
-                                            <span class="forgot_password font-weight-bolderer"><a href="forgot.html">Forgot your password? </a></span>
-                                         </div>
-                                      </form>
-                                   </div>
-                                </div>
-                             </div>
-                          </div>
-                       </div>
-                    </div> -->
-                    <div class="row">
+                 
+
+					<span class="text-primary " data-toggle="modal" data-target="#coupenModal" style="cursor: pointer;">Available Coupens</span>
+
+					<!-- </button> -->
+                    
+      
+                    <!-- Coupen Area -->
+
+						<div class="cart-discount">
+
+							<p hidden class="msg"><%= message %></p>
+							
+							<% if (cartData.coupenDiscount == 0) { %>
+
+								<form action="/coupen" method="post">
+
+								<div class="input-group mt-1 ">
+
+									<input type="text" class="form-control"  name="coupen" oninput="coupenCheck(this)" placeholder="coupon code" required>
+
+									<div class="input-group-append">											
+
+										<button class="btn btn-outline-primary" id="btn" type="submit"><i class="icon-long-arrow-right"></i>Apply</button>
+
+									</div><!-- .End .input-group-append -->
+
+								</div><!-- End .input-group -->
+
+								</form>
+									
+							<%	} else { %>
+
+
+								<div class="input-group mt-1">
+
+								<input type="text" class="form-control" name="coupen" value="Coupen Applied" disabled>
+								<input type="text" class="form-control" id="coupen_idd" hidden value="<%= coupen_id ? coupen_id :''  %>" disabled>
+
+									<div class="input-group-append">											
+
+										<button class="btn btn-outline-danger" style="padding: 8px;" onclick="removeCoupen('<%=coupen_id%>')" id="btn" type="submit">Remove</button>
+                              
+									</div><!-- .End .input-group-append -->
+
+								</div><!-- End .input-group -->
+
+							<% } %>
+
+							</form>
+
+							<p id="msgg"></p>
+
+						</div><!-- End .cart-discount -->
+					
+                    <div class="row mt-4">
                      <% if (address !== null && address.addressData.length !== 0) { %>
                            
                        <% for (let i = 0; i < address.addressData.length; i++) { %>
@@ -368,29 +263,11 @@
                                  </div><!-- End .card-dashboard -->
          
                              </div ><!-- End .col-lg-6 -->
-         
-                             <!--Edit Addres Modal-->
-         
-                                     <!-- Modal -->
-         
-                                   
-                             <!-- <div class="col-lg-6">
-                                 <div class="card card-dashboard">
-                                     <div class="card-body">
-                                         <h3 class="card-title">Shipping Address</h3>End .card-title
-         
-                                         <p>You have not set up this type of address yet.<br>
-                                         <a href="#">Edit <i class="icon-edit"></i></a></p>
-                                     </div>End .card-body
-                                 </div>End .card-dashboard
-                             </div>End .col-lg-6 -->
-         
                             
                           <%  } %>
                              
                        <%} %>
                         
-                         <!-- <h3 style="margin-left: 24%;"><i>can't see any address</i></h3> -->
                          <div class="col-lg-12">
                          <div class="card rounded mb-2">
                            <div class="card-header bg-white" id="chechout_add">
@@ -443,7 +320,7 @@
                                        <input type="hidden" name="status" value="true" id="statusHidden">
                                        <div>
                                            <button id="clearButton" type="reset" class="f_13 btn btn-secondary mt-3">Reset</button>
-                                           <button type="submit" class="f_13 btn btn-primary mt-3 float-right">Add</button>
+                                           <button type="submit" class="f_13 btn btn-primary mt-3 float-right" on>Add</button>
                                        </div>
                                    </form>
                                  </div>
@@ -451,112 +328,9 @@
                            </div>
                         </div>
                      </div>
-                       
                            </div><!-- End .row -->
-                    <!-- card -->
-                   
-                    <!-- card address-1-->
-                    <!-- <div class="card rounded mb-2">
-                       <div class="card-header bg-white" id="checkout_shipping">
-                          <h2 class="mb-0">
-                             <button class="btn btn-link btn-block text-left collapsed text-body p-0 font-weight-bolder" type="button" data-toggle="collapse" data-target="#check_ship" aria-expanded="false" aria-controls="check_ship">
-                             Shipping Method<span class="float-right"><i class="fas fa-angle-down"></i></span>
-                             </button>
-                          </h2>
-                       </div>
-                       <div id="check_ship" class="collapse" aria-labelledby="checkout_shipping" data-parent="#check_out_toggle">
-                          <div class="card-body">
-                             <div id="ship_check" class="page-content">
-                                <form>
-                                   <div class="form-group text-left">
-                                      <label class="font-weight-bolder">Shipping Method</label><br>
-                                      <span class="form-check d-inline-block">
-                                      <input class="form-check-input" type="radio" name="gridRadios" id="free_ship" checked>
-                                      <label class="form-check-label" for="free_ship">
-                                      Free shipping
-                                      </label>
-                                      </span>
-                                      <span class="form-check d-inline-block ml-2">
-                                      <input class="form-check-input" type="radio" name="gridRadios" id="with_ship">
-                                      <label class="form-check-label" for="with_ship">
-                                      shipping
-                                      </label>
-                                      </span>
-                                   </div>
-                                </form>
-                             </div>
-                          </div>
-                       </div>
-                    </div> -->
-                    <!-- card -->
-                    <!-- <div class="card rounded mb-2">
-                       <div class="card-header bg-white" id="checkout_payment">
-                          <h2 class="mb-0">
-                             <button class="btn btn-link btn-block text-left collapsed text-body p-0 font-weight-bolder" type="button" data-toggle="collapse" data-target="#check_payment" aria-expanded="false" aria-controls="check_payment">
-                             Payment<span class="float-right"><i class="fas fa-angle-down"></i></span>
-                             </button>
-                          </h2>
-                       </div>
-                       <div id="check_payment" class="collapse" aria-labelledby="checkout_payment" data-parent="#check_out_toggle">
-                          <div class="card-body">
-                             <div id="pay_check" class="page-content">
-                                <form >
-                                   <div class="form-group text-left">
-                                      <label class="font-weight-bolder">payment Method</label><br>
-                                      <span class="form-check d-inline-block">
-                                      <input class="form-check-input" type="radio" name="gridRadios" id="pay_by_check" checked>
-                                      <label class="form-check-label" for="pay_by_check">
-                                      pay by check
-                                      </label>
-                                      </span>
-                                      <span class="form-check d-inline-block ml-2">
-                                      <input class="form-check-input" type="radio" name="gridRadios" id="pay_by_bank">
-                                      <label class="form-check-label" for="pay_by_bank">
-                                      pay by bank 
-                                      </label>
-                                      </span>
-                                   </div>
-                                   <div class="form-group form-check">
-                                      <input type="checkbox" class="form-check-input" id="user_pay_check" >
-                                      <label class="form-check-label" for="user_pay_check">I accept the Terms of Use & Privacy Policy</label>
-                                   </div>
-                                   <div class="text-center">
-                                      <button type="submit" class="btn btn-primary f_13">
-                                      Order with an obligation to pay
-                                      </button>
-                                   </div>
-                                </form>
-                             </div>
-                          </div>
-                       </div>
-                    </div> -->
-                    <!-- card -->
                  </div>
               </div>
-
-               <!-- <span class="float-right font-weight-bolder" id="tax"><%=// productPrice*9/100 %></span><div class="col-12 col-lg-4">
-                  <div class="border rounded bg-white final_payment">
-                     <div class="card-body  border-bottom">
-                       
-                        <p class="font-weight-bolderer">show details</p>
-                        <div>
-                           <span class="font-weight-bolder">subtotal</span>
-                          
-                        <div>
-                           <span class="font-weight-bolder">taxes</span>
-                           <span class="float-right font-weight-bolder">9%</span>
-                        </div>
-                        </div>
-                     </div>
-                     <div class="card-body ">
-                        <div>
-                           <span class="font-weight-bolder">(tax excl.)</span>
-                           
-                        </div>
-                     </div>
-                  </div>
-               </div> -->
-
                <div class="col-lg-4 col-12 ">
                   <div class="border rounded bg-white final_payment">
                     <div class="card-body border-bottom">
@@ -587,19 +361,21 @@
                       </table>
                 
                       <hr>
-                
-                      <div>
-                        <span class="font-weight-bolder">Subtotal</span>
-                        <span class="float-right font-weight-bolder" id="subtotal">$<%= cartData.totalCartPrice %>.00</span>
-                      </div>
+                      
                       <div>
                         <span class="font-weight-bolder">Taxes</span>
                         <span class="float-right font-weight-bolder" id="tax">$<%= taxAmount %>.00</span>
                       </div>
-                      <!-- <div>
-                        <span class="font-weight-bolder">Shipping</span>
-                        <span class="float-right font-weight-bolder">$2.00</span>
-                      </div> -->
+                      <div>
+                        <span class="font-weight-bolder">Subtotal</span>
+                        <span class="float-right font-weight-bolder" id="subtotal">$<%= cartData.totalCartPrice + cartData.coupenDiscount %>.00</span>
+                      </div>
+
+                      <div>
+                        <span class="font-weight-bolder text-danger"><%= coupenSpan %></span>
+                        <span class="float-right font-weight-bolder text-danger" id="subtotal"><%= coupenDiscount %></span>
+                      </div>
+                      <br>
                     </div>
                     <div class="card-body">
                       <div>
@@ -611,16 +387,23 @@
                         <label for="cod">
                           <input type="radio" id="cod" name="payment" value="cod" > Cash on Delivery
                         </label><br>
-                        <label for="wallet">
-                          <input  type="radio" id="wallet" name="payment" onclick="CheckWallet()" value="wallet" > Wallet
+                        <% if (!userWallet || cartData.totalCartPrice > userWallet?.balance || userWallet?.balance == 0 ) {%>
+                        <label for="wallet" style="text-decoration: line-through;">
+                              <input  type="radio" disabled id="wallet" name="payment" value="wallet" > Wallet
+                           </label>
+                           <% }else{ %>
+                              <label for="wallet">
+                              <input  type="radio"  id="wallet" name="payment" value="wallet" > Wallet
+                           </label>
+                              <% } %>
                         </label><br>
                         <label for="online">
-                          <input type="radio" id="online" name="payment" value="online"  > Online Payment
+                          <input type="radio" id="online" name="payment" value="online"> Online Payment
                         </label> 
                       </div>
                       <br>
-                      <button type="submit" onclick="submitPayment( '<%= totalAmount %>','<%= cartData.user_id %>')" class="btn btn-primary btn-block">Place Order</button>
-                    </div>
+                      <button type="submit" onclick="submitPayment( '<%= cartData.totalCartPrice %>','<%= cartData.user_id %>')" class="btn btn-primary btn-block">Place Order</button>
+                     </div>
                   </div>
                 </div>
                 
@@ -631,180 +414,59 @@
      <style>
      
      </style>
-     <!-- checkout page -->
-     <!-- footer -->
-    
+
      <%- include('../layouts/client/footer') %>
 
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
      <!-- swal -->
      <script>
-    
-    
+
       
-      let selectedAddressId = null;
-      // let selectedPayment = null;
-      // selectedPayment ?selectedPayment.value:null = document.querySelector('input[name="payment"]:checked')
-      function submitAddress(addressId) {
-        
-      selectedAddressId = addressId;
-      console.log(selectedAddressId)
-  }
-      function submitPayment(amount,userID){
-        var selectedPayment = document.querySelector('input[name="payment"]:checked')
-        if(selectedPayment){
-         var selectedpayment = selectedPayment.value
-        }else{
-         selectedpayment=null
-        }
-          console.log(selectedPayment)
-         if (!selectedAddressId) {
-            Swal.fire({
-                    html: "<b>Please add one address</b>",
-                    iconHtml: 'X',
-                    iconColor: 'red',
-                    background: '#f9f6e8',
-                    width: '280px',
-                    padding: '10px',
-                    icon: 'error',
-                    toast: true,
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-             return
- }
- else if(!selectedPayment){
-   Swal.fire({
-                    html: "<b>Please select any one payment method</b>",
-                    iconHtml: 'X',
-                    iconColor: 'red',
-                    background: '#f9f6e8',
-                    width: '280px',
-                    padding: '10px',
-                    icon: 'error',
-                    toast: true,
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-            return
- }else{
+  function form(event) {
+    event.preventDefault();
     
-         fetch('/orders', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-        body: JSON.stringify({ amount, selectedAddressId,selectedpayment})
-    })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error('Network response was not ok ' + res.statusText);
-        }
-        return res.json();
-    })
-    .then(data => {
-      console.log(data)
-      if(data.razorpay){
-         return razorpayPayment(data.order);
-      }
-      
-      if(data.listed){
-        return window.location.href=`/cart?message=${data.message}`
-      }else if(data.success){
-        console.log(data);
-        return window.location.href=`/success`
-      }else if(!data.quantity){
-         return window.location.href=`/cart?message=${data.message}`
-      }else if(data.insuficent){
-         Swal.fire({
-                    html: "<b>jfdkj</b>",
-                    iconHtml: 'X',
-                    iconColor: 'red',
-                    background: '#f9f6e8',
-                    width: '280px',
-                    padding: '10px',
-                    icon: 'error',
-                    toast: true,
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-            return
-      }
-      else{
-         // address backend check(if not)
-      }
-      if(data.order){
-          console.log(data.order)
-          return
-       }
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-        // Handle the error here
-    });
-   
-         
-  
- }
-}
+    const form = document.getElementById('addform');
+    const inputs = form.querySelectorAll('input, textarea');
+    let isValid = true;
 
-function razorpayPayment(order){
+    const patterns = {
+        name: /^[A-Za-z]{3,50}(?: [A-Za-z]+)*$/,
+        phone: /^[6-9]\d{9}$/,
+        locality: /^[A-Za-z0-9\s,.'-]{2,100}$/,
+        pincode: /^[1-9][0-9]{5}$/,
+        address: /^.{10,200}$/,
+        city: /^[A-Za-z\s]{3,50}$/,
+        state: /^[A-Za-z\s]{3,50}$/
+    };
 
-var options = {
-    "key": "rzp_test_deu2ORuCjDgPNd", 
-    "amount":order.amount, 
-    "currency": "INR",
-    "name": "plantly", 
-    "description": "Test Transaction",
-    "image": "https://cdn-icons-png.flaticon.com/512/616/616430.png",
-    "order_id": order.id, 
-    // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
-    "handler": function (response){                              
-        console.log('response:',response);
-        verifyPayment(response,order);
-    },
-    "prefill": { 
-        "name": "muhammad riyas ck", 
-        "email": "plantlyplant@gmail.com", 
-        "contact": "9000090000" 
-    },
-    "notes": {
-        "address": "Razorpay Corporate Office"
-    },
-    "theme": {  
-        "color": "#f2a100"
-    }
-};
-console.log('hereeeeeeeeeeeeee');
-var rzp1 = new Razorpay(options);
-console.log('rzp1:',rzp1);
-rzp1.on('payment.failed', function (response){
-    window.location.href=`/failuer?id=${order.receipt}`
-});
-
-rzp1.open();
-}
-
-function verifyPayment(response,order){
-        fetch('/razorpay',{
-            method:"POST",
-            headers:{
-                "content-type": "application/json;charset=utf-8"
-            },
-            body:JSON.stringify({
-                response,
-                order
-            })
-        })
-        .then((res)=>res.json())
-        .then((data)=>{
-            if(data.statusChanged){
-      
-                window.location.href=`/success`
+    inputs.forEach(input => {
+        if (input.type !== 'hidden') {
+            const pattern = patterns[input.name];
+            if (pattern && !pattern.test(input.value.trim())) {
+                input.classList.add('is-invalid');
+                isValid = false;
+            } else if (input.required && input.value.trim() === '') {
+                input.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
             }
-        })   
+        }
+    });
+
+    if (!isValid) {
+     
+    } else {
+        const validId = document.getElementById('validUserId').value;
+        addAddress(validId);
     }
+}
+
+// Add event listener to the form
+document.getElementById('addform').addEventListener('submit', form);
+
 function addAddress(id){
 
 // console.log(id);
@@ -842,27 +504,18 @@ fetch(`/address?id=${id}` , {method : 'put' , headers : {'Content-Type' : 'appli
 
   } else {
 
-   
-    // .then((result) => {
-
-    //  window.location.reload()
-        
-    // })
-
-  
-
   Swal.fire({
-                    html: "<b>this address is already exits</b>",
-                    iconHtml: 'X',
-                    iconColor: 'red',
-                    background: '#f9f6e8',
-                    width: '280px',
-                    padding: '10px',
-                    icon: 'error',
-                    toast: true,
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
+        html: "<b>this address is already exits</b>",
+        iconHtml: 'X',
+        iconColor: 'red',
+        background: '#f9f6e8',
+        width: '280px',
+        padding: '10px',
+        icon: 'error',
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+    });
                
    
 }
@@ -966,6 +619,210 @@ function validateForm(event) {
     }
 }
 
+
+function coupenCheck(val){
+
+const msg = document.getElementById('msgg')
+const btn = document.getElementById('btn')
+
+fetch(`/checkCoupen` , {method : 'post' , headers : {'Content-Type' : 'application/json'} , body : JSON.stringify({id : val.value})})
+
+.then(res => res.json())
+
+.then(data => {
+
+   console.log(data);
+
+   if(data.succuss){
+
+      msg.textContent = 'Valid Coupen'
+      msg.classList.remove('text-danger')
+      msg.classList.add('text-success')
+      btn.disabled = false
+
+   } else  {
+
+      msg.textContent = 'Invalid Coupen'
+      msg.classList.remove('text-success')
+      msg.classList.add('text-danger')
+      btn.disabled = true
+
+   }
+
+})
+}
+    
+      
+      let selectedAddressId = null;
+      function submitAddress(addressId) {
+        
+      selectedAddressId = addressId;
+      console.log(selectedAddressId)
+  }
+  function submitPayment(amount,userID){
+         let coupen = document.getElementById('coupen_idd')
+         if(coupen){
+            coupenIdd = coupen.value
+         }else{
+            coupenIdd = null
+         }
+         console.log(coupenIdd)
+        var selectedPayment = document.querySelector('input[name="payment"]:checked')
+        if(selectedPayment){
+         var selectedpayment = selectedPayment.value
+        }else{
+         selectedpayment=null
+        }
+          console.log(selectedPayment)
+         if (!selectedAddressId) {
+            Swal.fire({
+                    html: "<b>Please add one address</b>",
+                    iconHtml: 'X',
+                    iconColor: 'red',
+                    background: '#f9f6e8',
+                    width: '280px',
+                    padding: '10px',
+                    icon: 'error',
+                    toast: true,
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+             return
+      }
+      else if(!selectedPayment){
+      Swal.fire({
+                    html: "<b>Please select any one payment method</b>",
+                    iconHtml: 'X',
+                    iconColor: 'red',
+                    background: '#f9f6e8',
+                    width: '280px',
+                    padding: '10px',
+                    icon: 'error',
+                    toast: true,
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            return
+      }else{
+    
+         fetch('/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+        body: JSON.stringify({ amount, selectedAddressId,selectedpayment,coupenIdd})
+      })
+      .then(res => {
+        if (!res.ok) {
+            throw new Error('Network response was not ok ' + res.statusText);
+        }
+        return res.json();
+      })
+      .then(data => {
+      console.log(data)
+      if(data.razorpay){
+         return razorpayPayment(data.order);
+      }
+      
+      if(data.listed){
+        return window.location.href=`/cart?message=${data.message}`
+      }else if(data.success){
+        console.log(data);
+        return window.location.href=`/success`
+      }else if(!data.quantity){
+         return window.location.href=`/cart?message=${data.message}`
+      }else if(data.insuficent){
+         Swal.fire({
+                    html: "<b>jfdkj</b>",
+                    iconHtml: 'X',
+                    iconColor: 'red',
+                    background: '#f9f6e8',
+                    width: '280px',
+                    padding: '10px',
+                    icon: 'error',
+                    toast: true,
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            return
+      }
+      if(data.order){
+          console.log(data.order)
+          return
+       }
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+
+      });
+   
+         
+  
+      }
+}
+
+function razorpayPayment(order){
+
+var options = {
+    "key": "rzp_test_deu2ORuCjDgPNd", 
+    "amount":order.amount, 
+    "currency": "INR",
+    "name": "plantly", 
+    "description": "Test Transaction",
+    "image": "https://cdn-icons-png.flaticon.com/512/616/616430.png",
+    "order_id": order.id, 
+    // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+    "handler": function (response){                              
+        console.log('response:',response);
+        verifyPayment(response,order);
+    },
+    "prefill": { 
+        "name": "muhammad riyas ck", 
+        "email": "plantlyplant@gmail.com", 
+        "contact": "9000090000" 
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {  
+        "color": "#f2a100"
+    }
+};
+
+   var rzp1 = new Razorpay(options);
+   console.log('rzp1:',rzp1);
+   rzp1.on('payment.failed', function (response){
+   window.location.href=`/failuer?id=${order.receipt}`
+
+});
+
+rzp1.open();
+}
+
+function verifyPayment(response,order){
+        fetch('/razorpay',{
+            method:"POST",
+            headers:{
+                "content-type": "application/json;charset=utf-8"
+            },
+            body:JSON.stringify({
+                response,
+                order
+            })
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+            if(data.statusChanged){
+      
+                window.location.href=`/success`
+            }
+        })   
+    }
+
+
+
+
+
 // Add event listener to the form
 document.getElementById('editForm').addEventListener('submit', validateForm);
 
@@ -992,49 +849,6 @@ document.querySelectorAll('#editForm input, #editForm textarea').forEach(input =
 
   }
 
-  function form(event) {
-    event.preventDefault();
-    
-    const form = document.getElementById('addform');
-    const inputs = form.querySelectorAll('input, textarea');
-    let isValid = true;
-
-    const patterns = {
-        name: /^[A-Za-z]{3,50}(?: [A-Za-z]+)*$/,
-        phone: /^[6-9]\d{9}$/,
-        locality: /^[A-Za-z0-9\s,.'-]{2,100}$/,
-        pincode: /^[1-9][0-9]{5}$/,
-        address: /^.{10,200}$/,
-        city: /^[A-Za-z\s]{3,50}$/,
-        state: /^[A-Za-z\s]{3,50}$/
-    };
-
-    inputs.forEach(input => {
-        if (input.type !== 'hidden') {
-            const pattern = patterns[input.name];
-            if (pattern && !pattern.test(input.value.trim())) {
-                input.classList.add('is-invalid');
-                isValid = false;
-            } else if (input.required && input.value.trim() === '') {
-                input.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                input.classList.remove('is-invalid');
-                input.classList.add('is-valid');
-            }
-        }
-    });
-
-    if (!isValid) {
-     
-    } else {
-        const validId = document.getElementById('validUserId').value;
-        addAddress(validId);
-    }
-}
-
-// Add event listener to the form
-document.getElementById('addform').addEventListener('submit', form);
 
 // Add input event listeners to remove invalid class when user starts typing
 document.querySelectorAll('#addform input, #addform textarea').forEach(input => {
@@ -1045,7 +859,173 @@ document.querySelectorAll('#addform input, #addform textarea').forEach(input => 
 });
 
 
-function CheckWallet(id){
+
+//	Sweet Alert For Edit Address :-
+
+const msg = document.getElementById('msg');
+
+if(msg.textContent == 'coupen'){
+
+	const Toast = Swal.mixin({
+
+		toast: true,
+		position: "top-end",
+		showConfirmButton: false,
+		timer: 3000,
+	    timerProgressBar: true,
+
+		didOpen: (toast) => {
+
+			toast.onmouseenter = Swal.stopTimer;
+		   toast.onmouseleave = Swal.resumeTimer;
+		}
+
+	});
+					
+	Toast.fire({
+
+		icon: "success",
+		title: "Coupen Applied"		
+
+	});
+		
+} else if(msg.textContent == 'usedOne'){
+
+	const Toast = Swal.mixin({
+
+		toast: true,
+		position: "top-end",
+		showConfirmButton: false,
+		timer: 3000,
+	    timerProgressBar: true,
+
+		didOpen: (toast) => {
+
+			toast.onmouseenter = Swal.stopTimer;
+		   toast.onmouseleave = Swal.resumeTimer;
+		}
+
+	});
+					
+	Toast.fire({
+
+		icon: "warning",
+		title: "Already Used!!!"		
+
+	});
 
 }
-     </script>
+
+//	Remove Coupen :-
+
+function removeCoupen(coupen_id){
+fetch(`/removeCop` , {method : 'put',headers:{'content-type':'application/json'},body:JSON.stringify({coupen_id})})
+
+.then(res => res.json())
+
+.then(data => {
+
+   if(data.succ){
+
+      window.location.reload()
+
+   }
+
+})
+
+}
+   //  Copy Coupen Code :-
+ 
+    var btn = document.getElementById("copybtn");
+    var copenCode = document.getElementById("coupencode");
+ 
+     function copyCode(code,elem){
+ 
+       navigator.clipboard.writeText(code);
+       elem.innerHTML ="COPIED";
+       
+       setTimeout(function(){
+ 
+         elem.innerHTML="COPY CODE";
+ 
+       }, 3000);
+ 
+     }
+ 
+ </script>
+ 
+ <style>
+ 
+   #coupenCode{
+     border: 1px dashed #fff;
+     padding: 10px 20px;
+      display: none;
+     border-right: 0;
+ 
+ }
+ #coupenBtn{
+     border: 1px solid #fff;
+     background: #fff;
+     padding: 10px 20px;
+     color: #000000;
+     cursor: pointer;
+ }
+ 
+     
+ .flip-card {
+ 
+   background-color: transparent;
+   width: 150px;
+   height: 200px;
+   perspective: 1000px;
+   font-family: sans-serif;
+ }
+ 
+ .title {
+   font-size: 1.5em;
+   font-weight: 900;
+   text-align: center;
+   margin: 0;
+ }
+ 
+ .flip-card-inner {
+   position: relative;
+   width: 100%;
+   height: 100%;
+   text-align: center;
+   transition: transform 0.8s;
+   transform-style: preserve-3d;
+ }
+ 
+ .flip-card:hover .flip-card-inner {
+   transform: rotateY(180deg);
+ }
+ 
+ .flip-card-front, .flip-card-back {
+   box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
+   position: absolute;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   width: 100%;
+   height: 100%;
+   -webkit-backface-visibility: hidden;
+   backface-visibility: hidden;
+   border: 1px solid coral;
+   border-radius: 1rem;
+ }
+ 
+ .flip-card-front {
+   background: linear-gradient(120deg, bisque 60%, rgb(255, 231, 222) 88%,
+      rgb(255, 211, 195) 40%, rgba(255, 127, 80, 0.603) 48%);
+   color: coral;
+ }
+ 
+ .flip-card-back {
+   background: linear-gradient(120deg, rgb(255, 174, 145) 30%, coral 88%,
+      bisque 40%, rgb(255, 185, 160) 78%);
+   color: white;
+   transform: rotateY(180deg);
+ }
+ 
+ </style>

@@ -180,8 +180,9 @@
                                                                             <td>$<%= product.price %>.00</td>
 
                                                                             <td> 
+                                                                               
                                                                             
-                                                                            <button onclick="idchange('<%= product._id %>')"data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-outline-success">Accept Return</button>
+                                                                            <button  onclick="acceptReturn('<%= product.product_id._id %>','<%=orderDetails._id%>','<%=orderDetails.user_id._id%>',this)" data-proid="<%= product._id %>"  class="btn btn-outline-success">Accept Return</button>
                                                                                     
                                                                             </td>
                                                                                         
@@ -242,7 +243,7 @@
 
                                                                         <tr>
     
-                                                                            <td><img src="/assets/productImage/<%= product.product_id.images[0] %>" height="100" alt=""><br><br><span><%= product.product_id.name%></span></td>
+                                                                            <td><img src="/assets/productImages/<%= product.product_id.images[0] %>" height="100" alt=""><br><br><span><%= product.product_id.name%></span></td>
     
                                                                             <td>$<%= product.product_id.price %>.00</td>
                                                                             <td><%= product.quantity %></td>
@@ -352,11 +353,12 @@
 
 //  Accepting Return :-
 
-const orderId = document.getElementById('oderId').textContent
-
-function acceptReturn(e){
-
-    fetch(`/admin/returnManage?id=${orderId}&&proId=${e.dataset.id}` , {method : 'POST'})
+// console.log(orderId);
+function acceptReturn(proid,orderId,userId,e){
+    
+    console.log('fetch',proid,orderId)
+    fetch(`/admin/returnManage?id=${orderId}&&proId=${proid}&&userId=${userId}` , {method : 'POST'});
+    e.disabled=true
     
 }
 

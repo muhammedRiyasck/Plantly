@@ -53,7 +53,7 @@
                             <input type="file" class="form-control" id="couponImage" name="image" accept="image/*" required>
                           </div>
 
-                          <div class="mb-3 d-flex">
+                          <!-- <div class="mb-3 d-flex">
                             <div>
                               <label for="min" class="form-label">Min</label>
                               <input type="number" class="form-control w-50" min="1" name="min" id="min" placeholder="min">
@@ -67,7 +67,7 @@
                               <p id="maximum" class="text-danger "></p>
 
                             </div>
-                          </div>
+                          </div> -->
 
                           <div class="mb-3">
                             <label for="discount" class="form-label">Discount</label>
@@ -127,11 +127,11 @@
                             
                           </div>
                           
-                      <%  }); %>
-
-                   </div>
-
-          </div>
+                          <%  }); %>
+                          
+                        </div>
+                        <%-include('../layouts/admin/pagination') %>
+                  </div>
 
           <!-- <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
@@ -147,7 +147,7 @@
 
 </div>
 
-<script defer src="https://cdn.crop.guide/loader/l.js?c=CYHKSV"></script>
+<script defer src="https://cdn.crop.guide/loader/l.js?c=YWZCCS"></script>
 
 
 <script>
@@ -210,7 +210,7 @@
           toast: true,
           position: "top-end",
           showConfirmButton: false,
-          timer: 3000,
+          timer: 800,
           timerProgressBar: true,
 
           didOpen: (toast) => {
@@ -227,9 +227,11 @@
           icon: "success",
           title: "Deleted Successfully"
           
-        });
+        }).then(()=>{
 
-        $('#reloadDiv').load('/admin/coupen #reloadDiv');
+          // $('#reloadDiv').load('/admin/coupen #reloadDiv');
+          window.location.reload()
+        })
 
       }
 
@@ -244,16 +246,16 @@
     event.preventDefault();
     
     document.getElementById('name').textContent = '';
-    document.getElementById('minimum').textContent = '';
-    document.getElementById('maximum').textContent = '';
+    // document.getElementById('minimum').textContent = '';
+    // document.getElementById('maximum').textContent = '';
     document.getElementById('dis').textContent = '';
 
     // Get form inputs
 
     var couponName = document.getElementById('couponName').value.trim();
     var discount = document.getElementById('discount').value.trim();
-    var minimum = document.getElementsByName('min')[0].value.trim();
-    var maximum = document.getElementsByName('max')[0].value.trim();
+    // var minimum = document.getElementsByName('min')[0].value.trim();
+    // var maximum = document.getElementsByName('max')[0].value.trim();
 
     // Validation
 
@@ -266,15 +268,15 @@
 
     }
 
-    if (isNaN(minimum) || minimum === '' || minimum <= 0) {
-      document.getElementById('minimum').textContent = 'Enter positive number';
-      isValid = false;
-    }
+      // if (isNaN(minimum) || minimum === '' || minimum <= 0) {
+      //   document.getElementById('minimum').textContent = 'Enter positive number';
+      //   isValid = false;
+      // }
 
-    if (isNaN(maximum) || maximum === '' || maximum <= 0) {
-      document.getElementById('maximum').textContent = 'must be a positive number';
-      isValid = false;
-    }
+      // if (isNaN(maximum) || maximum === '' || maximum <= 0) {
+      //   document.getElementById('maximum').textContent = 'must be a positive number';
+      //   isValid = false;
+      // }
 
     if (isNaN(discount) || discount === '' || discount < 0 || discount > 99) {
       document.getElementById('dis').textContent = 'Discount rate maximujm upto 99 %';
@@ -299,6 +301,7 @@
   height: 300px;
   perspective: 1000px;
   font-family: sans-serif;
+  margin-bottom: 1rem;
 }
 
 .title {

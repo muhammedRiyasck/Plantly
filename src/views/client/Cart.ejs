@@ -288,16 +288,16 @@
                               <div>
                                  <span class="font-weight-bolder">subtotal</span>
                                  <span class="float-right font-weight-bolder" id="subtotal" >$<%= productPrice %>.00</span>
-                              <div>
+                              <div hidden>
                                  <span class="font-weight-bolder">taxes</span>
                                  <span class="float-right font-weight-bolder">9%</span>
                               </div>
                               </div>
                            </div>
                            <div class="card-body ">
-                              <div>
+                              <div hidden>
                                  <span class="font-weight-bolder">(tax excl.)</span>
-                                 <span class="float-right font-weight-bolder" id="tax"><%= productPrice*9/100 %></span>
+                                 <span class="float-right font-weight-bolder" id="tax"><%= productPrice %></span>
                               </div>
                            </div>
                         </div>

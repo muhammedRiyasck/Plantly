@@ -78,7 +78,7 @@
                             <hr class="mt-0 mb-4" />
 
                             <div class="row">
-                              <div class="col-6 mb-3">
+                              <div class="col-6 mb-2">
                                 <h6>Name</h6>
                                 <p><%=userData.fullName %></p>
                               </div>
@@ -98,7 +98,14 @@
                                 <h6>Email</h6>
                                 <p><%= userData.email %></p>
                               </div>
+                            </div>
 
+                              <div class="row">
+                                <div class="col-6 mb-2">
+                                  <h6>Refferal Code</h6>
+                                  <p><%= userData.refferal %></p>
+                                </div>
+                              </div>
                               <% //if (!walletData?.balance) { %>
 
                               <!-- <div class="col-6 mb-2">
@@ -120,7 +127,6 @@
                                                     </div> -->
 
                               <% //} %>
-                            </div>
 
                             <div class="row pt-1">
                               <div class="col-8 mb-3 d-flex">

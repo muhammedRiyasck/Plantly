@@ -4,13 +4,15 @@ const app = express();
 const path = require('path');
 const session = require('express-session');
 const flash = require('express-flash');
-const nocache = require('nocache')
+const nocache = require('nocache');
 
 require('dotenv').config()
 
 const userRoute = require('./src/routes/client/userRouter');
 const adminRoute = require('./src/routes/admin/adminRouter');
 const googleAuth = require('./src/utilities/googleAuth');
+const customError = require('./src/utilities/error_handling')
+const golobalErrorHandler = require('./src/utilities/errorController')
 
 const mongoose = require('mongoose');
 const { number } = require('joi');
@@ -37,13 +39,15 @@ app.use('/', userRoute);
 app.use('/admin', adminRoute);
 app.use('/', googleAuth);
 
-// app.use((err,req,res,next){
 
-// })
 
-app.get('*', (req, res) => {
-    res.render('404')
+app.all('*', (req, res, next) => {
+    // res.render('../404')
+    const err = new customError(`Can't find ${req.originalUrl} on the server!`,404)
+    next(err)
 })
+
+app.use(golobalErrorHandler)
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

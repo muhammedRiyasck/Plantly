@@ -3,7 +3,7 @@ const User = require('../../model/user_model')
 const Product = require('../../model/products_model')
 const Category = require('../../model/category_model')
 
-const loadWishList = async(req,res)=>{
+const loadWishList = async(req,res,next)=>{
     try {
         
         if (req.session.user) {
@@ -31,7 +31,7 @@ const loadWishList = async(req,res)=>{
                 }
                 
             } else {
-                console.log('elelelelel')
+                
                 res.render("WishList", { userlogdata: req.session.user,wishlistData });
 
             }
@@ -44,7 +44,7 @@ const loadWishList = async(req,res)=>{
         
     } catch (error) {
         
-        console.log(error.message)
+        next(error)
 
 
     }
@@ -54,7 +54,8 @@ const loadWishList = async(req,res)=>{
 const addWishlist = async (req, res , next) => {
     
     try {
-    
+
+    if(req.session.user){
         const proIdd = req.query.idd
         console.log(proIdd)
         const userIdd = req.session.user._id
@@ -71,7 +72,9 @@ const addWishlist = async (req, res , next) => {
 
             res.send({ success: false });
         }
-
+    }else{
+         req.flash('')
+    }
     } catch (error) {
 
         next(error,req,res);
@@ -104,8 +107,7 @@ const removeWishlist = async (req, res , next) => {
         
     } catch (error) {
 
-        console.log("aaaa");
-        console.log(error.message);
+       next()
 
         
     }

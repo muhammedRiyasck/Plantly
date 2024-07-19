@@ -13,11 +13,10 @@ const Instance = new Razorpay({
   
 });
 
-const verifyPayment = async (req,res)=>{
+const verifyPayment = async (req,res,next)=>{
     try {
         console.log('verify payment route reacheddd!!'); 
         const {response,order}=req.body;
-        console.log('rbody',req.body);
         const userId = req.session.user._id
         const cartData = await cart.find({user_id:userId})
   
@@ -28,8 +27,7 @@ const verifyPayment = async (req,res)=>{
         if(hmac == response.razorpay_signature){
             
             const orderData=await Order.findOne({_id:order.receipt},{products:1});
-            console.log('pppp',orderData);
-            
+          
             for(const item of orderData.products){
               await Order.findOneAndUpdate(
                 { _id: order.receipt, 'products.product_id': item.product_id },
@@ -43,21 +41,45 @@ const verifyPayment = async (req,res)=>{
                
             }
             if(cartData){
-            // await decreaseProductQuantity(cartData.products);
             await cart.deleteOne({ user: userId });
             }
-            console.log('haiii');
             res.json({statusChanged:true});
         
         }
   
     } catch (error) {
-        console.log(error.message);
-        res.status(500).render('500');
+       next(error)
     }
+  }
+
+ const retryPayment = async(req,res)=>{
+            try {
+              
+              let totalAmount = req.body.amount
+              let orderID = req.body.order_Id
+              req.session.user.amount = totalAmount
+              req.session.user.order_Id = orderID
+              const orderedData =await Order.findOne({order_Id:orderID})
+     
+              let options = {  amount:totalAmount * 100,
+                       currency: 'INR',
+                       receipt: ''+orderedData._id,
+                     }
+       
+               Instance.orders.create(options, async function (err, order) {
+                       if(err){
+                         console.log("error:",err);
+                     }
+               return res.json({razorpay:true,order})
+                    
+             })
+            } catch (error) {
+              console.log(error)
+            }
   }
   
 
 module.exports={
-  verifyPayment
+  verifyPayment,
+  retryPayment
 }

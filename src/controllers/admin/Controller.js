@@ -3,17 +3,17 @@ const User = require('../../model/user_model')
 const bcrypt=require('bcrypt')
 
 
-const loadLogin=async(req,res)=>{
+const loadLogin=async(req,res,next)=>{
     try {
         const msg=req.flash('passError')
         res.render('Login.ejs',{msg})
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
 
-const verifyLogin = async (req, res) => {
+const verifyLogin = async (req, res , next) => {
     
     try {
         
@@ -51,36 +51,35 @@ const verifyLogin = async (req, res) => {
 
     } catch (error) {
 
-        console.log(error.message);
+        next(error)
         
     }
 };
 
 
-const loadDashboard = async (req, res) => {
-    try {
-        res.render('Dashboard')
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+// const loadDashboard = async (req, res) => {
+//     try {
+//         res.render('Dashboard')
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
 
 
-const logOut = async (req,res)=>{
+const logOut = async (req,res,next)=>{
     try {
         req.session.admin = undefined
         req.flash('passError', "Logout Successfully...")
         res.redirect('/admin/login')
     } catch (error) {
 
-        console.log(error.message);
+        next(error)
         
     }
 }
 
 module.exports = {
     loadLogin,
-    loadDashboard,
     verifyLogin,
     logOut
 }

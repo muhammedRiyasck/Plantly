@@ -1,18 +1,32 @@
 const Category=require('../../model/category_model')
 
-const loadCategory=async(req,res)=>{
+const loadCategory=async(req,res,next)=>{
     try {
+        const page = parseInt(req.query.page)||1
+        const limit = 4
+        const skip = (page-1)*limit
 
-        const category = await Category.find({})  
-        const messages=req.flash('flash')      
+        const [category,categoryCount] = await Promise.all([
+            Category.find({}).skip(skip).limit(limit),
+            Category.countDocuments()
+        ])   
+        const totalPages = Math.ceil(categoryCount/limit)
 
-        res.render('Category' , {category ,messages})
+        const messages =req.flash('flash')      
+
+        res.render('Category' , {
+            category,
+            messages,
+            totalPages,
+            currentPages:page,
+            skip
+        })
     } catch (error) {
-        
+        next(error)
     }
 }
 
-const addCategory=async(req,res)=>{
+const addCategory=async(req,res,next)=>{
 
     try {
         
@@ -48,35 +62,44 @@ const addCategory=async(req,res)=>{
  }
 catch (error) {
 
-        console.log(error.message)
+    next(error)
 }
   
 }
 
-const categoryAction = async(req , res)=>{
-
-    const categoryId = req.body.id
-
-    const findCategory = await Category.findOne({_id:categoryId})
+const categoryAction = async(req , res,next)=>{
+   
+    try {
+        
+        const categoryId = req.body.id
     
-    findCategory.Listed = !findCategory.Listed;
-
-    findCategory.save()
+        const findCategory = await Category.findOne({_id:categoryId})
+        
+        findCategory.Listed = !findCategory.Listed;
+    
+        findCategory.save()
+    } catch (error) {
+        next(error)
+    }
 
 }
 
-const categoryDelete = async(req,res)=>{
-
- const userId = req.query.userId
-
- const deleteCategory = await Category.deleteOne({_id:userId})
-
-  console.log(deleteCategory)
-
-    if(deleteCategory){
-
-        res.send({succ:true})
-      
+const categoryDelete = async(req,res,next)=>{
+    try {
+        
+        const userId = req.query.userId
+       
+        const deleteCategory = await Category.deleteOne({_id:userId})
+       
+         console.log(deleteCategory)
+       
+           if(deleteCategory){
+       
+               res.send({succ:true})
+             
+           }
+    } catch (error) {
+         next(error)
     }
 
 }
@@ -113,7 +136,7 @@ const categoryEdit = async (req, res , next) => {
 
 };
 
-const valSett = async(req , res)=>{
+const valSett = async(req , res,next)=>{
 
     try {
 
@@ -129,7 +152,7 @@ const valSett = async(req , res)=>{
         
     } catch (error) {
 
-        console.log(error.message);
+        next(error)
         
     }
 

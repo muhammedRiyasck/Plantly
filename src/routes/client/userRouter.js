@@ -26,6 +26,7 @@ userRoute.post('/logout' , userController.logout);
 userRoute.get('/registration', user_middilware.login ,userController.loadRegisteration)
 
 userRoute.post('/registration',userController.insertUser)
+userRoute.put('/refferal-cheking',userController.validateRefferral)
 userRoute.get('/otp', user_middilware.login,userController.loadOtp)
 userRoute.post('/verifyotp',userController.verifyOtp)
 
@@ -38,8 +39,6 @@ userRoute.route('/resetPassword').get(userController.loadResetPassword).post(use
 
 userRoute.get('/single-blog',user_middilware.isBlocked,userController.loadSingleBlog)
 userRoute.get('/single-product',user_middilware.isBlocked,userController.loadSingleProduct)
-
-// userRoute.route('/search').post(userController.search)
 
 userRoute.route('/profile').get(user_middilware.user,userProfile.loadUserProfile).post(userProfile.editProfile)
 
@@ -54,28 +53,27 @@ userRoute.route('/wishlist').get(user_middilware.isBlocked,wishlistController.lo
 userRoute.post('/removewishlist',wishlistController.removeWishlist)
 
 userRoute.route('/wallet').get(user_middilware.isBlocked,userController.loadWallet)
-
-userRoute.route('/checkout').get(user_middilware.isBlocked,checkoutController.loadChekout)
-
-userRoute.route('/success').get(userController.loadSuccess)
-userRoute.route('/failuer').get(userController.loadFailurePage)
-
 userRoute.route('/address').get(user_middilware.user,addressController.loadAddress).put(addressController.addAddress)
+userRoute.route('/checkout').get(user_middilware.isBlocked,checkoutController.loadChekout)
 userRoute.route('/editAddress').put(addressController.editAddress)
 userRoute.route('/addEditAddress').post(addressController.addEditAddress)
 userRoute.route('/deleteAddress').delete(addressController.deleteAddress)
 
-userRoute.post('/sortAndFilter',ShopController.sortAndFilter);
-userRoute.post('/search',ShopController.search)
-userRoute.post('/checkWallet',checkoutController.checkWalletAmount)
+userRoute.post('/sortAndFilterAndSearch',ShopController.sortAndFilterAndSearch)
+
 userRoute.route('/orders').get(user_middilware.isBlocked,orderController.loadOrders).post(orderController.setOrders)
 userRoute.route('/orderdetails').get(user_middilware.isBlocked,orderController.loadOrderDetail)
 
 userRoute.post('/cancelOrder',orderController.orderCancel)
 userRoute.put('/returnOrder',orderController.returnOrder)
 
-userRoute.route('/coupen').get(coupenController.loadCoupen)
-
+userRoute.route('/coupen').get(coupenController.loadCoupen).post(coupenController.useCoupen)
+userRoute.route('/checkCoupen').post(coupenController.checkValidCoupen)
+userRoute.put('/removeCop', coupenController.removeCop);
 
 userRoute.post('/razorpay',PaymentController.verifyPayment)
+userRoute.put('/retry-payment',PaymentController.retryPayment)
+userRoute.route('/success').get(userController.loadSuccess)
+userRoute.route('/failuer').get(userController.loadFailurePage)
+
 module.exports = userRoute

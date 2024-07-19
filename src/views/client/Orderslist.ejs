@@ -51,11 +51,11 @@
                                               </tr>
                                             </thead>
                                             <tbody class="text-center">
-                                              <% orderedData.slice().reverse().forEach((ordVal, ind) => { %>
+                                              <% orderedData.forEach((ordVal, ind) => { %>
 
+                                                <tr class="fs-4" style="border-bottom: 1px solid #dee2e6;">
                                                 <% if(ordVal.orderStatus=='pending'||ordVal.orderAmount==0){ %>
-                                                  <tr class="fs-4" style="border-bottom: 1px solid #dee2e6;">
-                                                    <td style="padding: 1rem; vertical-align: middle;"><%= ind + 1 %></td>
+                                                    <td style="padding: 1rem; vertical-align: middle;"><%= ind + 1 + skip %></td>
   
                                                     <% const formattedDate =ordVal.orderDate.toLocaleString('en-US', { weekday: 'short',
                                                     month: 'short', day: 'numeric', year: 'numeric', hour:
@@ -68,7 +68,7 @@
                                                     <td style="padding: 1rem; vertical-align: middle;text-decoration:line-through">
                                                       <% ordVal.products.forEach((product, index) => { %>
                                                         
-                                                         <%= product.product_id.name %>.
+                                                         <%= product.product_id?.name %>.
                                                         
                                                       <% }); %>
                                                     </td>
@@ -81,40 +81,10 @@
                                                       <td style="padding: 1rem; vertical-align: middle; color:red;">canceled</td>
                                                     <% } %>
                                                    
-                                                    <td style="padding: 1rem; vertical-align: middle;">
-                                                      <% if (ordVal.orderStatus == 'pending') { %>
-                                                        <input type="button" 
-                                                          style="
-                                                            border-radius: 5px;
-                                                            border: 0px solid transparent;
-                                                            outline: 0px;
-                                                            transition: all ease 0.5s;
-                                                            background-color: rgb(74, 144, 24);
-                                                            color: white;
-                                                            padding: 8px 8px;
-                                                            display: inline-block;
-                                                            text-decoration: none;
-                                                          " value="pay again" onclick="submitPayment( '<%= ordVal.orderAmount %>','<%= ordVal.user_id %>')">
-                                                         
-                                                      <% } else { %>
-                                                      <a href="/orderDetails?id=<%= ordVal?._id %>"
-                                                         style="
-                                                           border-radius: 5px;
-                                                           border: 0px solid transparent;
-                                                           outline: 0px;
-                                                           transition: all ease 0.5s;
-                                                           background-color: #c96;
-                                                           padding: 0.5rem 1rem;
-                                                           display: inline-block;
-                                                           text-decoration: none;
-                                                         "
-                                                         class="text-white">Details</a>
-                                                        <% } %>
-                                                    </td>
                                                    <% }else{ %>
                                                     
-                                                <tr class="fs-4" style="border-bottom: 1px solid #dee2e6;">
-                                                  <td style="padding: 1rem; vertical-align: middle;"><%= ind + 1 %></td>
+                                                <!-- <tr class="fs-4" style="border-bottom: 1px solid #dee2e6;"> -->
+                                                  <td style="padding: 1rem; vertical-align: middle;"><%= ind + 1 + skip %></td>
 
                                                   <% const formattedDate =ordVal.orderDate.toLocaleString('en-US', { weekday: 'short',
                                                   month: 'short', day: 'numeric', year: 'numeric', hour:
@@ -127,51 +97,46 @@
                                                   <td style="padding: 1rem; vertical-align: middle;">
                                                     <% ordVal.products.forEach((product, index) => { %>
                                                       
-                                                       <%= product.product_id.name %>.
+                                                       <%= product.product_id?.name %>.
                                                       
                                                     <% }); %>
                                                   </td>
                                                   <td class="text-danger" style="padding: 1rem; vertical-align: middle;"><%= ordVal?.payment %></td>
                                                   <td style="padding: 1rem; vertical-align: middle;">$<%= ordVal?.orderAmount %></td>
                                                   <td style="padding: 1rem; vertical-align: middle;color: #0b681c;"><%= ordVal?.orderStatus %></td>
-                                                  <td style="padding: 1rem; vertical-align: middle;">
-                                                    <% if (ordVal.orderStatus == 'pending') { %>
-                                                      <input type="button" 
-                                                        style="
-                                                          border-radius: 5px;
-                                                          border: 0px solid transparent;
-                                                          outline: 0px;
-                                                          transition: all ease 0.5s;
-                                                          background-color: rgb(74, 144, 24);
-                                                          color: white;
-                                                          padding: 8px 8px;
-                                                          display: inline-block;
-                                                          text-decoration: none;
-                                                        " value="pay again" onclick="submitPayment( '<%= ordVal.orderAmount %>','<%= ordVal.user_id %>')">
-                                                       
-                                                    <% } else { %>
-                                                    <a href="/orderDetails?id=<%= ordVal?._id %>"
-                                                       style="
-                                                         border-radius: 5px;
-                                                         border: 0px solid transparent;
-                                                         outline: 0px;
-                                                         transition: all ease 0.5s;
-                                                         background-color: #c96;
-                                                         padding: 0.5rem 1rem;
-                                                         display: inline-block;
-                                                         text-decoration: none;
-                                                       "
-                                                       class="text-white">Details</a>
-                                                      <% } %>
-                                                  </td>
-                                                  
-                                                  <!-- <td style="padding: 1rem; vertical-align: middle;"><input type="button" class="btn btn-success" value="pay now"></td> -->
-                                                </tr>
-
+                                            
+                                                  <% } %>
+                                                  <td>
+                                                 <% if (ordVal.orderStatus == 'pending') { %>
+                                                  <input type="button" 
+                                                    style="
+                                                      border-radius: 5px;
+                                                      border: 0px solid transparent;
+                                                      outline: 0px;
+                                                      transition: all ease 0.5s;
+                                                      background-color: rgb(74, 144, 24);
+                                                      color: white;
+                                                      padding: 8px 8px;
+                                                      display: inline-block;
+                                                      text-decoration: none;
+                                                    " value="pay again" onclick="retryPayment('<%= ordVal.order_Id%>', '<%=ordVal?.orderAmount %>')">
                                                    
-                                                </tr>
-                                                 <% } %>
-                                             
+                                                <% } else { %>
+                                                <a href="/orderDetails?id=<%= ordVal?._id %>"
+                                                   style="
+                                                     border-radius: 5px;
+                                                     border: 0px solid transparent;
+                                                     outline: 0px;
+                                                     transition: all ease 0.5s;
+                                                     background-color: #c96;
+                                                     padding: 0.5rem 1rem;
+                                                     display: inline-block;
+                                                     text-decoration: none;
+                                                   "
+                                                   class="text-white">Details</a>
+                                                  <% } %>
+                                                </td>
+                                              </tr>
                                               <% }); %>
                                             </tbody>
                                           </table>
@@ -194,6 +159,37 @@
                                   </aside>
                                 </div>
                               </div><!-- End .col-lg-9 -->
+                               <div class="container custom_container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <nav class="float-right mt-5 mt-col-3">
+                                            <ul class="pagination">
+                                                <% if (currentPage > 1) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage - 1 %>">
+                                                            <span aria-hidden="true">&laquo;</span>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% for(let i = 1; i <= totalPages; i++) { %>
+                                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% if (currentPage < totalPages) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>">
+                                                            <span aria-hidden="true">&raquo;</span>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
                         </div><!-- End .row -->
                     </div><!-- End .container -->
                 </div><!-- End .dashboard -->
@@ -216,6 +212,7 @@
   <!--Connect Mobaile View-->
  
   <!--Connect Mobaile View-->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Plugins JS File -->
   <script src="assets/js/jquery.min.js"></script>
@@ -228,15 +225,14 @@
   <script src="assets/js/main.js"></script>
 
   <script>
-  function submitPayment(amount,userID,selectedAddressId){
-    
-    let selectedpayment = 'online'
-    fetch('/orders', {
-    method: 'POST',
+  function retryPayment(order_Id,amount){
+
+    fetch('/retry-payment', {
+    method: 'put',
     headers: {
         'Content-Type': 'application/json'
     },
-        body: JSON.stringify({ amount, selectedAddressId,selectedpayment})
+        body: JSON.stringify({order_Id, amount})
     })
     .then(res => {
         if (!res.ok) {
@@ -245,26 +241,9 @@
         return res.json();
     })
     .then(data => {
-      console.log(data)
       if(data.razorpay){
          return razorpayPayment(data.order);
       }
-      
-      if(data.listed){
-        return window.location.href=`/cart?message=${data.message}`
-      }else if(data.success){
-        console.log(data);
-        return window.location.href=`/success`
-      }else if(!data.quantity){
-         return window.location.href=`/cart?message=${data.message}`
-      }
-      else{
-         // address backend check(if not)
-      }
-      if(data.order){
-          console.log(data.order)
-          return
-       }
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
@@ -275,8 +254,7 @@
   
  }
 
-
-function razorpayPayment(order){
+ function razorpayPayment(order){
 
 var options = {
     "key": "rzp_test_deu2ORuCjDgPNd", 
@@ -284,7 +262,7 @@ var options = {
     "currency": "INR",
     "name": "plantly", 
     "description": "Test Transaction",
-    "image": "https://example.com/your_logo",
+    "image": "https://cdn-icons-png.flaticon.com/512/616/616430.png",
     "order_id": order.id, 
     // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
     "handler": function (response){                              
@@ -332,5 +310,8 @@ function verifyPayment(response,order){
             }
         })   
     }
+
+
+
   
   </script>

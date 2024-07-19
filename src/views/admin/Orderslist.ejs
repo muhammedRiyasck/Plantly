@@ -12,7 +12,7 @@
     <div class="main-panel">
 
           <div class="content-wrapper">
-         
+         <div>
                 <div class="w-100 container-fluid mb-5">
                     <table class="table table-dark" style="border-radius: 10px;">
                         <thead class="text-center ">
@@ -38,7 +38,7 @@
 
                                     <tr>
 
-                                        <td><%= ind + 1 %></td>
+                                        <td><%= ind + 1 + skip%></td>
                                         <td><%= order.deliveryAddress.name %></td>
                                         <td><%= order.orderDate.toString().split(' ').slice(0,4).join('  ') %></td>
                                         <td>$<%= order.orderAmount %></td>
@@ -78,8 +78,9 @@
                 </div>
 
              
-
             </div>
+            <%-include('../layouts/admin/pagination') %>
+         </div>
         </div>
 
 

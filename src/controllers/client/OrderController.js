@@ -6,6 +6,7 @@ const Order = require('../../model/order_model')
 const Wallet = require('../../model/wallet_model')
 const {cart} = require('../../model/CartAndWishlist_model')
 const flash = require('express-flash')
+const Coupen = require('../../model/coupen_model')
 const genretor = require('otp-generator')
 const Razorpay = require('razorpay')
 
@@ -17,19 +18,39 @@ const Instance = new Razorpay({
     
   });
 
-const loadOrders = async (req, res) => {
+const loadOrders = async (req, res , next) => {
     try {
         if (req.session.user) {
-            const addressData = await Address.findOne({ user_id: req.session.user._id })
-            const orderedData = await Order.find({ user_id: req.session.user._id }).populate('products.product_id')
-           
-            res.render('Orderslist', { userlogdata: req.session.user, addressData, orderedData })
+            const page = parseInt(req.query.page)||1;
+            const limit = 5;
+            const skip = (page-1)*limit
+            
+            const [addressData,orderedData,totalOrders] = await Promise.all([
+                Address.findOne({user_id:req.session.user._id}),
+                Order.find({user_id:req.session.user._id})
+                .populate('products.product_id')
+                .skip(skip)
+                .limit(limit)
+                .sort({orderDate:-1}),
+                Order.countDocuments({user_id:req.session.user._id})
+            ])
+
+            const totalPages = Math.ceil(totalOrders/limit)
+            res.render('Orderslist', { 
+                userlogdata:req.session.user,
+                addressData,
+                orderedData,
+                currentPage:page,
+                totalPages,
+                skip
+             })
         } else {
             req.flash('message', 'please login to see your orders')
             res.redirect('/login')
         }
     } catch (error) {
         console.log(error.message)
+        next(error)
     }
 }
 
@@ -47,19 +68,20 @@ const loadOrderDetail = async (req, res) => {
     }
 }
 
-const setOrders = async (req, res) => {
+const setOrders = async (req, res , next) => {
     try {
         const userId = req.session.user._id;
         const addressId = req.body.selectedAddressId
         const paymentMethod = req.body.selectedpayment
+        const coupenIdd = req.body.coupenIdd
+        console.log(coupenIdd,'hihi')
         console.log(paymentMethod,'method')
         if (!userId) {
             return res.redirect('/login');
         }
 
-        
-
         const totalAmount = Math.round(req.body.amount);
+        req.session.user.amount = totalAmount
         const addressData = await Address.aggregate([
             { $unwind: "$addressData" },
             { $match: { "addressData._id": new mongoose.Types.ObjectId(addressId) } },
@@ -82,9 +104,6 @@ const setOrders = async (req, res) => {
                             return res.json({ quantity:false, message: "Sorry.insufficient stock." });
                             throw new Error(`Insufficient stock for ${item.product_id.name}`);
                           }
-                    //       else{
-                    //        return res.status(200).json({ quantity:true });
-                    //    }
                   
             }
      
@@ -101,10 +120,11 @@ const setOrders = async (req, res) => {
             upperCaseAlphabets: true,
             specialChars: false
         });
-     
+        
+        req.session.user.order_Id= orderID
         
         const { name, phone, address, pincode, locality, state, city, } = addressData[0];
-
+       const perce=cartData.percentage|| 0;
         const orderedData = await Order.create({
             user_id: userId,
             products: cartData.products,
@@ -115,9 +135,15 @@ const setOrders = async (req, res) => {
             orderDate: Date.now(),
             orderAmount: totalAmount,
             order_Id : orderID,
-            payment: paymentMethod
+            payment: paymentMethod,
+            percentage:perce
         });
 
+        await Coupen.findOneAndUpdate({coupen_id:coupenIdd},{$set:{used:true}})
+
+        cartData.coupenDiscount = 0;
+        cartData.percentage = 0;
+        await cartData.save()
         req.session.order = orderedData;
 
         if (orderedData) {
@@ -130,7 +156,7 @@ const setOrders = async (req, res) => {
 
             await cart.updateOne({ user_id: userId }, { $unset: { products: 1 }, $set: { totalCartPrice: 0 } });
 
-            if(paymentMethod=='online'){
+            if(paymentMethod == 'online'){
                 var options = {
                     amount:totalAmount * 100,
                     currency: 'INR',
@@ -195,8 +221,7 @@ const setOrders = async (req, res) => {
         }
     
     } catch (error) {
-        console.log(error.message);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        next(error)
     }
     
 };
@@ -231,7 +256,9 @@ const orderCancel = async (req, res , next) => {
     
     try {
         const { proId, ordId, price, reason } = req.body;
+
         console.log(req.body)
+
         const userIdd = req.session.user._id
 
         const cancelOrd = await Order.findOneAndUpdate(
@@ -255,11 +282,12 @@ const orderCancel = async (req, res , next) => {
         )
 
         //  Adding Stock Back :-
-        let cancelOrder = await Order.findOne({ order_Id: ordId, user_id: userIdd,'products.product_id':proId },{ "products.$": 1, });
+        let cancelOrder = await Order.findOne({ order_Id: ordId, user_id: userIdd,'products.product_id':proId });
         let totalOrder = await Order.findOne({ order_Id: ordId, user_id: userIdd,'products.product_id':proId }) //  Find Order
         let Price // Product Price
         let updatePrice
         let updateTax
+
         if (cancelOrder) {
   
             var Quantity = cancelOrder.products[0].quantity;     //  Find Pro Quantity
@@ -268,19 +296,21 @@ const orderCancel = async (req, res , next) => {
 
             //  Manage The Money :-
 
-            Price = Number(cancelOrder.products[0].price)
+            Price = Math.round(cancelOrder.products[0].price-((cancelOrder.products[0].price*cancelOrder.percentage)/100))
           
            console.log(cancelOrder,'ordereeeeeeeeeeeeeeeeeee')
 
-           updateTax=Math.round(Price*(9/100))
+           updateTax=0
            console.log(updateTax,Price)
 
-           updatePrice=Price+updateTax
+           updatePrice=Price+updateTax;
+           updatePrice=totalOrder.orderAmount-updatePrice<0?0:totalOrder.orderAmount-updatePrice
 
             console.log(updatePrice,'enthaaaaa avasthaa')
+
             // if(totalOrder.products.length>1){  
 
-                await Order.findOneAndUpdate({ order_Id: ordId, 'products.product_id': proId }, { $inc: { orderAmount:-updatePrice } });
+                await Order.findOneAndUpdate({ order_Id: ordId, 'products.product_id': proId }, { $set: { orderAmount:updatePrice } });
                 
             // }else{
                 
@@ -295,17 +325,20 @@ const orderCancel = async (req, res , next) => {
         if (cancelOrd.payment != 'cod') {
             
             if(Quantity>=1){
+
                 await Wallet.findOneAndUpdate({ user_id: userIdd },
                 
                     {
-                        $inc: { balance: price },
-                        $push: { transaction: { amount: price, creditOrDebit: 'credit' } }
+                        $inc: { balance: Price },
+                        $push: { transaction: { amount: Price, creditOrDebit: 'credit' } }
                     },
                     
                     { new: true, upsert: true }
                 
                 );
+
             }else{
+
                 await Wallet.findOneAndUpdate({ user_id: userIdd },
                 
                     {
@@ -317,9 +350,7 @@ const orderCancel = async (req, res , next) => {
                 
             }
 
-    
-                res.send({ succ: true });
-
+            res.send({ succ: true });
 
         } else {
 

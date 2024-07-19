@@ -40,7 +40,7 @@
            
 
                               <tr class="text-center ">
-                                  <td><%= i +1 %></td>
+                                  <td><%= i + 1 + skip%></td>
                                   <td>
                                     <img width="80" height="80" src="https://img.icons8.com/office/80/user.png" alt="user"/></td>
                                   <td><%= user[i].fullName %></td>
@@ -161,7 +161,7 @@
               </table><!-- End table -->
             </div>
             
-            <%-// include('../layouts/pageNavigation.ejs') %>
+            <%-include('../layouts/admin/pagination') %>
            
 
           </div>

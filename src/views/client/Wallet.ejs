@@ -31,17 +31,21 @@
                         <%- include('../layouts/client/profileNavbar') %>
 
                             <div class="col-md-8 col-lg-9">
-
-                                <!-- <div class="tab-content">
-
-                                <aside class="col col-xl-9 col-lg-8 col-md-6 col-sm-6 mb-4 mb-lg-0">
-
-                                    <div class="row w-100" style="gap: 2rem">
-
-                                        <div class="container"  style="overflow-y: scroll; height: 300px;"> -->
-
-                    <% if (walletData?.transaction.length >= 1) { %>
-
+                                <% if (walletData?.transaction.length>0) { %>
+                                <% if(locals.walletData) {%>
+                              <div class="wishlist-share">
+            
+                              <div class="social-icons social-icons-sm mb-2">
+            
+                              <label class="social-label text-info">Total Amount: <span style="color: black;">$<%= walletData?.balance %></span> </label>
+            
+                               <p class="text-info "></p>
+            
+                            </div><!-- End .soial-icons -->
+            
+                            </div>
+            
+                        <% } %>
                         <table class="table table-wishlist table-mobile text-center" style="width: 920px">
 
                                 <thead>
@@ -57,14 +61,14 @@
 
                                 </thead>
 
-                            <% walletData?.transaction.slice().reverse().forEach((element , index) => { %>
+                            <% walletData?.transaction.forEach((element , index) => { %>
                                     
                                 <tbody>
 
                                     <tr>
                                             <td>
 
-                                                <%= index + 1 %>
+                                                <%= index + 1 + startIndex %>
 
                                             </td>
 
@@ -74,10 +78,13 @@
 
                                             </td>
 
+                                           <% const formattedDate =element.time.toLocaleString('en-US', { weekday: 'short',
+                                            month: 'short', day: 'numeric', year: 'numeric', hour:
+                                            'numeric', minute: 'numeric', second: 'numeric', hour12:
+                                             true }); %>
                                             <td>
 
-                                                <%= element.time.toString().split(' ').slice(0,5).join('  ') %>
-
+                                            <%= formattedDate %>
                                             </td>
        
                                             <td class="<%= element.creditOrDebit == 'credit' ? 'text-success' : 'text-danger'%>">
@@ -95,29 +102,44 @@
 
                                 </table>
 
-                                <% if(locals.walletData) {%>
-
-                                    <div class="wishlist-share">
-                    
-                                    <div class="social-icons social-icons-sm mb-2">
-                    
-                                        <label class="social-label text-info">Total Amount: $<%= walletData?.balance %></label>
-                    
-                                       <p class="text-info "></p>
-                    
-                                    </div><!-- End .soial-icons -->
-                    
-                                    </div>
-                    
-                                <% } %>
+                             
                     <%  } else { %>
 
                         <p style="display: flex;padding-left:15rem;" >Wallet Amount Not Found</p>
 
                     <% } %>
 
+                    <div class="row">
+                        <div class="col-12">
+                            <nav class="float-right mt-5 mt-col-3">
+                                <ul class="pagination">
+                                    <% if (currentPage > 1) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage - 1 %>">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% for(let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                            <a class="page-link" href="?page=<%= i %>"><%=i %></a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% if (currentPage < totalPages) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage + 1 %>">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
                 </div>
-
+                </div>
 
             </div>
           

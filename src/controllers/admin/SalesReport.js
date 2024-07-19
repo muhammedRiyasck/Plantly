@@ -7,7 +7,7 @@ const loadReport = async (req, res , next) => {
     try {
 
         const reportVal = req.params.id;
-
+        console.log(reportVal)
         if (reportVal == "Week") {
 
             const crrDate = new Date();

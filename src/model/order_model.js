@@ -35,6 +35,10 @@ const OrderSchema  = mongoose.Schema({
         address:{type:String,required:true},
         locality:{type:String,required:true}
     },
+    percentage:{
+        type:Number,
+        default:0
+    },
     products:[{
         product_id:{
             type:mongoose.Schema.Types.ObjectId,

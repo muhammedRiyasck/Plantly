@@ -12,9 +12,9 @@
         <div class="main-panel">
 
             <div class="content-wrapper" >
-
-                <div class="container-fluid " >
-
+                <div>
+                <div class="container-fluid mb-5" >
+                    
                     <div class="container-fluid">
 
                         <!-- Button trigger modal -->
@@ -33,13 +33,13 @@
         <div class="modal-body">
             <div class="modal-body">
 
-                <form id="offerForm" action="/admin/offerModule" method="post">
+                <form id="form" action="/admin/offerModule" method="post">
 
                 <div class="form-group">
 
                     <label for="offerName">Offer Name:</label>
                     <input type="text" class="form-control" id="offername" name="offername">
-                    <p id="nameer" class="text-danger "></p>
+                    <p id="nameError" class="text-danger "></p>
                 </div>
 
                 <div class="form-group">
@@ -65,7 +65,7 @@
 
                     <label for="offer">Offer:</label>
                     <input type="number" min="1" class="form-control" id="offer" max="70" name="offer"></input>
-                    <p id="numer" class="text-danger "></p>
+                    <p id="amountError" class="text-danger "></p>
 
                 </div>
 
@@ -111,7 +111,7 @@
                                 <% offer.slice().reverse().forEach((val , indx) => { %>
                                     <tr id="reloadDiv">
 
-                                        <td><%= indx + 1 %></td>
+                                        <td><%= indx + 1 + skip%></td>
 
                                         <td class="">
 
@@ -161,14 +161,17 @@
                     </tbody>
 
                 </table>
-            
+                
+                
             </div>
-
-            </div>
-
-        </div>
-
+        <!-- </div> -->
     </div>
+    
+    <%-include('../layouts/admin/pagination') %>
+</div>
+
+
+</div>
 
 </div>
 
@@ -176,28 +179,27 @@
 
     //  Offer Validation :-
 
-const form = document.getElementById('offerForm');
-const namer = document.getElementById('nameer');
-const num = document.getElementById('numer');
+const form = document.getElementById('form');
+const nameError = document.getElementById('nameError');
+const amountError = document.getElementById('amountError');
 
 form.addEventListener('submit', function(event) {
 
     const offer = document.getElementById('offer').value
     const offername = document.getElementById('offername').value
-
-    num.textContent = ''
-    namer.textContent = ''
+    amountError.textContent = ''
+    nameError.textContent = ''
 
     if (isNaN(offer) || offer.trim() === '') {
 
         event.preventDefault(); 
-        num.textContent = 'Offer should be a valid number.';
+    amountError.textContent = 'Offer should be a valid number.';
 
     }
 
     if (offername.trim().length < 4 || !/^[a-zA-Z\s]+$/.test(offername)) {
         event.preventDefault(); 
-        namer.textContent = 'minimum 4 character';
+        nameError.textContent = 'minimum 4 character';
     }
 
 
@@ -212,7 +214,7 @@ function offerRemove(id){
     .then(res => res.json())
 
     .then(data => {
-
+        
         if(data.succ){
 
             const Toast = Swal.mixin({
@@ -220,7 +222,7 @@ function offerRemove(id){
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 800,
                 timerProgressBar: true,
 
                 didOpen: (toast) => {
@@ -237,10 +239,14 @@ function offerRemove(id){
                 icon: "success",
                 title: "Deleted Successfully"
                 
-            });
+            }).then(()=>{
+                window.location.reload()
+            })
 
-            $('#reloadDiv').load('/admin/adminOffer #reloadDiv')
-            window.location.reload()
+            
+
+            // $('#reloadDiv').load('/admin/adminOffer #reloadDiv')
+            
 
         } else {
 

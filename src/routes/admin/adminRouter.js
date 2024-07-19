@@ -7,6 +7,7 @@ const adminOrders= require('../../controllers/admin/Orders')
 const adminOfferController = require('../../controllers/admin/OfferModule')
 const adminCoupenController = require('../../controllers/admin/Coupen')
 const salesReportController = require('../../controllers/admin/SalesReport')
+const dashboardController = require('../../controllers/admin/Dashboard')
 const adminRoute = express()
 
 const admin_auth = require('../.././middleware/admin_auth')
@@ -22,7 +23,7 @@ adminRoute.get('/login',admin_auth.isLogout, adminControllers.loadLogin)
  
 adminRoute.post('/verifylogin',adminControllers.verifyLogin)
 
-adminRoute.get('/dashboard',admin_auth.isLogin,adminControllers.loadDashboard);
+adminRoute.get('/dashboard',admin_auth.isLogin,dashboardController.loadDashboard);
 
 adminRoute.get('/users',admin_auth.isLogin,adminUsers.loadUsers)
 adminRoute.put('/userAction', adminUsers.statusUpdation);

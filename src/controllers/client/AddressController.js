@@ -4,7 +4,7 @@ const User = require('../../model/user_model')
 const Product = require('../../model/products_model')
 const Category = require('../../model/category_model')
 
-const loadAddress = async(req,res)=>{
+const loadAddress = async(req,res,next)=>{
 
     try {
         if(req.session.user){
@@ -19,12 +19,12 @@ const loadAddress = async(req,res)=>{
         }
 
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 
 }
 
-const addAddress = async(req,res)=>{
+const addAddress = async(req,res,next)=>{
 
     try {
 
@@ -69,23 +69,23 @@ const addAddress = async(req,res)=>{
         }
 
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 
 }
 
-const editAddress = async(req,res)=>{
+const editAddress = async(req,res,next)=>{
     try {
         const id = req.body.addressId
         console.log(id)
         const editAddress = await Address.findOne({'addressData._id':id},{'addressData.$' : 1})
         res.json({editAddress})
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 }
 
-const addEditAddress = async(req,res)=>{
+const addEditAddress = async(req,res,next)=>{
 
     try {
         const userId = req.session.user._id
@@ -102,12 +102,12 @@ const addEditAddress = async(req,res)=>{
             res.redirect('/address')
         }
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 
 }
 
-const deleteAddress = async(req,res)=>{
+const deleteAddress = async(req,res,next)=>{
 
     try {
         const userId = req.query.id
@@ -119,7 +119,7 @@ const deleteAddress = async(req,res)=>{
             res.send(true)
         }
     } catch (error) {
-        console.log(error.message)
+        next(error)
     }
 
 }

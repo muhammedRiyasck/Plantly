@@ -1,5 +1,5 @@
 
-<%- include('../layouts/admin/header.ejs') %>
+<%- include('./layouts/admin/header.ejs') %>
 
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
@@ -8,11 +8,12 @@
             <div class="col-lg-7 mx-auto text-black">
               <div class="row align-items-center d-flex flex-row">
                 <div class="col-lg-6 text-lg-right pr-lg-4">
-                  <h1 class="display-1 mb-0" >404</h1>
+                  <h1 class="display-1 mb-0" ><%= statusCode %></h1>
                 </div>
                 <div class="col-lg-6 error-page-divider text-lg-left pl-lg-4">
                   <h2>SORRY!</h2>
-                  <h3 class="font-weight-light">The page you’re looking for was not found.</h3>
+                  <p><%= message %></p>
+                  <h3 class="font-weight-light"><%= statusCode>=400 && statusCode<500 ? 'The page you’re looking for was not found.' : 'Oops something went wrong !!' %></h3>
                 </div>
               </div>
               <div class="row mt-5">
@@ -37,4 +38,4 @@
 
     
 
-    <% include('../layouts/admin/footer.ejs') %>
+    <% include('./layouts/admin/footer.ejs') %>
