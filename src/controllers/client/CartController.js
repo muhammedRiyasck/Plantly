@@ -5,7 +5,6 @@ const Category = require('../../model/category_model')
 
 
 
-
 const loadCart = async (req, res,next) => {
 
     try {
