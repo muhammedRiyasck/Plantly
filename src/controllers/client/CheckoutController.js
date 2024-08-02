@@ -1,4 +1,4 @@
-const {wishlist,cart}= require('../../model/CartAndWishlist_model')
+const {wishlist,cart}= require('../../model/cartandwishlist_model')
 const Coupen = require('../../model/coupen_model')
 const Product = require('../../model/products_model')
 const Category = require('../../model/category_model')

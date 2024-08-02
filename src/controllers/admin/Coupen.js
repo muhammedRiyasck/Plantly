@@ -14,7 +14,7 @@ const Category = require("../../model/category_model");
 const Order = require("../../model/order_model");
 
 //  Import Cart Modal :-
-const {cart} = require("../../model/CartAndWishlist_model");
+const {cart} = require("../../model/cartandwishlist_model");
 
 //  Import Wallet Model :-
 const Wallet = require("../../model/wallet_model");
