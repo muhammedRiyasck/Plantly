@@ -1,4 +1,4 @@
-const { cart } = require('../../model/CartAndWishlist_model')
+const { cart } = require('../../model/cartandwishlist_model')
 const User = require('../../model/user_model')
 const Product = require('../../model/products_model')
 const Category = require('../../model/category_model')
